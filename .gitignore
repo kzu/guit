@@ -1,0 +1,16 @@
+out
+bin
+obj
+
+*.nupkg
+*.lock.json
+*.nuget.props
+*.nuget.targets
+
+.vs
+.idea
+*.suo
+*.user
+*.log
+*.binlog
+*.rsp
