@@ -1,0 +1,12 @@
+﻿<Project>
+
+  <Import Project="DotNetGit.csproj" />
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AssemblyName>guit</AssemblyName>
+    <PackageId>dotnet-guit</PackageId>
+    <ToolCommandName>guit</ToolCommandName>
+  </PropertyGroup>
+
+</Project>
