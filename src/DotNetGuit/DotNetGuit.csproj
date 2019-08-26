@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../DotNetGit/DotNetGit.props" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <AssemblyName>guit</AssemblyName>
+    <RootNamespace>DotNetGit</RootNamespace>
+
+    <PackageId>dotnet-guit</PackageId>
+    <ToolCommandName>guit</ToolCommandName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../DotNetGit/**/*$(DefaultLanguageSourceExtension)" Exclude="$(DefaultItemExcludes);../DotNetGit/$(BaseIntermediateOutputPath)/**" />
+    <EmbeddedResource Include="../DotNetGit/**/*.resx" Exclude="$(DefaultItemExcludes);../DotNetGit/$(BaseIntermediateOutputPath)/**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../DotNetGit/**/*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);../DotNetGit/$(BaseIntermediateOutputPath)/**" />
+    <None Remove="../DotNetGit/**/*$(DefaultLanguageSourceExtension)" />
+    <None Remove="../DotNetGit/**/*.resx" />
+  </ItemGroup>
+
+  <Import Project="../DotNetGit/DotNetGit.targets" />
+
+</Project>

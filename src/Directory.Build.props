@@ -6,6 +6,18 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <Author>kzu</Author>
+    <Description>A dotnet global tool providing a text-based UI for Git</Description>
+
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/kzu/dotnet-git</PackageProjectUrl>
+
+    <IsTool>true</IsTool>
+    <PackAsTool>true</PackAsTool>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <LangVersion>Latest</LangVersion>
 
@@ -16,6 +28,8 @@
     <NoWarn>NU5105;$(NoWarn)</NoWarn>
 
     <GeneratePackageOnBuild Condition="$(CI)">true</GeneratePackageOnBuild>
+
+    <DefaultItemExcludes>$(DefaultExcludeItems);*.binlog</DefaultItemExcludes>
   </PropertyGroup>
   
   <!-- This target is replaced by GitInfo when restored -->
