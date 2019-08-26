@@ -10,7 +10,6 @@
 
   <PropertyGroup>
     <PackageId>dotnet-git</PackageId>
-    <PackageVersion>0.1.2-pre</PackageVersion>
 
     <Author>kzu</Author>
     <Description>A dotnet global tool providing a text-based UI for Git</Description>

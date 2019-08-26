@@ -20,3 +20,5 @@ To update to a CI build, run:
 dotnet tool update -g --add-source https://kzu.blob.core.windows.net/nuget/index.json dotnet-git
 ```
 
+You can also install (or update to) a specific version (i.e. for a PR you send) by looking at the version 
+numbers from the build runs in the [AzDO build](http://build.azdo.io/kzu/oss/27).
