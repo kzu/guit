@@ -23,8 +23,6 @@ AssemblyVersion=$(AssemblyVersion)" />
     </PropertyGroup>
 
     <ItemGroup>
-      <VersionMetadata Include="$(GitCommits)" Condition="'$(GitSemVerDashLabel)' == '' and '$(GitCommits)' != '0'"/>
-
       <!-- Branch metadata always present for non-master branches, unless the existing label matches the branch.
            For a versioned branch, it doesn't make sense either. -->
       <VersionMetadata Include="$(GitBranch)" Condition="'$(GitBranch)' != 'master' and '$(GitSemVerSource)' != 'Branch' and '$(GitSemVerDashLabel)' != '-$(GitBranch)'" />
