@@ -7,3 +7,16 @@ A dotnet global tool providing a text-based UI for Git leveraging [gui.cs](https
 [![Build Status](https://dev.azure.com/kzu/oss/_apis/build/status/dotnet-git?branchName=master)](http://build.azdo.io/kzu/oss/27)
 [![License](https://img.shields.io/github/license/kzu/dotnet-git.svg)](LICENSE)
 
+
+To install a CI build run:
+
+```
+dotnet tool install -g --add-source https://kzu.blob.core.windows.net/nuget/index.json dotnet-git
+```
+
+To update to a CI build, run:
+
+```
+dotnet tool update -g --add-source https://kzu.blob.core.windows.net/nuget/index.json dotnet-git
+```
+
