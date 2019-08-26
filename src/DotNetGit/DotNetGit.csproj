@@ -6,8 +6,6 @@
 
     <AssemblyName>git</AssemblyName>
     <RootNamespace>DotNetGit</RootNamespace>
-
-    <!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
   </PropertyGroup>
 
   <PropertyGroup>
@@ -24,11 +22,12 @@
     <IsTool>true</IsTool>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>git</ToolCommandName>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Terminal.Gui" Version="0.24.0" />
+    <PackageReference Include="GitInfo" Version="2.0.20" PrivateAssets="all" />
+    <PackageReference Include="Terminal.Gui" Version="0.24.0" PrivateAssets="all" />
+    <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

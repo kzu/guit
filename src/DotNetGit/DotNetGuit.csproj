@@ -9,4 +9,6 @@
     <ToolCommandName>guit</ToolCommandName>
   </PropertyGroup>
 
+  <Import Project="DotNetGit.targets" />
+
 </Project>

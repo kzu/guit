@@ -16,7 +16,6 @@ namespace DotNetGit
             Add(new MenuBar(new[] 
             {
                 new MenuBarItem("_File", new [] {
-                    new MenuItem("_Open", "Opens a new git repository", () => { }),
                     new MenuItem("_Quit", "", () => Running = false)
                 }),
                 new MenuBarItem("_Sync", new [] {
