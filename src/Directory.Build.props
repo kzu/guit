@@ -13,7 +13,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kzu/dotnet-git</PackageProjectUrl>
 
-    <IsTool>true</IsTool>
+    <!--<IsTool>true</IsTool>-->
     <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
@@ -21,8 +21,10 @@
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <LangVersion>Latest</LangVersion>
 
+    <!--
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    -->
 
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <NoWarn>NU5105;$(NoWarn)</NoWarn>
