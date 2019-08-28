@@ -14,7 +14,7 @@ namespace DotNetGit.Tests
         [Fact]
         public void Test()
         {
-            using (var repo = new Repository(@"..\..\..\..\.."))
+            using (var repo = new Repository(@"..\..\..\.."))
             {
                 output.WriteLine(repo.Branches.ToString());
 
