@@ -31,7 +31,7 @@ namespace DotNetGit
                     case Status.Added:
                         return "+ " + Path;
                     case Status.Deleted:
-                        return "x " + Path;
+                        return "- " + Path;
                     case Status.Modified:
                         return "* " + Path;
                     default:

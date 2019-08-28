@@ -13,7 +13,6 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kzu/dotnet-git</PackageProjectUrl>
 
-    <!--<IsTool>true</IsTool>-->
     <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
