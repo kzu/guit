@@ -1,10 +1,29 @@
+using System;
+using System.IO;
+using LibGit2Sharp;
 using Terminal.Gui;
 
-public static class Program
+namespace DotNetGit
 {
-    public static void Main()
+    public static class Program
     {
-        Application.Init();
-        Application.Run(new DotNetGit.App());
+        public static void Main()
+        {
+            try
+            {
+                App.Repository = new Repository(Directory.GetCurrentDirectory());
+            }
+            catch (RepositoryNotFoundException e)
+            {
+                var color = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Error.WriteLine(e.Message);
+                Console.ForegroundColor = color;
+                return;
+            }
+
+            Application.Init();
+            Application.Run(new App());
+        }
     }
 }

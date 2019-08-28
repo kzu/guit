@@ -1,10 +1,12 @@
-﻿using NStack;
+﻿using LibGit2Sharp;
 using Terminal.Gui;
 
 namespace DotNetGit
 {
     public class App : Window
     {
+        public static Repository Repository { get; set; }
+
         public App() : base(".NET Git")
         {
             X = 0;
@@ -23,6 +25,8 @@ namespace DotNetGit
                     new MenuItem("P_ush", "", null),
                 })
             }));
+
+            Add(new CommitView());
         }
     }
 }

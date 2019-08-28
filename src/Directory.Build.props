@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Author>kzu</Author>
+    <Authors>kzu</Authors>
     <Description>A dotnet global tool providing a text-based UI for Git</Description>
 
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
