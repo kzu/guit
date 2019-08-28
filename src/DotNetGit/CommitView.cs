@@ -6,7 +6,7 @@ namespace DotNetGit
 {
     public class CommitView : FrameView
     {
-        public CommitView() : base(new Rect(0, 0, 100, 100), "Commit")
+        public CommitView() : base("Changes")
         {
             var status = App.Repository.RetrieveStatus(new StatusOptions());
             var list = status
@@ -16,7 +16,7 @@ namespace DotNetGit
                 .OrderBy(x => x.Path)
                 .ToList();
 
-            Add(new ListView(new Rect(5, 5, 95, 95), list));
+            Add(new ListView(list));
         }
 
         class FileStatus
