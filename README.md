@@ -11,14 +11,19 @@ A dotnet global tool providing a text-based UI for Git leveraging [gui.cs](https
 To install a CI build run:
 
 ```
-dotnet tool install -g --add-source https://kzu.blob.core.windows.net/nuget/index.json dotnet-git
+dotnet tool install -g --add-source https://kzu.io/index.json dotnet-git
 ```
 
 To update to a CI build, run:
 
 ```
-dotnet tool update -g --add-source https://kzu.blob.core.windows.net/nuget/index.json dotnet-git
+dotnet tool update -g --add-source https://kzu.io/index.json dotnet-git
 ```
+
+To run the tool, open a command prompt on the git repo root directory and run `dotnet git`. 
+Alternatively, you can install the `dotnet-guit` tool, which contains the exact same code, but 
+allows running by simply running `guit`.
+
 
 You can also install (or update to) a specific version (i.e. for a PR you send) by looking at the version 
 numbers from the build runs in the [AzDO build](http://build.azdo.io/kzu/oss/27).
