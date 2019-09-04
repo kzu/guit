@@ -6,9 +6,9 @@ namespace DotNetGit
 {
     public class CommitView : FrameView
     {
-        public CommitView() : base("Changes")
+        public CommitView(Repository repository) : base("Changes")
         {
-            var status = App.Repository.RetrieveStatus(new StatusOptions());
+            var status = repository.RetrieveStatus(new StatusOptions());
             var list = status
                 .Added.Concat(status.Untracked).Select(x => new FileStatus { Path = x.FilePath, Status = Status.Added })
                 .Concat(status.Removed.Concat(status.Missing).Select(x => new FileStatus { Path = x.FilePath, Status = Status.Deleted }))

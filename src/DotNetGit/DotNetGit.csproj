@@ -11,4 +11,11 @@
     <ToolCommandName>git</ToolCommandName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Merq.Core" Version="1.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="16.3.13" />
+    <PackageReference Include="RxFree" Version="1.0.0-beta" />
+    <PackageReference Include="System.Composition" Version="1.2.0" />
+  </ItemGroup>
+
 </Project>

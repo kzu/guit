@@ -1,47 +1,44 @@
-﻿using LibGit2Sharp;
+﻿using System;
+using System.Collections.Generic;
+using System.Composition;
+using DotNetGit.Commands;
 using Terminal.Gui;
 
 namespace DotNetGit
 {
-    public class App : Window
+    [Export]
+    public class App : Toplevel
     {
-        public static Repository Repository { get; set; }
-
-        public App() : base( ".NET Git")
+        [ImportingConstructor]
+        public App(Window mainWindow, [ImportMany] IEnumerable<Lazy<IMainCommand, IDictionary<string, object>>> mainCommands)
         {
-            X = 0;
-            Y = 1;
+            mainWindow.Height = Height - 1;
+            var commands = new View();
+            commands.Y = Pos.Bottom(mainWindow);
+            commands.Height = 1;
 
-            Width = Dim.Fill();
-            Height = Dim.Fill();
-
-            var menu = new MenuBar(new[] 
+            Label current = default;
+            foreach (var command in mainCommands)
             {
-                new MenuBarItem("_File", new [] {
-                    new MenuItem("_Quit", "", () => Running = false)
-                }),
-                new MenuBarItem("_Sync", new [] {
-                    new MenuItem("_Pull", "", null),
-                    new MenuItem("P_ush", "", null),
-                })
-            });
+                if (current != null)
+                {
+                    current = new Label(" | ")
+                    {
+                        X = Pos.Right(current)
+                    };
 
-            var staged = new FrameView("Staged")
-            {
-                X = 0,
-                Y = Pos.Bottom(menu) + 1,
-                Height = Dim.Percent(50),
-            };
-            staged.Add(new TextField("[commit message]"));
+                    commands.Add(current);
+                }
 
-            var view = new CommitView
-            {
-                X = 0,
-                Y = Pos.Bottom(staged),
-                Height = Dim.Percent(100)
-            };
+                current = new Label(command.Metadata["HotKey"] + " " + command.Metadata["DisplayName"])
+                {
+                    X = current == null ? commands.X : Pos.Right(current)
+                };
 
-            Add(menu, staged, view);
+                commands.Add(current);
+            }
+
+            Add(mainWindow, commands);
         }
     }
 }

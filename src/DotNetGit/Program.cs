@@ -1,4 +1,8 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Composition;
+using System.Composition.Hosting;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using LibGit2Sharp;
 using Terminal.Gui;
@@ -11,7 +15,17 @@ namespace DotNetGit
         {
             try
             {
-                App.Repository = new Repository(Directory.GetCurrentDirectory());
+                var configuration = new ContainerConfiguration().WithAssembly(typeof(Program).Assembly);
+                var container = configuration.CreateContainer();
+
+                Application.Init();
+
+                // Force a RepositoryNotFoundException up-front.
+                container.GetExport<Repository>();
+
+                var app = container.GetExport<App>();
+
+                Application.Run(app);
             }
             catch (RepositoryNotFoundException e)
             {
@@ -21,9 +35,6 @@ namespace DotNetGit
                 Console.ForegroundColor = color;
                 return;
             }
-
-            Application.Init();
-            Application.Run(new App());
         }
     }
 }
