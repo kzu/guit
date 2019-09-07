@@ -12,6 +12,7 @@ namespace DotNetGit
         [ImportingConstructor]
         public MainWindow(Repository repository) : base(null)
         {
+            this.ColorScheme = Colors.Error;
             var staged = new FrameView("Staged")
             {
                 X = 0,

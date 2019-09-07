@@ -6,21 +6,21 @@ using Terminal.Gui;
 
 namespace DotNetGit.Commands
 {
-    public class PullCommand : IAsyncCommand
-    {
-    }
-
     [Shared]
     [Export]
     [Export(typeof(IMainCommand))]
     [ExportMetadata("HotKey", Key.F5)]
     [ExportMetadata("DisplayName", "Pull")]
-    public class PullCommandHandler : IAsyncCommandHandler<FetchCommand>, IMainCommand
+    public class PullCommand : IMainCommand
     {
-        public bool CanExecute(FetchCommand command) => true;
+        IEventStream eventStream;
 
-        public Task ExecuteAsync(FetchCommand command, CancellationToken cancellation)
+        [ImportingConstructor]
+        public PullCommand(IEventStream eventStream) => this.eventStream = eventStream;
+
+        public Task ExecuteAsync(CancellationToken cancellation)
         {
+            eventStream.Push("Pulled!");
             return Task.CompletedTask;
         }
     }
