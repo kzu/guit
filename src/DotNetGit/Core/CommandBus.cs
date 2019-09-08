@@ -2,7 +2,7 @@
 using System.Composition;
 using Merq;
 
-namespace DotNetGit.Commands
+namespace DotNetGit
 {
     [Export(typeof(ICommandBus))]
     public class CommandBus : Merq.CommandBus
@@ -11,6 +11,9 @@ namespace DotNetGit.Commands
         public CommandBus([ImportMany] IEnumerable<ICommandHandler> handlers)
             : base(handlers)
         {
+            Default = this;
         }
+
+        public static ICommandBus Default { get; private set; }
     }
 }

@@ -1,17 +1,16 @@
 ﻿using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetGit.Events;
+using DotNetGit.Properties;
 using Merq;
 using Terminal.Gui;
 
 namespace DotNetGit.Commands
 {
     [Shared]
-    [Export]
-    [Export(typeof(IMainCommand))]
-    [ExportMetadata("HotKey", Key.F5)]
-    [ExportMetadata("DisplayName", "Pull")]
-    public class PullCommand : IMainCommand
+    [MenuCommand(nameof(Resources.PullDisplayName), Key.F5, 0)]
+    public class PullCommand : IMenuCommand
     {
         IEventStream eventStream;
 
@@ -20,7 +19,7 @@ namespace DotNetGit.Commands
 
         public Task ExecuteAsync(CancellationToken cancellation)
         {
-            eventStream.Push("Pulled!");
+            eventStream.Push<StatusUpdated>("Pulled!");
             return Task.CompletedTask;
         }
     }

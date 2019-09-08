@@ -6,13 +6,14 @@ using Terminal.Gui;
 namespace DotNetGit
 {
     [Shared]
-    [Export(typeof(Window))]
-    public class MainWindow : Window
+    [Export(typeof(MainWindow))]
+    public class MainWindow : View
     {
         [ImportingConstructor]
-        public MainWindow(Repository repository) : base(null)
+        public MainWindow(Repository repository) //: base(null)
         {
-            this.ColorScheme = Colors.Error;
+            // NOTE: to see the exact dimensions of the main area, uncomment the following line
+            //this.ColorScheme = Colors.Error;
             var staged = new FrameView("Staged")
             {
                 X = 0,

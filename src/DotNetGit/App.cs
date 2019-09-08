@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
 using System.Threading;
-using DotNetGit.Commands;
+using DotNetGit.Events;
 using Merq;
 using Terminal.Gui;
 
@@ -12,29 +12,27 @@ namespace DotNetGit
     [Export]
     public class App : Toplevel
     {
-        IEnumerable<Lazy<IMainCommand, IDictionary<string, object>>> mainCommands;
+        readonly IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> menuCommands;
 
         [ImportingConstructor]
-        public App(Window mainWindow, StatusBar outputPane, 
+        public App(
+            MainWindow mainWindow, 
+            StatusBar status, 
             IEventStream eventStream,
-            [ImportMany] IEnumerable<Lazy<IMainCommand, IDictionary<string, object>>> mainCommands)
+            [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> menuCommands)
         {
-            this.mainCommands = mainCommands;
-            mainWindow.Height = Height - 4;
-            outputPane.Y = Pos.Bottom(mainWindow);
-
+            this.menuCommands = menuCommands;
             var commands = new View
             {
-                Y = Pos.Bottom(outputPane),
+                Y = Pos.Bottom(mainWindow),
                 Height = 1
             };
 
             View current = new Label("");
             commands.Add(current);
-            foreach (var command in mainCommands)
+            foreach (var command in menuCommands.OrderBy(x => x.Metadata.Order))
             {
-                //current = AddSeparator(commands, current);
-                current = new Button(command.Metadata["HotKey"] + " " + command.Metadata["DisplayName"])
+                current = new Button(command.Metadata.HotKey + " " + command.Metadata.DisplayName)
                 {
                     CanFocus = false,
                     X = Pos.Right(current),
@@ -44,27 +42,26 @@ namespace DotNetGit
                 commands.Add(current);
             }
 
-            AddSeparator(commands, current);
-            Add(mainWindow, outputPane, commands);
+            status.Y = Pos.Bottom(commands);
+            mainWindow.Height = Height - commands.Height - status.Height;
+
+            Add(mainWindow, commands, status);
         }
 
         public override bool ProcessHotKey(KeyEvent keyEvent)
         {
-            var command = mainCommands.FirstOrDefault(x => keyEvent.Key == (Key)x.Metadata["HotKey"]);
+            var command = menuCommands.FirstOrDefault(x => keyEvent.Key == x.Metadata.HotKey);
             if (command != null)
                 command.Value.ExecuteAsync(CancellationToken.None);
 
             return base.ProcessHotKey(keyEvent);
         }
 
-        static View AddSeparator(View commands, View current)
+        public override void LayoutSubviews()
         {
-            current = new Label("|")
-            {
-                X = Pos.Right(current)
-            };
-            commands.Add(current);
-            return current;
+            ColorScheme = Colors.Error;
+            base.LayoutSubviews();
+            EventStream.Default.Push<StatusUpdated>(this.Height.ToString());
         }
     }
 }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DotNetGit": {
+      "commandName": "Project",
+      "workingDirectory": "..\\.."
+    }
+  }
+}

@@ -2,6 +2,8 @@
 using Merq;
 using Terminal.Gui;
 using System;
+using LibGit2Sharp;
+using DotNetGit.Events;
 
 namespace DotNetGit
 {
@@ -9,28 +11,35 @@ namespace DotNetGit
     [Export]
     public class StatusBar : View
     {
+        readonly Repository repository;
+        readonly Label status;
+        readonly Label clock;
         object clearMessageToken;
 
-        Label status = new Label("Ready")
-        {
-            // Initially, we can only use the Frame of the top view, since Width is null at this point.
-            // See LayoutSubviews below
-            Width = Application.Top.Frame.Width - ClockText.Length,
-        };
-        Label clock = new Label(ClockText)
-        {
-            Width = ClockText.Length,
-        };
-
         [ImportingConstructor]
-        public StatusBar(IEventStream eventStream)
+        public StatusBar(IEventStream eventStream, Repository repository)
         {
+            this.repository = repository;
+
             CanFocus = false;
             Height = 1;
+            ColorScheme = new ColorScheme
+            {
+                Normal = Terminal.Gui.Attribute.Make(Color.White, Color.Black)
+            };
 
-            ColorScheme = Colors.Menu;
-            clock.X = Pos.Right(status);
-            
+            status = new Label("Ready")
+            {
+                // Initially, we can only use the Frame of the top view, since Width is null at this point.
+                // See LayoutSubviews below
+                Width = Application.Top.Frame.Width - ClockText.Length
+            };
+            clock = new Label(ClockText)
+            {
+                Width = ClockText.Length,
+                X = Pos.Right(status)
+            };
+
             // To see the width of the clock itself, uncomment the following line
             //clock.ColorScheme = Colors.Error;
 
@@ -44,7 +53,7 @@ namespace DotNetGit
 
             // Pushing simple strings to the event stream will cause them to update the 
             // status message.
-            eventStream.Of<string>().Subscribe(OnValue);
+            eventStream.Of<StatusUpdated>().Subscribe(OnStatusUpdated);
         }
 
         public override void LayoutSubviews()
@@ -52,18 +61,17 @@ namespace DotNetGit
             // At this point, Application.Current has a Width. For some reason, this same 
             // code in the constructor doesn't work.
             status.Width = Application.Current.Width - clock.Width;
-
             base.LayoutSubviews();
         }
 
-        static string ClockText => DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString();
+        string ClockText => repository.Config.Get<string>("user.name").Value + " (" + repository.Config.Get<string>("user.email").Value + ") | " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString();
 
-        void OnValue(string value)
+        void OnStatusUpdated(StatusUpdated value)
         {
             if (clearMessageToken != null)
                 Application.MainLoop.RemoveTimeout(clearMessageToken);
 
-            status.Text = value;
+            status.Text = value.NewStatus;
             clearMessageToken = Application.MainLoop.AddTimeout(TimeSpan.FromSeconds(5), _ =>
             {
                 status.Text = "Ready";

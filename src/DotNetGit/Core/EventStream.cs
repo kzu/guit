@@ -2,7 +2,7 @@
 using System.Composition;
 using Merq;
 
-namespace DotNetGit.Events
+namespace DotNetGit
 {
     [Shared]
     [Export(typeof(IEventStream))]
@@ -12,6 +12,9 @@ namespace DotNetGit.Events
         public EventStream([ImportMany("IObservable")] IEnumerable<object> observables)
             : base(observables)
         {
+            Default = this;
         }
+
+        public static IEventStream Default { get; private set; }
     }
 }

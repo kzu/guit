@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace DotNetGit.Commands
+namespace DotNetGit
 {
-    public interface IMainCommand
+    public interface IMenuCommand
     {
         Task ExecuteAsync(CancellationToken cancellation);
     }

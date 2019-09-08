@@ -5,6 +5,11 @@
     <PackageReference Include="Terminal.Gui" Version="0.24.0" />
     <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.1" />
+    <PackageReference Include="Merq.Core" Version="1.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="16.3.13" />
+    <PackageReference Include="RxFree" Version="1.0.0-beta" />
+    <PackageReference Include="System.Composition" Version="1.2.0" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.5.1" />
   </ItemGroup>
 
 </Project>
