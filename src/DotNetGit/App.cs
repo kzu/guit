@@ -59,7 +59,6 @@ namespace DotNetGit
 
         public override void LayoutSubviews()
         {
-            ColorScheme = Colors.Error;
             base.LayoutSubviews();
             EventStream.Default.Push<StatusUpdated>(this.Height.ToString());
         }
