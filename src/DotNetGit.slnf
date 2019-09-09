@@ -1,9 +1,0 @@
-{
-  "solution": {
-    "path": "DotNetGit.sln",
-    "projects": [
-      "DotNetGit.Tests\\DotNetGit.Tests.csproj",
-      "DotNetGit\\DotNetGit.csproj"
-    ]
-  }
-}

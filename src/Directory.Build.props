@@ -11,7 +11,7 @@
 
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/kzu/dotnet-git</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/kzu/guit</PackageProjectUrl>
 
     <PackAsTool>true</PackAsTool>
   </PropertyGroup>

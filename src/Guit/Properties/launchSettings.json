@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Guit": {
+      "commandName": "Project",
+      "workingDirectory": "..\\.."
+    }
+  }
+}

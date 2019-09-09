@@ -17,27 +17,27 @@ stages:
     - task: MSBuild@1
       displayName: Restore
       inputs:
-        solution: src/DotNetGit.sln
+        solution: src/Guit.sln
         configuration: $(Configuration)
         msbuildArguments: -t:restore
 
     - task: MSBuild@1
       displayName: Set Version
       inputs:
-        solution: src/DotNetGit/DotNetGit.csproj
+        solution: src/Guit/Guit.csproj
         msbuildArguments: -t:version
 
     - task: MSBuild@1
       displayName: Build
       inputs:
-        solution: src/DotNetGit.sln
+        solution: src/Guit.sln
         configuration: $(Configuration)
         msbuildArguments: -p:PackageOutputPath=$(Build.ArtifactStagingDirectory)
 
     - task: VSTest@2
       displayName: Test
       inputs:
-        testAssemblyVer2: src/DotNetGit.Tests/bin/*/*.Tests.dll
+        testAssemblyVer2: src/Guit.Tests/bin/*/*.Tests.dll
         runInParallel: true
         codeCoverageEnabled: false
         publishRunAttachments: true
