@@ -9,7 +9,7 @@ using Terminal.Gui;
 namespace DotNetGit.Commands
 {
     [Shared]
-    [MenuCommand(nameof(Resources.PullDisplayName), Key.F5, 0)]
+    [MenuCommand(nameof(Resources.PullDisplayName), Key.F5, 1)]
     public class PullCommand : IMenuCommand
     {
         IEventStream eventStream;

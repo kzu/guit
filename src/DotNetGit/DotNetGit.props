@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.0.20" />
-    <PackageReference Include="Terminal.Gui" Version="0.24.0" />
+    <PackageReference Include="Terminal.Gui" Version="0.25.0" />
     <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.1" />
     <PackageReference Include="Merq.Core" Version="1.2.0" />

@@ -16,10 +16,11 @@ namespace DotNetGit
 
         [ImportingConstructor]
         public App(
-            MainWindow mainWindow, 
+            CommitView mainWindow, 
             StatusBar status, 
-            IEventStream eventStream,
-            [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> menuCommands)
+            [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> menuCommands,
+            // Just importing the singletons causes them to be instantiated.
+            [ImportMany] IEnumerable<ISingleton> singletons)
         {
             this.menuCommands = menuCommands;
             var commands = new View
@@ -46,6 +47,7 @@ namespace DotNetGit
             mainWindow.Height = Height - commands.Height - status.Height;
 
             Add(mainWindow, commands, status);
+            singletons.ToList();
         }
 
         public override bool ProcessHotKey(KeyEvent keyEvent)
@@ -55,12 +57,6 @@ namespace DotNetGit
                 command.Value.ExecuteAsync(CancellationToken.None);
 
             return base.ProcessHotKey(keyEvent);
-        }
-
-        public override void LayoutSubviews()
-        {
-            base.LayoutSubviews();
-            EventStream.Default.Push<StatusUpdated>(this.Height.ToString());
         }
     }
 }

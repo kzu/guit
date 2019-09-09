@@ -123,4 +123,7 @@
   <data name="PullDisplayName" xml:space="preserve">
     <value>Pull</value>
   </data>
+  <data name="ViewDisplayName" xml:space="preserve">
+    <value>View</value>
+  </data>
 </root>

@@ -77,5 +77,14 @@ namespace DotNetGit.Properties {
                 return ResourceManager.GetString("PullDisplayName", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View.
+        /// </summary>
+        internal static string ViewDisplayName {
+            get {
+                return ResourceManager.GetString("ViewDisplayName", resourceCulture);
+            }
+        }
     }
 }
