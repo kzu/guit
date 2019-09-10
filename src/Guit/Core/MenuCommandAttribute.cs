@@ -11,6 +11,11 @@ namespace Guit
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class MenuCommandAttribute : ExportAttribute
     {
+        public MenuCommandAttribute(string displayNameResource, Key hotKey) :
+            this(displayNameResource, hotKey, (double)hotKey)
+        {
+        }
+
         public MenuCommandAttribute(string displayNameResource, Key hotKey, double order) : base(typeof(IMenuCommand))
         {
             var resourceManager = new ResourceManager(typeof(Resources));

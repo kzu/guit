@@ -9,7 +9,7 @@ using Terminal.Gui;
 namespace Guit.Commands
 {
     [Shared]
-    [MenuCommand(nameof(Resources.PullDisplayName), Key.F5, 1)]
+    [MenuCommand(nameof(Resources.PullDisplayName), Key.F5)]
     public class PullCommand : IMenuCommand
     {
         IEventStream eventStream;

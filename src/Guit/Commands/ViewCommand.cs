@@ -11,7 +11,7 @@ using Terminal.Gui;
 namespace Guit.Commands
 {
     [Shared]
-    [MenuCommand(nameof(Resources.ViewDisplayName), Key.F4, 0)]
+    [MenuCommand(nameof(Resources.ViewDisplayName), Key.F4)]
     public class ViewCommand : IMenuCommand
     {
         readonly Repository repository;
