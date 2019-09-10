@@ -117,13 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FetchDisplayName" xml:space="preserve">
-    <value>Fetch</value>
-  </data>
-  <data name="PullDisplayName" xml:space="preserve">
+  <data name="Sync.Pull" xml:space="preserve">
     <value>Pull</value>
-  </data>
-  <data name="ViewDisplayName" xml:space="preserve">
-    <value>View</value>
   </data>
 </root>

@@ -11,21 +11,22 @@ namespace Guit
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class MenuCommandAttribute : ExportAttribute
     {
-        public MenuCommandAttribute(string displayNameResource, Key hotKey) :
-            this(displayNameResource, hotKey, (double)hotKey)
+        public MenuCommandAttribute(string id, Key hotKey, string context = null) :
+            this(id, hotKey, (double)hotKey, context)
         {
         }
 
-        public MenuCommandAttribute(string displayNameResource, Key hotKey, double order) : base(typeof(IMenuCommand))
+        public MenuCommandAttribute(string id, Key hotKey, double order, string context = null) 
+            : base(context, typeof(IMenuCommand))
         {
             var resourceManager = new ResourceManager(typeof(Resources));
             try
             {
-                DisplayName = resourceManager.GetString(displayNameResource, CultureInfo.CurrentUICulture);
+                DisplayName = resourceManager.GetString(id, CultureInfo.CurrentUICulture) ?? id;
             }
             catch (MissingManifestResourceException)
             {
-                DisplayName = displayNameResource;
+                DisplayName = id;
             }
 
             HotKey = hotKey;

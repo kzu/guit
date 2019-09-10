@@ -2,14 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
-using Guit.Properties;
 using Merq;
 using Terminal.Gui;
 
-namespace Guit.Commands
+namespace Guit.Plugin.Sync
 {
     [Shared]
-    [MenuCommand(nameof(Resources.PullDisplayName), Key.F5)]
+    [MenuCommand("Sync.Pull", Key.F7, nameof(Sync))]
     public class PullCommand : IMenuCommand
     {
         IEventStream eventStream;

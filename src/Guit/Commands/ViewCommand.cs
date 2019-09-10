@@ -4,14 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Guit.Properties;
 using LibGit2Sharp;
 using Terminal.Gui;
 
 namespace Guit.Commands
 {
     [Shared]
-    [MenuCommand(nameof(Resources.ViewDisplayName), Key.F4)]
+    [MenuCommand("View", Key.F4)]
     public class ViewCommand : IMenuCommand
     {
         readonly Repository repository;

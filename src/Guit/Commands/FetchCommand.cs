@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
-using Guit.Properties;
 using LibGit2Sharp;
 using Merq;
 using Terminal.Gui;
@@ -12,7 +11,7 @@ using Git = LibGit2Sharp.Commands;
 namespace Guit.Commands
 {
     [Shared]
-    [MenuCommand(nameof(Resources.FetchDisplayName), Key.F6)]
+    [MenuCommand("Fetch", Key.F6, nameof(Plugin.Sync))]
     public class FetchCommand : IMenuCommand
     {
         readonly Repository repository;

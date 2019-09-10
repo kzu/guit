@@ -61,29 +61,11 @@ namespace Guit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fetch.
-        /// </summary>
-        internal static string FetchDisplayName {
-            get {
-                return ResourceManager.GetString("FetchDisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Pull.
         /// </summary>
-        internal static string PullDisplayName {
+        internal static string Sync_Pull {
             get {
-                return ResourceManager.GetString("PullDisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to View.
-        /// </summary>
-        internal static string ViewDisplayName {
-            get {
-                return ResourceManager.GetString("ViewDisplayName", resourceCulture);
+                return ResourceManager.GetString("Sync.Pull", resourceCulture);
             }
         }
     }
