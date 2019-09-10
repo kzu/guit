@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using LibGit2Sharp;
 using Xunit;
 using Xunit.Abstractions;
@@ -16,6 +16,8 @@ namespace Guit.Tests
         {
             using (var repo = new Repository(@"..\..\..\.."))
             {
+                var plugins = repo.Config.OfType<ConfigurationEntry<string>>().Where(x => x.Key == "guit.plugin").ToArray();
+
                 output.WriteLine(repo.Branches.ToString());
 
                 // Object lookup

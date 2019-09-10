@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Composition.Hosting;
 using System.Threading.Tasks;
 using LibGit2Sharp;

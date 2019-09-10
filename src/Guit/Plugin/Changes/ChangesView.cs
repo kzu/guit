@@ -2,23 +2,30 @@
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
+using System.Threading;
 using Guit.Events;
 using LibGit2Sharp;
 using Merq;
 using Terminal.Gui;
 
-namespace Guit
+namespace Guit.Plugin.Changes
 {
     [Shared]
     [Export]
-    public class CommitView : FrameView
+    public class ChangesView : MainView
     {
         readonly IEventStream eventStream;
+
         readonly List<FileStatus> files;
         readonly ListView view;
 
         [ImportingConstructor]
-        public CommitView(Repository repository, IEventStream eventStream) : base("Changes")
+        public ChangesView(
+            Repository repository,
+            IEventStream eventStream,
+            [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> globalCommands,
+            [ImportMany(nameof(Changes))] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> localCommands)
+            : base("Changes", globalCommands, localCommands)
         {
             this.eventStream = eventStream;
 
@@ -35,10 +42,8 @@ namespace Guit
                 AllowsMarking = true,
             };
             view.SelectedChanged += OnSelectedChanged;
-            Add(view);
 
-            Width = Dim.Fill();
-            Height = Dim.Fill();
+            Content = view;
         }
 
         void OnSelectedChanged()
