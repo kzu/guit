@@ -1,4 +1,5 @@
-﻿using System.Composition;
+﻿using System;
+using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 using Terminal.Gui;
@@ -9,15 +10,11 @@ namespace Guit.Plugin.Changes
     [MenuCommand(nameof(Changes), Key.F1)]
     public class ChangesCommand : IMenuCommand
     {
-        readonly ChangesView view;
+        readonly Func<CancellationToken, Task> run;
 
         [ImportingConstructor]
-        public ChangesCommand(ChangesView view) => this.view = view;
+        public ChangesCommand(ChangesView view, IApp app) => run = cancellation => app.RunAsync(view, cancellation);
 
-        public Task ExecuteAsync(CancellationToken cancellation)
-        {
-            Task.Run(() => Application.Run(view));
-            return Task.CompletedTask;
-        }
+        public Task ExecuteAsync(CancellationToken cancellation) => run(cancellation);
     }
 }

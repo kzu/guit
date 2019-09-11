@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
-using System.Threading;
 using Guit.Events;
 using LibGit2Sharp;
 using Merq;
@@ -12,6 +11,7 @@ namespace Guit.Plugin.Changes
 {
     [Shared]
     [Export]
+    [Export(typeof(MainView))]
     public class ChangesView : MainView
     {
         readonly IEventStream eventStream;

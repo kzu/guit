@@ -19,15 +19,10 @@ namespace Guit
 
                 Application.Init();
 
-                // Force a RepositoryNotFoundException up-front.
-                container.GetExport<Repository>();
-
-                var app = container.GetExport<App>();
-
                 AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.Error.WriteLine(args.ExceptionObject?.ToString());
                 TaskScheduler.UnobservedTaskException += (sender, args) => Console.Error.WriteLine(args.Exception?.ToString());
 
-                Application.Run(app);
+                container.GetExport<App>().Run();
             }
             catch (RepositoryNotFoundException e)
             {
