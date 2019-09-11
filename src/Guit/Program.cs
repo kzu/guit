@@ -1,5 +1,6 @@
 using System;
 using System.Composition.Hosting;
+using System.Threading.Tasks;
 using LibGit2Sharp;
 using Terminal.Gui;
 
@@ -7,6 +8,7 @@ namespace Guit
 {
     public static class Program
     {
+        [MTAThread]
         public static void Main()
         {
             try
@@ -20,6 +22,9 @@ namespace Guit
                 container.GetExport<Repository>();
 
                 var app = container.GetExport<App>();
+
+                AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.Error.WriteLine(args.ExceptionObject?.ToString());
+                TaskScheduler.UnobservedTaskException += (sender, args) => Console.Error.WriteLine(args.Exception?.ToString());
 
                 Application.Run(app);
             }

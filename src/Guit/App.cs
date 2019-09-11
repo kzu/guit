@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Guit.Events;
 using Merq;
+using Microsoft.VisualStudio.Threading;
 using Terminal.Gui;
 
 namespace Guit
@@ -13,16 +15,19 @@ namespace Guit
     public class App : Toplevel
     {
         readonly IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> menuCommands;
+        readonly IEventStream eventStream;
 
         [ImportingConstructor]
         public App(
-            CommitView mainWindow, 
-            StatusBar status, 
+            CommitView mainWindow,
+            StatusBar status,
             [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> menuCommands,
             // Just importing the singletons causes them to be instantiated.
-            [ImportMany] IEnumerable<ISingleton> singletons)
+            [ImportMany] IEnumerable<ISingleton> singletons,
+            IEventStream eventStream)
         {
             this.menuCommands = menuCommands;
+            this.eventStream = eventStream;
             var commands = new View
             {
                 Y = Pos.Bottom(mainWindow),
@@ -54,7 +59,13 @@ namespace Guit
         {
             var command = menuCommands.FirstOrDefault(x => keyEvent.Key == x.Metadata.HotKey);
             if (command != null)
-                command.Value.ExecuteAsync(CancellationToken.None);
+            {
+                Task.Run(async () =>
+                {
+                    using (var progress = new ReportStatusProgress(command.Metadata.DisplayName, eventStream))
+                        await command.Value.ExecuteAsync(CancellationToken.None);
+                });
+            }
 
             return base.ProcessHotKey(keyEvent);
         }

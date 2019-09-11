@@ -68,15 +68,19 @@ namespace Guit
 
         void OnStatusUpdated(StatusUpdated value)
         {
-            if (clearMessageToken != null)
-                Application.MainLoop.RemoveTimeout(clearMessageToken);
-
-            status.Text = value.NewStatus;
-            clearMessageToken = Application.MainLoop.AddTimeout(TimeSpan.FromSeconds(5), _ =>
+            if (value.Importance >= StatusImportance.Normal)
             {
-                status.Text = "Ready";
-                return false;
-            });
+                if (clearMessageToken != null)
+                    Application.MainLoop.RemoveTimeout(clearMessageToken);
+
+                Application.MainLoop.Invoke(() => status.Text = value.NewStatus);
+
+                clearMessageToken = Application.MainLoop.AddTimeout(TimeSpan.FromSeconds(5), _ =>
+                {
+                    status.Text = "Ready";
+                    return false;
+                });
+            }
         }
     }
 }

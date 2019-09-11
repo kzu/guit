@@ -32,10 +32,10 @@ namespace Guit
             Order = order;
         }
 
-        public string DisplayName { get; private set; }
+        public string DisplayName { get; }
 
-        public Key HotKey { get; private set; }
+        public Key HotKey { get; }
 
-        public double Order { get; private set; }
+        public double Order { get; }
     }
 }
