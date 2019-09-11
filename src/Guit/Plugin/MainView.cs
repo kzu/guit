@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Terminal.Gui;
 
 namespace Guit.Plugin
@@ -98,8 +99,11 @@ namespace Guit.Plugin
 
             if (command != null)
             {
-                command.Value.ExecuteAsync(CancellationToken.None);
-                return true;
+                Task.Run(async () =>
+                {
+                    using (var progress = new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default))
+                        await command.Value.ExecuteAsync(CancellationToken.None);
+                });
             }
 
             return base.ProcessHotKey(keyEvent);

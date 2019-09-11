@@ -53,7 +53,7 @@ namespace Guit
 
             // Pushing simple strings to the event stream will cause them to update the 
             // status message.
-            eventStream.Of<StatusUpdated>().Subscribe(OnStatusUpdated);
+            eventStream.Of<Status>().Subscribe(OnStatus);
         }
 
         public override void LayoutSubviews()
@@ -66,7 +66,7 @@ namespace Guit
 
         string ClockText => repository.Config.Get<string>("user.name").Value + " (" + repository.Config.Get<string>("user.email").Value + ") | " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString();
 
-        void OnStatusUpdated(StatusUpdated value)
+        void OnStatus(Status value)
         {
             if (value.Importance >= StatusImportance.Normal)
             {

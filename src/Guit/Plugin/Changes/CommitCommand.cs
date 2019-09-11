@@ -18,7 +18,7 @@ namespace Guit.Plugin.Changes
 
         public Task ExecuteAsync(CancellationToken cancellation)
         {
-            eventStream.Push<StatusUpdated>("Committed!");
+            eventStream.Push<Status>("Committed!");
             return Task.CompletedTask;
         }
     }

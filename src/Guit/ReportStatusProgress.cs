@@ -16,12 +16,12 @@ namespace Guit
         {
             Title = title;
 
-            statusSubscription = eventStream.Of<StatusUpdated>().Subscribe(OnStatusUpdated);
+            statusSubscription = eventStream.Of<Status>().Subscribe(OnStatus);
         }
 
         public string Title { get; }
 
-        void OnStatusUpdated(StatusUpdated value)
+        void OnStatus(Status value)
         {
             if (value.Progress > 0 && progressDialog == null)
             {

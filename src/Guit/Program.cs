@@ -22,7 +22,7 @@ namespace Guit
                 AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.Error.WriteLine(args.ExceptionObject?.ToString());
                 TaskScheduler.UnobservedTaskException += (sender, args) => Console.Error.WriteLine(args.Exception?.ToString());
 
-                container.GetExport<App>().Run();
+                Application.Run(container.GetExport<App>());
             }
             catch (RepositoryNotFoundException e)
             {

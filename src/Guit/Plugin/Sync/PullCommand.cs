@@ -18,7 +18,7 @@ namespace Guit.Plugin.Sync
 
         public Task ExecuteAsync(CancellationToken cancellation)
         {
-            eventStream.Push<StatusUpdated>("Pulled!");
+            eventStream.Push<Status>("Pulled!");
             return Task.CompletedTask;
         }
     }

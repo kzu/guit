@@ -7,6 +7,7 @@ using Merq;
 using Terminal.Gui;
 using System.Linq;
 using Git = LibGit2Sharp.Commands;
+using LibGit2Sharp.Handlers;
 
 namespace Guit.Commands
 {
@@ -16,12 +17,14 @@ namespace Guit.Commands
     {
         readonly Repository repository;
         readonly IEventStream eventStream;
+        readonly CredentialsHandler credentials;
 
         [ImportingConstructor]
-        public FetchCommand(Repository repository, IEventStream eventStream)
+        public FetchCommand(Repository repository, IEventStream eventStream, CredentialsHandler credentials)
         {
             this.repository = repository;
             this.eventStream = eventStream;
+            this.credentials = credentials;
         }
 
         public Task ExecuteAsync(CancellationToken cancellation)
@@ -29,7 +32,18 @@ namespace Guit.Commands
             foreach (var remote in repository.Network.Remotes)
             {
                 eventStream.Push<Status>($"Fetching {remote.Name}...");
-                Git.Fetch(repository, remote.Name, remote.FetchRefSpecs.Select(x => x.Specification), new FetchOptions { OnProgress = OnProgress, OnTransferProgress = OnTransferProgress }, "");
+                Git.Fetch(repository, remote.Name, remote.FetchRefSpecs.Select(x => x.Specification), new FetchOptions 
+                {
+                    CredentialsProvider = credentials,
+                    OnProgress = OnProgress, 
+                    OnTransferProgress = OnTransferProgress 
+                }, "");
+
+                for (int i = 0; i < 100; i++)
+                {
+                    Thread.Sleep(100);
+                    eventStream.Push(new Status($"Fetching {i}", i / 100f));
+                }
             }
 
             return Task.CompletedTask;
@@ -37,13 +51,13 @@ namespace Guit.Commands
 
         bool OnProgress(string serverProgressOutput)
         {
-            eventStream.Push<Status>(serverProgressOutput);
+            eventStream.Push(new Status(serverProgressOutput, importance: StatusImportance.High));
             return true;
         }
 
         bool OnTransferProgress(TransferProgress progress)
         {
-            eventStream.Push<Status>(progress.ReceivedObjects / (float)progress.TotalObjects);
+            eventStream.Push(new Status($"Received {progress.ReceivedObjects} of {progress.TotalObjects}", progress.ReceivedObjects / (float)progress.TotalObjects));
             return true;
         }
     }

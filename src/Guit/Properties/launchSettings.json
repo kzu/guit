@@ -2,7 +2,7 @@
   "profiles": {
     "Guit": {
       "commandName": "Project",
-      "workingDirectory": "..\\.."
+      "workingDirectory": "C:\\Code\\Xamarin\\XamarinVS"
     }
   }
 }
