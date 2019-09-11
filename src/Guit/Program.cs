@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Composition.Hosting;
-using Guit.Plugin.Changes;
 using LibGit2Sharp;
 using Terminal.Gui;
 
@@ -18,14 +16,7 @@ namespace Guit
 
                 Application.Init();
 
-                // Force a RepositoryNotFoundException up-front.
-                container.GetExport<Repository>();
-                // Force all singletons to be instantiated.
-                container.GetExports<ISingleton>();
-
-                //var app = container.GetExport<App>();
-                
-                Application.Run(container.GetExport<ChangesView>());
+                container.GetExport<App>().Run();
             }
             catch (RepositoryNotFoundException e)
             {

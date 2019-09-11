@@ -1,8 +1,7 @@
-﻿using System.Composition;
+﻿using System;
+using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
-using Guit.Events;
-using Merq;
 using Terminal.Gui;
 
 namespace Guit.Plugin.Sync
@@ -11,15 +10,11 @@ namespace Guit.Plugin.Sync
     [MenuCommand(nameof(Sync), Key.F2)]
     public class SyncCommand : IMenuCommand
     {
-        readonly SyncView view;
+        readonly Func<CancellationToken, Task> run;
 
         [ImportingConstructor]
-        public SyncCommand(SyncView view) => this.view = view;
+        public SyncCommand(SyncView view, IApp app) => run = cancellation => app.RunAsync(view, cancellation);
 
-        public Task ExecuteAsync(CancellationToken cancellation)
-        {
-            Task.Run(() => Application.Run(view));
-            return Task.CompletedTask;
-        }
+        public Task ExecuteAsync(CancellationToken cancellation) => run(cancellation);
     }
 }

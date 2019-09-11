@@ -1,4 +1,5 @@
-﻿using System.Composition;
+﻿using System;
+using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 using Terminal.Gui;
@@ -9,15 +10,11 @@ namespace Guit.Plugin.Log
     [MenuCommand(nameof(Log), Key.F3)]
     public class LogCommand : IMenuCommand
     {
-        readonly LogView view;
+        readonly Func<CancellationToken, Task> run;
 
         [ImportingConstructor]
-        public LogCommand(LogView view) => this.view = view;
+        public LogCommand(LogView view, IApp app) => run = cancellation => app.RunAsync(view, cancellation);
 
-        public Task ExecuteAsync(CancellationToken cancellation)
-        {
-            Task.Run(() => Application.Run(view));
-            return Task.CompletedTask;
-        }
+        public Task ExecuteAsync(CancellationToken cancellation) => run(cancellation);
     }
 }
