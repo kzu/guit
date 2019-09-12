@@ -32,7 +32,7 @@ namespace Guit.Plugin
             var contentView = Subviews[0];
             contentView.Width = Dim.Fill(1);
             contentView.Height = Dim.Fill(1);
-            
+
             commandsView = new View
             {
                 Height = 1
