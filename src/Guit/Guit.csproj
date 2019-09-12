@@ -9,10 +9,13 @@
 
     <PackageId>dotnet-guit</PackageId>
     <ToolCommandName>guit</ToolCommandName>
+
+    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.0.20" />
+    <PackageReference Include="Microsoft.VisualStudio.Composition" Version="16.3.7" />
     <PackageReference Include="Terminal.Gui" Version="0.25.0" />
     <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.1" />

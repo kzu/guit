@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Composition.Hosting;
+using System.Reflection;
 using System.Threading.Tasks;
 using LibGit2Sharp;
+using Microsoft.VisualStudio.Composition;
 using Terminal.Gui;
 
 namespace Guit
@@ -10,19 +10,28 @@ namespace Guit
     public static class Program
     {
         [MTAThread]
-        public static void Main()
+        public static async Task Main()
         {
             try
             {
-                var configuration = new ContainerConfiguration().WithAssembly(typeof(Program).Assembly);
-                var container = configuration.CreateContainer();
+                // See https://github.com/microsoft/vs-mef/blob/master/doc/hosting.md
+                var discovery = new AttributedPartDiscovery(Resolver.DefaultInstance, true);
+                var catalog = ComposableCatalog.Create(Resolver.DefaultInstance)
+                    // TODO: pull plugins assemblies
+                    .AddParts(await discovery.CreatePartsAsync(Assembly.GetExecutingAssembly()))
+                    .WithCompositionService();
+
+                var config = CompositionConfiguration.Create(catalog);
+                // Represents the container
+                var provider = config.CreateExportProviderFactory().CreateExportProvider();
 
                 Application.Init();
 
                 AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.Error.WriteLine(args.ExceptionObject?.ToString());
                 TaskScheduler.UnobservedTaskException += (sender, args) => Console.Error.WriteLine(args.Exception?.ToString());
 
-                Application.Run(container.GetExport<App>());
+                // Obtain our first exported value
+                Application.Run(provider.GetExportedValue<App>());
             }
             catch (RepositoryNotFoundException e)
             {
