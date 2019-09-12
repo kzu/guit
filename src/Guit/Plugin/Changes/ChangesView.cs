@@ -41,6 +41,11 @@ namespace Guit.Plugin.Changes
             {
                 AllowsMarking = true,
             };
+
+            // Mark modified files by default
+            foreach (var file in files.Where(x => x.Status == Status.Modified))
+                view.Source.SetMark(files.IndexOf(file), true);
+
             view.SelectedChanged += OnSelectedChanged;
 
             Content = view;
@@ -50,6 +55,9 @@ namespace Guit.Plugin.Changes
         {
             eventStream.Push<SelectionChanged>(files[view.SelectedItem].Entry);
         }
+
+        public IEnumerable<StatusEntry> GetMarkedEntries() =>
+            files.Where(x => view.Source.IsMarked(files.IndexOf(x))).Select(x => x.Entry);
 
         class FileStatus
         {
@@ -75,7 +83,7 @@ namespace Guit.Plugin.Changes
 
         enum Status
         {
-            Added, 
+            Added,
             Deleted,
             Modified,
         }
