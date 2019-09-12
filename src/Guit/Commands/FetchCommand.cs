@@ -38,12 +38,6 @@ namespace Guit.Commands
                     OnProgress = OnProgress, 
                     OnTransferProgress = OnTransferProgress 
                 }, "");
-
-                for (int i = 0; i < 100; i++)
-                {
-                    Thread.Sleep(100);
-                    eventStream.Push(new Status($"Fetching {i}", i / 100f));
-                }
             }
 
             return Task.CompletedTask;
