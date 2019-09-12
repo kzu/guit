@@ -1,0 +1,4 @@
+[submodule "gui.cs"]
+	path = gui.cs
+	url = ../../kzu/gui.cs.git
+	branch = dev
