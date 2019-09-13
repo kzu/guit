@@ -27,17 +27,25 @@ namespace Guit
 
                 Application.Init();
 
+                // Force all singletons to be instantiated.
+                provider.GetExportedValues<ISingleton>();
+
                 AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.Error.WriteLine(args.ExceptionObject?.ToString());
                 TaskScheduler.UnobservedTaskException += (sender, args) => Console.Error.WriteLine(args.Exception?.ToString());
 
                 // Obtain our first exported value
                 Application.Run(provider.GetExportedValue<App>());
             }
-            catch (RepositoryNotFoundException e)
+            catch (CompositionFailedException e)
             {
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Error.WriteLine(e.Message);
+
+                if (e.InnerException != null)
+                    Console.Error.WriteLine(e.Message);
+                else
+                    Console.Error.WriteLine(e.ToString());
+
                 Console.ForegroundColor = color;
                 return;
             }

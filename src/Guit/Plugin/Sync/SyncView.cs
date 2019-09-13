@@ -7,7 +7,7 @@ namespace Guit.Plugin.Sync
 {
     [Shared]
     [Export]
-    public class SyncView : MainView
+    public class SyncView : ContentView
     {
         [ImportingConstructor]
         public SyncView()

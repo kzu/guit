@@ -10,11 +10,11 @@ namespace Guit.Plugin.Changes
     [MenuCommand(nameof(Changes), Key.F1)]
     public class ChangesCommand : IMenuCommand
     {
-        readonly Func<CancellationToken, Task> run;
+        readonly Func<Task> run;
 
         [ImportingConstructor]
-        public ChangesCommand(ChangesView view, IApp app) => run = cancellation => app.RunAsync(view, cancellation);
+        public ChangesCommand(ChangesView view, IApp app) => run = () => app.RunAsync(view);
 
-        public Task ExecuteAsync(CancellationToken cancellation) => run(cancellation);
+        public Task ExecuteAsync(CancellationToken cancellation) => run();
     }
 }

@@ -10,11 +10,11 @@ namespace Guit.Plugin.Log
     [MenuCommand(nameof(Log), Key.F3)]
     public class LogCommand : IMenuCommand
     {
-        readonly Func<CancellationToken, Task> run;
+        readonly Func<Task> run;
 
         [ImportingConstructor]
-        public LogCommand(LogView view, IApp app) => run = cancellation => app.RunAsync(view, cancellation);
+        public LogCommand(LogView view, IApp app) => run = () => app.RunAsync(view);
 
-        public Task ExecuteAsync(CancellationToken cancellation) => run(cancellation);
+        public Task ExecuteAsync(CancellationToken cancellation) => run();
     }
 }

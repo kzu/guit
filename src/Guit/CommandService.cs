@@ -16,10 +16,7 @@ namespace Guit
         readonly IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands;
 
         [ImportingConstructor]
-        public CommandService([ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands)
-        {
-            this.commands = commands;
-        }
+        public CommandService([ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands) => this.commands = commands;
 
         IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> LocalCommands => commands.Where(x => !string.IsNullOrEmpty(x.Metadata.Context));
 
@@ -32,17 +29,13 @@ namespace Guit
 
             if (command != null)
             {
-                return Task.Run(async () =>
-                {
-                    using (var progress = new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default))
-                        await command.Value.ExecuteAsync(CancellationToken.None);
-                });
+                return ExecuteAsync(command);
             }
 
             return Task.CompletedTask;
         }
 
-        public View GetCommandsView(MainView view)
+        public View GetCommands(ContentView view)
         {
             var commandsView = new View
             {
@@ -65,8 +58,7 @@ namespace Guit
                 {
                     CanFocus = false,
                     X = Pos.Right(current),
-                    // TODO: improve execution, cancellation, etc.
-                    Clicked = () => command.Value.ExecuteAsync(CancellationToken.None),
+                    Clicked = async () => await ExecuteAsync(command),
                 };
                 globals.Add(current);
                 // Not sure why we need to do this... seems like the containing view 
@@ -84,14 +76,19 @@ namespace Guit
                 {
                     CanFocus = false,
                     X = Pos.Right(current),
-                    // TODO: improve execution, cancellation, etc.
-                    Clicked = () => command.Value.ExecuteAsync(CancellationToken.None),
+                    Clicked = async () => await ExecuteAsync(command),
                 };
                 locals.Add(current);
                 locals.Width += Dim.Width(current);
             }
 
             return commandsView;
+        }
+
+        async Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, CancellationToken cancellation = default)
+        {
+            using (var progress = new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default))
+                await command.Value.ExecuteAsync(cancellation);
         }
     }
 }
