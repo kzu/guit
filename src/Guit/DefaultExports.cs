@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Composition;
 using System.IO;
-using System.Threading;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Microsoft.Alm.Authentication;
-using Microsoft.VisualStudio.Threading;
 
 namespace Guit
 {
@@ -15,12 +13,6 @@ namespace Guit
         [Export(typeof(ISingleton))]
         [Export]
         public Repository Repository { get; } = new Repository(Directory.GetCurrentDirectory());
-
-        [Export]
-        public JoinableTaskFactory TaskFactory { get; } = new JoinableTaskFactory(new JoinableTaskContext(synchronizationContext: SynchronizationContext.Current));
-
-        [Export]
-        public JoinableTaskContext TaskContext => TaskFactory.Context;
 
         [Export(typeof(CredentialsHandler))]
         public CredentialsHandler CredentialsHandler { get; } = new CredentialsHandler(OnHandleCredentials);
