@@ -1,0 +1,7 @@
+<Project>
+
+  <PropertyGroup>
+    <NoWarn>CS1591;CS0162;CS0219;CS0649;CS0067;CS0169;CS0414;CS1573</NoWarn>
+  </PropertyGroup>
+
+</Project>

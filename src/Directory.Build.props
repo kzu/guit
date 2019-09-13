@@ -14,6 +14,9 @@
     <PackageProjectUrl>https://github.com/kzu/guit</PackageProjectUrl>
 
     <PackAsTool>true</PackAsTool>
+
+    <!-- See https://github.com/microsoft/Git-Credential-Manager-for-Windows/issues/864. Authentication won't work on MacOS until it's fixed :( -->
+    <NoWarn>NU1701</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
