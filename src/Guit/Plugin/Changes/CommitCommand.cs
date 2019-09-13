@@ -54,6 +54,8 @@ namespace Guit.Plugin.Changes
                     var signatrure = repository.Config.BuildSignature(DateTimeOffset.Now);
                     repository.Commit(dialog.Message, signatrure, signatrure);
 
+                    changes.Refresh();
+
                     eventStream.Push<Status>("Commit OK!");
                 }
             }
