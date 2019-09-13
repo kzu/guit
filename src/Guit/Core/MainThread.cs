@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Composition;
 using System.Threading;
+using System.Threading.Tasks;
 using Terminal.Gui;
 
 namespace Guit
@@ -22,6 +23,29 @@ namespace Guit
                 action();
             else
                 Application.MainLoop.Invoke(action);
+        }
+
+        public T Invoke<T>(Func<T> function)
+        {
+            if (Thread.CurrentThread.ManagedThreadId == mainThreadId)
+            {
+                return function();
+            }
+            else
+            {
+                // Run and wait for a result.
+                var ev = new ManualResetEventSlim();
+                T result = default;
+
+                Application.MainLoop.Invoke(() =>
+                {
+                    result = function();
+                    ev.Set();
+                });
+
+                ev.Wait();
+                return result;
+            }
         }
     }
 }

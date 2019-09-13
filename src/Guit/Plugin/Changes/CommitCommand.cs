@@ -6,7 +6,6 @@ using System.Linq;
 using Guit.Events;
 using LibGit2Sharp;
 using Merq;
-using Microsoft.VisualStudio.Threading;
 using Terminal.Gui;
 using Git = LibGit2Sharp.Commands;
 
@@ -17,15 +16,15 @@ namespace Guit.Plugin.Changes
     public class CommitCommand : IMenuCommand
     {
         readonly IEventStream eventStream;
-        readonly JoinableTaskFactory jtf;
+        readonly MainThread mainThread;
         readonly Repository repository;
         readonly ChangesView changes;
 
         [ImportingConstructor]
-        public CommitCommand(IEventStream eventStream, JoinableTaskFactory jtf, Repository repository, ChangesView changes)
+        public CommitCommand(IEventStream eventStream, MainThread mainThread, Repository repository, ChangesView changes)
         {
             this.eventStream = eventStream;
-            this.jtf = jtf;
+            this.mainThread = mainThread;
             this.repository = repository;
             this.changes = changes;
         }
@@ -35,13 +34,7 @@ namespace Guit.Plugin.Changes
             if (changes.GetMarkedEntries().Any())
             {
                 var dialog = new CommitDialog();
-
-                var dialogResult = jtf.Run(async () =>
-                {
-                    await jtf.SwitchToMainThreadAsync();
-
-                    return dialog.ShowDialog();
-                });
+                var dialogResult = mainThread.Invoke(() => dialog.ShowDialog());
 
                 if (dialogResult == true)
                 {
