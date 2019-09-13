@@ -10,6 +10,11 @@ namespace Guit
     public interface IApp
     {
         /// <summary>
+        /// Gets the current view being shown
+        /// </summary>
+        ContentView Current { get; }
+
+        /// <summary>
         /// Runs the given main view as the top-level view in the app.
         /// </summary>
         Task RunAsync(ContentView view);

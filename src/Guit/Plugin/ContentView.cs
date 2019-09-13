@@ -22,6 +22,8 @@ namespace Guit.Plugin
 
         public virtual string Context => null;
 
+        public virtual void Refresh() { }
+
         protected View Content 
         {
             get => content;
