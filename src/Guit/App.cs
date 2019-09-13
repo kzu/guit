@@ -34,6 +34,8 @@ namespace Guit
             this.commandService = commandService;
         }
 
+        public ContentView Current => main as ContentView;
+
         public override bool ProcessHotKey(KeyEvent keyEvent)
         {
             commandService.RunAsync(keyEvent.KeyValue, (main as ContentView)?.Context);
@@ -52,8 +54,13 @@ namespace Guit
             main = view;
 
             // Check if the view is a MainView and if the CommandsView was not already set
-            if (main is ContentView mainView && mainView != null && mainView.Commands == null)
-                mainView.Commands = commandService.GetCommands(mainView);
+            if (main is ContentView mainView && mainView != null)
+            {
+                if (mainView.Commands == null)
+                    mainView.Commands = commandService.GetCommands(mainView);
+
+                mainView.Refresh();
+            }
 
             mainThread.Invoke(() => Application.Run(view));
 
