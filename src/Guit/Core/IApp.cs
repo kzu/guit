@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Guit.Plugin;
 
 namespace Guit
@@ -13,6 +12,6 @@ namespace Guit
         /// <summary>
         /// Runs the given main view as the top-level view in the app.
         /// </summary>
-        Task RunAsync(MainView view, CancellationToken cancellation = default);
+        Task RunAsync(ContentView view);
     }
 }

@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Composition;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
 namespace Guit.Plugin
 {
-    public abstract class MainView : Window
+    public abstract class ContentView : Window
     {
         View content;
-        View commandsView;
+        View commands;
 
-        public MainView(string title)
+        public ContentView(string title)
             : base(title)
         {
             Width = Dim.Fill();
@@ -21,9 +15,9 @@ namespace Guit.Plugin
             
             // Seems like a bug in gui.cs since both are set with a margin of 2, 
             // which is 1 unnecessary extra value since X,Y are already 1.
-            var contentView = Subviews[0];
-            contentView.Width = Dim.Fill(1);
-            contentView.Height = Dim.Fill(1);
+            var content = Subviews[0];
+            content.Width = Dim.Fill(1);
+            content.Height = Dim.Fill(1);
         }
 
         public virtual string Context => null;
@@ -34,21 +28,20 @@ namespace Guit.Plugin
             set
             {
                 content = value;
-
                 Add(content);
             }
         }
 
-        public View CommandsView
+        internal View Commands
         {
-            get => commandsView;
+            get => commands;
             set
             {
-                commandsView = value;
+                commands = value;
 
-                commandsView.Y = Pos.Bottom(content);
-                content.Height = Height - commandsView.Height;
-                Add(commandsView);
+                commands.Y = Pos.Bottom(content);
+                content.Height = Height - commands.Height;
+                Add(commands);
 
                 LayoutSubviews();
             }

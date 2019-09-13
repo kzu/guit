@@ -7,7 +7,7 @@ namespace Guit.Plugin.Log
 {
     [Shared]
     [Export]
-    public class LogView : MainView
+    public class LogView : ContentView
     {
         [ImportingConstructor]
         public LogView()

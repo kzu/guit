@@ -11,8 +11,8 @@ namespace Guit.Plugin.Changes
 {
     [Shared]
     [Export]
-    [Export(typeof(MainView))]
-    public class ChangesView : MainView
+    [Export(typeof(ContentView))]
+    public class ChangesView : ContentView
     {
         readonly IEventStream eventStream;
 

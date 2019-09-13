@@ -10,11 +10,11 @@ namespace Guit.Plugin.Sync
     [MenuCommand(nameof(Sync), Key.F2)]
     public class SyncCommand : IMenuCommand
     {
-        readonly Func<CancellationToken, Task> run;
+        readonly Func<Task> run;
 
         [ImportingConstructor]
-        public SyncCommand(SyncView view, IApp app) => run = cancellation => app.RunAsync(view, cancellation);
+        public SyncCommand(SyncView view, IApp app) => run = () => app.RunAsync(view);
 
-        public Task ExecuteAsync(CancellationToken cancellation) => run(cancellation);
+        public Task ExecuteAsync(CancellationToken cancellation) => run();
     }
 }
