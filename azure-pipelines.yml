@@ -12,6 +12,7 @@ stages:
       vmImage: 'windows-2019'
     steps:
     - checkout: self
+      submodules: recursive
       clean: true
 
     - task: MSBuild@1
