@@ -28,17 +28,10 @@ namespace Guit.Plugin.Changes
             this.eventStream = eventStream;
 
             var status = repository.RetrieveStatus(new StatusOptions());
-            files = status
-                .Added.Concat(status.Untracked).Select(x => new FileStatus { Entry = x, Status = Status.Added })
-                .Concat(status.Removed.Concat(status.Missing).Select(x => new FileStatus { Entry = x, Status = Status.Deleted }))
-                .Concat(status.Modified.Select(x => new FileStatus { Entry = x, Status = Status.Modified }))
-                .OrderBy(x => x.Entry.FilePath)
-                .ToList();
 
             view = new ListView(files)
             {
-                AllowsMarking = true,
-                CanFocus = true
+                AllowsMarking = true
             };
             view.SelectedChanged += OnSelectedChanged;
 
