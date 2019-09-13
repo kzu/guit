@@ -10,15 +10,15 @@ namespace Guit.Plugin.Log
     public class LogView : MainView
     {
         [ImportingConstructor]
-        public LogView(
-            [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> globalCommands,
-            [ImportMany(nameof(Log))] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> localCommands)
-            : base("Log", globalCommands, localCommands)
+        public LogView()
+            : base("Log")
         {
             Content = new View
             {
                 new Label("// TODO: Log")
             };
         }
+
+        public override string Context => nameof(Log);
     }
 }

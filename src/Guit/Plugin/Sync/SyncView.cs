@@ -10,15 +10,15 @@ namespace Guit.Plugin.Sync
     public class SyncView : MainView
     {
         [ImportingConstructor]
-        public SyncView(
-            [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> globalCommands,
-            [ImportMany(nameof(Sync))] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> localCommands)
-            : base("Sync", globalCommands, localCommands)
+        public SyncView()
+            : base("Sync")
         {
             Content = new View
             {
                 new Label("// TODO: Sync")
             };
         }
+
+        public override string Context => nameof(Sync);
     }
 }
