@@ -14,15 +14,17 @@ namespace Guit.Plugin.Changes
     [Export(typeof(ContentView))]
     public class ChangesView : ContentView
     {
+        readonly Repository repository;
         readonly IEventStream eventStream;
 
-        readonly List<FileStatus> files;
-        readonly ListView view;
+        List<FileStatus> files = new List<FileStatus>();
+        ListView view;
 
         [ImportingConstructor]
         public ChangesView(Repository repository, IEventStream eventStream)
             : base("Changes")
         {
+            this.repository = repository;
             this.eventStream = eventStream;
 
             var status = repository.RetrieveStatus(new StatusOptions());
@@ -36,15 +38,28 @@ namespace Guit.Plugin.Changes
             view = new ListView(files)
             {
                 AllowsMarking = true,
+                CanFocus = true
             };
+            view.SelectedChanged += OnSelectedChanged;
+
+            Content = view;
+        }
+
+        public override void Refresh()
+        {
+            var status = repository.RetrieveStatus(new StatusOptions());
+            files = status
+                .Added.Concat(status.Untracked).Select(x => new FileStatus { Entry = x, Status = Status.Added })
+                .Concat(status.Removed.Concat(status.Missing).Select(x => new FileStatus { Entry = x, Status = Status.Deleted }))
+                .Concat(status.Modified.Select(x => new FileStatus { Entry = x, Status = Status.Modified }))
+                .OrderBy(x => x.Entry.FilePath)
+                .ToList();
+
+            view.SetSource(files);
 
             // Mark modified files by default
             foreach (var file in files.Where(x => x.Status == Status.Modified))
                 view.Source.SetMark(files.IndexOf(file), true);
-
-            view.SelectedChanged += OnSelectedChanged;
-
-            Content = view;
         }
 
         public override string Context => nameof(Changes);
