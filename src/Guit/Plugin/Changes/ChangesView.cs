@@ -20,12 +20,8 @@ namespace Guit.Plugin.Changes
         readonly ListView view;
 
         [ImportingConstructor]
-        public ChangesView(
-            Repository repository,
-            IEventStream eventStream,
-            [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> globalCommands,
-            [ImportMany(nameof(Changes))] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> localCommands)
-            : base("Changes", globalCommands, localCommands)
+        public ChangesView(Repository repository, IEventStream eventStream)
+            : base("Changes")
         {
             this.eventStream = eventStream;
 
@@ -50,6 +46,8 @@ namespace Guit.Plugin.Changes
 
             Content = view;
         }
+
+        public override string Context => nameof(Changes);
 
         void OnSelectedChanged()
         {

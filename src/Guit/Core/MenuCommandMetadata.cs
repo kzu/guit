@@ -7,5 +7,6 @@ namespace Guit
         public string DisplayName { get; set; }
         public Key HotKey { get; set; }
         public double Order { get; set; }
+        public string Context { get; set; }
     }
 }
