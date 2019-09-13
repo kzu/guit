@@ -2,6 +2,7 @@
 using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 using Guit.Events;
 using LibGit2Sharp;
 using Merq;
@@ -31,27 +32,30 @@ namespace Guit.Plugin.Changes
 
         public Task ExecuteAsync(CancellationToken cancellation)
         {
-            var dialog = new CommitDialog();
-
-            var dialogResult = jtf.Run(async () =>
+            if (changes.GetMarkedEntries().Any())
             {
-                await jtf.SwitchToMainThreadAsync();
+                var dialog = new CommitDialog();
 
-                return dialog.ShowDialog();
-            });
+                var dialogResult = jtf.Run(async () =>
+                {
+                    await jtf.SwitchToMainThreadAsync();
 
-            if (dialogResult == true)
-            {
-                if (!string.IsNullOrEmpty(dialog.NewBranchName))
-                    Git.Checkout(repository, repository.CreateBranch(dialog.NewBranchName));
+                    return dialog.ShowDialog();
+                });
 
-                foreach (var entry in changes.GetMarkedEntries())
-                    Git.Stage(repository, entry.FilePath);
+                if (dialogResult == true)
+                {
+                    if (!string.IsNullOrEmpty(dialog.NewBranchName))
+                        Git.Checkout(repository, repository.CreateBranch(dialog.NewBranchName));
 
-                var signatrure = repository.Config.BuildSignature(DateTimeOffset.Now);
-                repository.Commit(dialog.Message, signatrure, signatrure);
+                    foreach (var entry in changes.GetMarkedEntries())
+                        Git.Stage(repository, entry.FilePath);
 
-                eventStream.Push<Status>("Commit OK!");
+                    var signatrure = repository.Config.BuildSignature(DateTimeOffset.Now);
+                    repository.Commit(dialog.Message, signatrure, signatrure);
+
+                    eventStream.Push<Status>("Commit OK!");
+                }
             }
 
             return Task.CompletedTask;
