@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using Terminal.Gui;
 
@@ -89,6 +90,42 @@ namespace Guit
             {
                 initialFocusSet = true;
             }
+        }
+
+        Dictionary<string, View> bindings = new Dictionary<string, View>();
+
+        protected T Bind<T>(T view, string propertyName) where T : View
+        {
+            RegisterBinding(view, propertyName);
+            RunBinding(view, propertyName);
+
+            return view;
+        }
+
+        void RegisterBinding(View view, string propertyName)
+        {
+            bindings.Add(propertyName, view);
+
+            if (view is TextField textField && textField != null)
+                textField.Changed += (sender, e) => GetType().GetProperty(propertyName).SetValue(this, textField.Text?.ToString());
+            else if (view is CheckBox checkBox && checkBox != null)
+                checkBox.Toggled += (sender, e) => GetType().GetProperty(propertyName).SetValue(this, checkBox.Checked);
+        }
+
+        void RunBinding(View view, string propertyName)
+        {
+            if (view is TextField textField && textField != null)
+                textField.Text = (string)GetType().GetProperty(propertyName).GetValue(this) ?? string.Empty;
+            else if (view is CheckBox checkBox && checkBox != null)
+                checkBox.Checked = (bool)GetType().GetProperty(propertyName).GetValue(this);
+        }
+
+        public override void WillPresent()
+        {
+            base.WillPresent();
+
+            foreach (var binding in bindings)
+                RunBinding(binding.Value, binding.Key);
         }
     }
 }
