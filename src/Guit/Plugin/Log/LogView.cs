@@ -13,7 +13,7 @@ namespace Guit.Plugin.Log
     {
         readonly Repository repository;
 
-        List<CommitInfo> commits = new List<CommitInfo>();
+        List<CommitEntry> commits = new List<CommitEntry>();
         readonly ListView view;
 
         [ImportingConstructor]
@@ -30,40 +30,39 @@ namespace Guit.Plugin.Log
             Content = view;
         }
 
+        public override string Context => nameof(Log);
+
+        public Commit SelectedCommit =>
+            view.SelectedItem >= 0 && view.SelectedItem < commits.Count ?
+                commits[view.SelectedItem].Commit : null;
+
         public override void Refresh()
         {
             base.Refresh();
 
             commits = repository.Commits
                 .QueryBy(new CommitFilter())
-                .Select(x =>
-                    new CommitInfo
-                    {
-                        Message = x.MessageShort,
-                        Author = x.Author.Name,
-                        When = x.Committer.When
-                    })
+                .Select(x => new CommitEntry(x))
                 .Take(50)
                 .ToList();
 
             view.SetSource(commits);
         }
 
-        public override string Context => nameof(Log);
-
-        class CommitInfo
+        class CommitEntry
         {
-            public string Message { get; set; }
+            public CommitEntry(Commit commit)
+            {
+                Commit = commit;
+            }
 
-            public string Author { get; set; }
-
-            public DateTimeOffset When { get; set; }
+            public Commit Commit { get; }
 
             public override string ToString()
             {
-                return GetNormalizedString(Message, 70) +
-                    GetNormalizedString(Author, 25) +
-                    When;
+                return GetNormalizedString(Commit.MessageShort, 70) +
+                    GetNormalizedString(Commit.Author.Name, 25) +
+                    Commit.Committer.When;
             }
 
             string GetNormalizedString(string value, int length)
