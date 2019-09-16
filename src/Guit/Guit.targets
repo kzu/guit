@@ -1,8 +1,8 @@
 <Project>
 
   <PropertyGroup>
-    <GitBranch Condition="'$(SYSTEM_PULLREQUEST_TARGETBRANCH)' != ''">$(SYSTEM_PULLREQUEST_TARGETBRANCH)</GitBranch>
-    <GitBranch Condition="'$(SYSTEM_PULLREQUEST_TARGETBRANCH)' == '' and '$(BUILD_SOURCEBRANCHNAME)' != ''">$(BUILD_SOURCEBRANCHNAME)</GitBranch>
+    <GitBranch Condition="'$(SYSTEM_PULLREQUEST_SOURCEBRANCH)' != ''">$(SYSTEM_PULLREQUEST_SOURCEBRANCH.Replace('refs/heads/', ''))</GitBranch>
+    <GitBranch Condition="'$(SYSTEM_PULLREQUEST_SOURCEBRANCH)' == '' and '$(BUILD_SOURCEBRANCH)' != ''">$(BUILD_SOURCEBRANCH.Replace('refs/heads/', ''))</GitBranch>
   </PropertyGroup>
 
   <Target Name="Version" DependsOnTargets="SetVersions">
@@ -38,7 +38,6 @@ AssemblyVersion=$(AssemblyVersion)" />
     <PropertyGroup>
       <VersionMetadataLabel>@(VersionMetadata -> '%(Identity)', '-')</VersionMetadataLabel>
       <VersionMetadataPlusLabel Condition="'$(VersionMetadataLabel)' != ''">+$(VersionMetadataLabel)</VersionMetadataPlusLabel>
-      <GitSemVerDashLabel Condition="'$(GitSemVerDashLabel)' != '' and '$(GitCommits)' != '0'">$(GitSemVerDashLabel).$(GitCommits)</GitSemVerDashLabel>
 
       <BuildVersion>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(GitSemVerDashLabel)$(VersionMetadataPlusLabel)</BuildVersion>
       <PackageVersion>$(BuildVersion)</PackageVersion>
