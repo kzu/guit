@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
 namespace Guit
 {
@@ -13,6 +10,14 @@ namespace Guit
                 views[i].Y = Pos.Bottom(views[i - 1]);
 
             Add(views);
+        }
+
+        public override void Add(View view)
+        {
+            if (Subviews.Count > 0)
+                view.Y = Pos.Bottom(Subviews[Subviews.Count - 1]);
+
+            base.Add(view);
         }
     }
 }
