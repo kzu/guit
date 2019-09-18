@@ -7,17 +7,10 @@ namespace Guit
 {
     class SingleTextInputDialog : DialogBox
     {
-        TextField valueText;
-        string text;
-        DialogBox parentDialog;
-
-        public SingleTextInputDialog(string title, string text, DialogBox parentDialog = null)
-            : base(title, useDefaultButtons: true, initializeComponents: false)
+        public SingleTextInputDialog(string title, string message)
+            : base(title, useDefaultButtons: true)
         {
-            this.text = text;
-            this.parentDialog = parentDialog;
-
-            InitializeComponents();
+            Message = message;
         }
 
         protected override void InitializeComponents()
@@ -27,22 +20,22 @@ namespace Guit
             Width = 60;
             Height = 10;
 
-            var label = new Label(text)
-            {
-                Y = 1,
-                Width = Dim.Fill(2)
-            };
+            var messageLabel = Bind(
+                new Label(string.Empty)
+                {
+                    Y = 1,
+                    Width = Dim.Fill(2)
+                }, nameof(Message));
 
-            valueText = new TextField(string.Empty)
-            {
-                Y = Pos.Bottom(label)
-            };
+            var textField = Bind(new TextField(string.Empty), nameof(Text));
 
-            InitialFocusedView = valueText;
+            InitialFocusedView = textField;
 
-            Add(label, valueText);
+            Add(new StackPanel(messageLabel, textField));
         }
 
-        public string Text => valueText.Text.ToString();
+        public string Message { get; set; }
+
+        public string Text { get; set; }
     }
 }

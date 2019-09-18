@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using Terminal.Gui;
 
 namespace Guit
@@ -11,13 +9,12 @@ namespace Guit
         bool initialFocusSet;
         readonly bool useDefaultButtons;
 
-        public DialogBox(string title, bool useDefaultButtons = false, bool initializeComponents = true)
+        public DialogBox(string title, bool useDefaultButtons = false)
             : base(title, 0, 0)
         {
             this.useDefaultButtons = useDefaultButtons;
 
-            if (initializeComponents)
-                InitializeComponents();
+            InitializeComponents();
         }
 
         protected virtual void InitializeComponents()
@@ -92,32 +89,33 @@ namespace Guit
             }
         }
 
-        Dictionary<string, View> bindings = new Dictionary<string, View>();
+        readonly List<Binding> bindings = new List<Binding>();
 
-        protected T Bind<T>(T view, string propertyName) where T : View
+        public T Bind<T>(
+            T control,
+            string propertyName,
+            Func<object, object> convertTo = null,
+            Func<object, object> convertFrom = null) where T : View
         {
-            RegisterBinding(view, propertyName);
-            RunBinding(view, propertyName);
+            var binding = new Binding(control, this, propertyName, convertTo, convertFrom);
 
-            return view;
+            binding.Register();
+            binding.Run();
+
+            bindings.Add(binding);
+
+            return control;
         }
 
-        void RegisterBinding(View view, string propertyName)
+        public T Add<T>(
+            T control,
+            string propertyNameBinding,
+            Func<object, object> convertTo = null,
+            Func<object, object> convertFrom = null) where T : View
         {
-            bindings.Add(propertyName, view);
+            Add(control);
 
-            if (view is TextField textField && textField != null)
-                textField.Changed += (sender, e) => GetType().GetProperty(propertyName).SetValue(this, textField.Text?.ToString());
-            else if (view is CheckBox checkBox && checkBox != null)
-                checkBox.Toggled += (sender, e) => GetType().GetProperty(propertyName).SetValue(this, checkBox.Checked);
-        }
-
-        void RunBinding(View view, string propertyName)
-        {
-            if (view is TextField textField && textField != null)
-                textField.Text = (string)GetType().GetProperty(propertyName).GetValue(this) ?? string.Empty;
-            else if (view is CheckBox checkBox && checkBox != null)
-                checkBox.Checked = (bool)GetType().GetProperty(propertyName).GetValue(this);
+            return Bind(control, propertyNameBinding, convertTo, convertFrom);
         }
 
         public override void WillPresent()
@@ -125,7 +123,7 @@ namespace Guit
             base.WillPresent();
 
             foreach (var binding in bindings)
-                RunBinding(binding.Value, binding.Key);
+                binding.Run();
         }
     }
 }

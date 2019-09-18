@@ -9,8 +9,6 @@ namespace Guit
 {
     class CommitDialog : DialogBox
     {
-        TextView messageText;
-
         public CommitDialog() : base("Commit", useDefaultButtons: true)
         { }
 
@@ -20,28 +18,25 @@ namespace Guit
 
             Height = Dim.Fill(5);
 
-            messageText = new TextView()
-            {
-                Text = string.Empty,
-                X = 1,
-                Y = 1,
-                Width = Dim.Fill(1),
-                Height = Dim.Height(this) - 7
-            };
-
-            InitialFocusedView = messageText;
+            InitialFocusedView = Add(
+                    new TextView()
+                    {
+                        X = 1,
+                        Y = 1,
+                        Width = Dim.Fill(1),
+                        Height = Dim.Height(this) - 7
+                    }, nameof(Message));
 
             AddButton("Commit To", OnNewBranchClicked);
-            Add(messageText);
         }
 
-        public string Message => messageText.Text.ToString();
+        public string Message { get; set; }
 
         public string NewBranchName { get; private set; }
 
         void OnNewBranchClicked()
         {
-            var dialog = new SingleTextInputDialog("New Branch Name", "Commit to:", this);
+            var dialog = new SingleTextInputDialog("New Branch Name", "Commit to:");
 
             if (dialog.ShowDialog() == true)
             {

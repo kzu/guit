@@ -30,12 +30,9 @@ namespace Guit
                 Width = Dim.Fill()
             };
 
-            progressBar = new ProgressBar()
-            {
-                Y = Pos.Bottom(listview)
-            };
+            progressBar = new ProgressBar();
 
-            Add(listview, progressBar);
+            Add(new StackPanel(listview, progressBar));
         }
 
         public override bool ProcessKey(KeyEvent kb)
