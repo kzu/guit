@@ -6,17 +6,17 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <GitBranch Condition="'$(SYSTEM_PULLREQUEST_SOURCEBRANCH)' != ''">$(SYSTEM_PULLREQUEST_SOURCEBRANCH.Replace('refs/heads/', ''))</GitBranch>
+    <GitBranch Condition="'$(SYSTEM_PULLREQUEST_SOURCEBRANCH)' == '' and '$(BUILD_SOURCEBRANCH)' != ''">$(BUILD_SOURCEBRANCH.Replace('refs/heads/', ''))</GitBranch>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <Authors>kzu</Authors>
     <Description>A dotnet global tool providing a text-based UI for Git</Description>
 
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kzu/guit</PackageProjectUrl>
-
-    <PackAsTool>true</PackAsTool>
-
-    <!-- See https://github.com/microsoft/Git-Credential-Manager-for-Windows/issues/864. Authentication won't work on MacOS until it's fixed :( -->
-    <NoWarn>NU1701</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
