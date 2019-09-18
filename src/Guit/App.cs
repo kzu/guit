@@ -50,19 +50,22 @@ namespace Guit
 
         Task RunAsync(Window view)
         {
-            main.Running = false;
             main = view;
-
-            // Check if the view is a MainView and if the CommandsView was not already set
-            if (main is ContentView mainView && mainView != null)
+            mainThread.Invoke(() =>
             {
-                if (mainView.Commands == null)
-                    mainView.Commands = commandService.GetCommands(mainView);
+                main.Running = false;
 
-                mainView.Refresh();
-            }
+                // Check if the view is a MainView and if the CommandsView was not already set
+                if (main is ContentView mainView && mainView != null)
+                {
+                    if (mainView.Commands == null)
+                        mainView.Commands = commandService.GetCommands(mainView);
 
-            mainThread.Invoke(() => Application.Run(view));
+                    mainView.Refresh();
+                }
+
+                Application.Run(main);
+            });
 
             return Task.CompletedTask;
         }
