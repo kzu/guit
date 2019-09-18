@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
 namespace Guit
 {
-    class SingleTextInputDialog : DialogBox
+    /// <summary>
+    /// Simple input box dialog for entering a single value.
+    /// </summary>
+    class InputBox : DialogBox
     {
-        public SingleTextInputDialog(string title, string message)
+        public InputBox(string title, string message)
             : base(title)
         {
             Message = message;

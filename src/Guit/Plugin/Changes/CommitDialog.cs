@@ -31,7 +31,7 @@ namespace Guit.Plugin.Changes
 
         void OnNewBranchClicked()
         {
-            var dialog = new SingleTextInputDialog("New Branch Name", "Commit to:");
+            var dialog = new InputBox("New Branch Name", "Commit to:");
 
             if (dialog.ShowDialog() == true)
             {
