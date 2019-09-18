@@ -29,7 +29,7 @@ namespace Guit
 
             if (command != null)
             {
-                return ExecuteAsync(command);
+                return Task.Run(() => ExecuteAsync(command));
             }
 
             return Task.CompletedTask;
