@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
 using LibGit2Sharp;
 using Terminal.Gui;
 
-namespace Guit
+namespace Guit.Plugin.Log
 {
     class ResetDialog : DialogBox
     {
