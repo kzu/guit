@@ -1,12 +1,11 @@
-﻿using System;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
-namespace Guit
+namespace Guit.Plugin.Sync
 {
     class PullDialog : DialogBox
     {
         public PullDialog(string remote, string branchName, bool isFastForward)
-            : base("Pull", useDefaultButtons: true)
+            : base("Pull")
         {
             Remote = remote;
             Branch = branchName;
@@ -19,10 +18,8 @@ namespace Guit
 
         public bool IsFastForward { get; set; }
 
-        protected override void InitializeComponents()
+        protected override void EndInit()
         {
-            base.InitializeComponents();
-
             Width = 60;
             Height = 15;
 
@@ -39,6 +36,8 @@ namespace Guit
                 X = 1,
                 Width = Dim.Fill(2)
             });
+
+            base.EndInit();
         }
     }
 }

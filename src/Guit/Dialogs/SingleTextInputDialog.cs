@@ -8,15 +8,13 @@ namespace Guit
     class SingleTextInputDialog : DialogBox
     {
         public SingleTextInputDialog(string title, string message)
-            : base(title, useDefaultButtons: true)
+            : base(title)
         {
             Message = message;
         }
 
-        protected override void InitializeComponents()
+        protected override void EndInit()
         {
-            base.InitializeComponents();
-
             Width = 60;
             Height = 10;
 
@@ -32,6 +30,8 @@ namespace Guit
             InitialFocusedView = textField;
 
             Add(new StackPanel(messageLabel, textField));
+
+            base.EndInit();
         }
 
         public string Message { get; set; }
