@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Guit.Plugin;
-using LibGit2Sharp;
 using Terminal.Gui;
 
 namespace Guit
@@ -15,13 +13,13 @@ namespace Guit
     class App : Toplevel, IApp
     {
         Window main;
-        readonly MainThread mainThread;
+        readonly ThreadContext threadContext;
         readonly CommandService commandService;
 
         [ImportingConstructor]
         public App(
             [ImportMany] IEnumerable<ContentView> views,
-            MainThread mainThread,
+            ThreadContext threadContext,
             CommandService commandService)
         {
             // Show an error window if we did not get at least one MainView.
@@ -30,7 +28,7 @@ namespace Guit
                 ColorScheme = Colors.Error,
             };
 
-            this.mainThread = mainThread;
+            this.threadContext = threadContext;
             this.commandService = commandService;
         }
 
@@ -51,7 +49,7 @@ namespace Guit
         Task RunAsync(Window view)
         {
             main = view;
-            mainThread.Invoke(() =>
+            threadContext.MainThread.Invoke(() =>
             {
                 main.Running = false;
 

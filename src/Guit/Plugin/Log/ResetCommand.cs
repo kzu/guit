@@ -11,14 +11,14 @@ namespace Guit.Plugin.Log
     [MenuCommand("Reset", Key.F6, nameof(Log))]
     public class ResetCommand : IMenuCommand
     {
-        readonly MainThread mainThread;
+        readonly ThreadContext threadContext;
         readonly Repository repository;
         readonly LogView log;
 
         [ImportingConstructor]
-        public ResetCommand(MainThread mainThread, Repository repository, LogView log)
+        public ResetCommand(ThreadContext threadContext, Repository repository, LogView log)
         {
-            this.mainThread = mainThread;
+            this.threadContext = threadContext;
             this.repository = repository;
             this.log = log;
         }
@@ -31,7 +31,7 @@ namespace Guit.Plugin.Log
             {
                 var dialog = new ResetDialog();
 
-                var result = mainThread.Invoke(() => dialog.ShowDialog());
+                var result = threadContext.MainThread.Invoke(() => dialog.ShowDialog());
 
                 if (result == true)
                 {
