@@ -6,16 +6,12 @@ namespace Guit.Plugin.Log
 {
     class ResetDialog : DialogBox
     {
-        public ResetDialog()
-            : base("Reset", useDefaultButtons: true)
-        { }
+        public ResetDialog() : base("Reset") { }
 
         public ResetMode ResetMode { get; set; } = ResetMode.Soft;
 
-        protected override void InitializeComponents()
+        protected override void EndInit()
         {
-            base.InitializeComponents();
-
             Width = 80;
             Height = 15;
 
@@ -24,6 +20,8 @@ namespace Guit.Plugin.Log
                 nameof(ResetMode),
                 resetMode => (int)resetMode - 1,
                 selectedIndex => (ResetMode)selectedIndex + 1);
+
+            base.EndInit();
         }
     }
 }

@@ -1,32 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Terminal.Gui;
 
 namespace Guit
 {
-    class DialogBox : Dialog
+    /// <summary>
+    /// Simple <see cref="Dialog"/> window containing default <c>Accept</c> and 
+    /// <c>Cancel</c> buttons that can be customized.
+    /// </summary>
+    public class DialogBox : Dialog, ISupportInitializeNotification
     {
         bool initialFocusSet;
-        readonly bool useDefaultButtons;
 
-        public DialogBox(string title, bool useDefaultButtons = false)
-            : base(title, 0, 0)
-        {
-            this.useDefaultButtons = useDefaultButtons;
+        public DialogBox(string title) : base(title, 0, 0) { }
 
-            InitializeComponents();
-        }
+        /// <summary>
+        /// Event raised when the dialog is initialized, which only happens once 
+        /// before displaying it.
+        /// </summary>
+        public event EventHandler Initialized;
 
-        protected virtual void InitializeComponents()
+        /// <summary>
+        /// Whether the dialog has been initialized.
+        /// </summary>
+        public bool IsInitialized { get; private set; }
+
+        void ISupportInitialize.BeginInit() => BeginInit();
+
+        void ISupportInitialize.EndInit() => EndInit();
+
+        /// <summary>
+        /// Begins the initialization of the dialog prior to display for the first time.
+        /// </summary>
+        protected virtual void BeginInit()
         {
             Height = 15;
             Width = Dim.Fill(20);
 
-            if (useDefaultButtons)
+            if (ShowDefaultButtons)
             {
                 AddButton(AcceptButtonText, OnAcceptButtonClicked, true);
                 AddButton(CancelButtonText, OnCancelButtonClicked);
             }
+        }
+
+        /// <summary>
+        /// Finishes the initialization of the dialog prior to display for the first time.
+        /// Sets the <see cref="IsInitialized"/> and raises <see cref="Initialized"/>.
+        /// </summary>
+        protected virtual void EndInit()
+        {
+            Initialized?.Invoke(this, EventArgs.Empty);
+            IsInitialized = true;
         }
 
         protected virtual void AddButton(string text, Action clickedAction, bool isDefault = false)
@@ -36,6 +62,11 @@ namespace Guit
 
             AddButton(button);
         }
+
+        /// <summary>
+        /// Whether to add the default buttons.
+        /// </summary>
+        protected bool ShowDefaultButtons { get; set; } = true;
 
         protected virtual string AcceptButtonText => "OK";
 
@@ -58,7 +89,7 @@ namespace Guit
 
         public override bool ProcessKey(KeyEvent kb)
         {
-            if (!useDefaultButtons && kb.KeyValue == (int)Key.Enter)
+            if (!ShowDefaultButtons && kb.KeyValue == (int)Key.Enter)
             {
                 Close(true);
                 return false;
