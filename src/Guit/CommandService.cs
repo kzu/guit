@@ -13,26 +13,23 @@ namespace Guit
     [Export]
     class CommandService
     {
-        readonly IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands;
-
+        readonly Dictionary<Tuple<int, string>, Lazy<IMenuCommand, MenuCommandMetadata>> commands;
+        
         [ImportingConstructor]
-        public CommandService([ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands) => this.commands = commands;
-
-        IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> LocalCommands => commands.Where(x => !string.IsNullOrEmpty(x.Metadata.Context));
-
-        IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> GlobalCommands => commands.Where(x => string.IsNullOrEmpty(x.Metadata.Context));
+        public CommandService([ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands)
+        {
+            // TODO: handle duplicate global/local command keys
+            this.commands = commands.ToDictionary(
+                x => Tuple.Create((int)x.Metadata.HotKey, x.Metadata.Context));
+        }
 
         public Task RunAsync(int hotKey, string context)
         {
-            var command = LocalCommands.FirstOrDefault(x => hotKey == (int)x.Metadata.HotKey && x.Metadata.Context == context) ??
-                    GlobalCommands.FirstOrDefault(x => hotKey == (int)x.Metadata.HotKey);
+            if (!commands.TryGetValue(Tuple.Create(hotKey, context), out var command) &&
+                !commands.TryGetValue(Tuple.Create(hotKey, default(string)), out command))
+                return Task.CompletedTask;
 
-            if (command != null)
-            {
-                return Task.Run(() => ExecuteAsync(command));
-            }
-
-            return Task.CompletedTask;
+            return Task.Run(() => ExecuteAsync(command));
         }
 
         public View GetCommands(ContentView view)
@@ -52,7 +49,7 @@ namespace Guit
             View current = new Label("");
             globals.Add(current);
             globals.Width = Dim.Width(current);
-            foreach (var command in GlobalCommands.OrderBy(x => x.Metadata.Order))
+            foreach (var command in commands.Values.Where(x => string.IsNullOrEmpty(x.Metadata.Context)).OrderBy(x => x.Metadata.Order))
             {
                 current = new Button(command.Metadata.HotKey + " " + command.Metadata.DisplayName)
                 {
@@ -70,7 +67,7 @@ namespace Guit
             current = new Label("");
             locals.Add(current);
             locals.Width = Dim.Width(current);
-            foreach (var command in LocalCommands.Where(x => x.Metadata.Context == view.Context).OrderBy(x => x.Metadata.Order))
+            foreach (var command in commands.Values.Where(x => x.Metadata.Context == view.Context).OrderBy(x => x.Metadata.Order))
             {
                 current = new Button(command.Metadata.HotKey + " " + command.Metadata.DisplayName)
                 {
@@ -82,8 +79,10 @@ namespace Guit
                 locals.Width += Dim.Width(current);
             }
 
+
             return commandsView;
         }
+
 
         async Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, CancellationToken cancellation = default)
         {
