@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using NStack;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
-namespace Guit
+namespace Guit.Plugin.Changes
 {
     class CommitDialog : DialogBox
     {
