@@ -9,8 +9,7 @@ namespace Guit
 {
     public static class Program
     {
-        [MTAThread]
-        public static async Task Main()
+        public static void Main()
         {
             try
             {
@@ -18,7 +17,7 @@ namespace Guit
                 var discovery = new AttributedPartDiscovery(Resolver.DefaultInstance, true);
                 var catalog = ComposableCatalog.Create(Resolver.DefaultInstance)
                     // TODO: pull plugins assemblies
-                    .AddParts(await discovery.CreatePartsAsync(Assembly.GetExecutingAssembly()))
+                    .AddParts(discovery.CreatePartsAsync(Assembly.GetExecutingAssembly()).Result)
                     .WithCompositionService();
 
                 var config = CompositionConfiguration.Create(catalog);
