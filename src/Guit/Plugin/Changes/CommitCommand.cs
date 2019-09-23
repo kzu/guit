@@ -16,15 +16,15 @@ namespace Guit.Plugin.Changes
     public class CommitCommand : IMenuCommand
     {
         readonly IEventStream eventStream;
-        readonly ThreadContext threadContext;
+        readonly MainThread mainThread;
         readonly Repository repository;
         readonly ChangesView changes;
 
         [ImportingConstructor]
-        public CommitCommand(IEventStream eventStream, ThreadContext threadContext, Repository repository, ChangesView changes)
+        public CommitCommand(IEventStream eventStream, MainThread mainThread, Repository repository, ChangesView changes)
         {
             this.eventStream = eventStream;
-            this.threadContext = threadContext;
+            this.mainThread = mainThread;
             this.repository = repository;
             this.changes = changes;
         }
@@ -34,7 +34,7 @@ namespace Guit.Plugin.Changes
             if (changes.GetMarkedEntries().Any())
             {
                 var dialog = new CommitDialog();
-                var dialogResult = threadContext.MainThread.Invoke(() => dialog.ShowDialog());
+                var dialogResult = mainThread.Invoke(() => dialog.ShowDialog());
 
                 if (dialogResult == true)
                 {

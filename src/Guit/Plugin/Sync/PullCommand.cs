@@ -13,13 +13,13 @@ namespace Guit.Plugin.Sync
     [MenuCommand("Sync.Pull", Key.F7, nameof(Sync))]
     public class PullCommand : IMenuCommand
     {
-        readonly ThreadContext threadContext;
+        readonly MainThread mainThread;
         readonly Repository repository;
 
         [ImportingConstructor]
-        public PullCommand(ThreadContext threadContext, Repository repository)
+        public PullCommand(MainThread mainThread, Repository repository)
         {
-            this.threadContext = threadContext;
+            this.mainThread = mainThread;
             this.repository = repository;
         }
 
@@ -33,7 +33,7 @@ namespace Guit.Plugin.Sync
                 .FirstOrDefault() ?? string.Empty;
 
             var dialog = new PullDialog(remote, branchName, true);
-            var result = threadContext.MainThread.Invoke(() => dialog.ShowDialog());
+            var result = mainThread.Invoke(() => dialog.ShowDialog());
 
             if (result == true && !string.IsNullOrEmpty(dialog.Remote) && !string.IsNullOrEmpty(dialog.Branch))
             {
