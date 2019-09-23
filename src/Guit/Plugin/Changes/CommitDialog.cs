@@ -10,6 +10,8 @@ namespace Guit.Plugin.Changes
         {
             Height = Dim.Fill(5);
 
+            AddButton("Commit To", OnNewBranchClicked);
+
             InitialFocusedView = Add(
                     new TextView()
                     {
@@ -18,8 +20,6 @@ namespace Guit.Plugin.Changes
                         Width = Dim.Fill(1),
                         Height = Dim.Height(this) - 7
                     }, nameof(Message));
-
-            AddButton("Commit To", OnNewBranchClicked);
 
             // Set IsInitialized and raise Initialized at the end.
             base.EndInit();
