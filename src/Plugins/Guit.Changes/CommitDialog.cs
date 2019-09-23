@@ -4,6 +4,8 @@ namespace Guit.Plugin.Changes
 {
     class CommitDialog : DialogBox
     {
+        TextView textView;
+
         public CommitDialog() : base("Commit") { }
 
         protected override void EndInit()
@@ -12,20 +14,24 @@ namespace Guit.Plugin.Changes
 
             AddButton("Commit To", OnNewBranchClicked);
 
-            InitialFocusedView = Add(
-                    new TextView()
-                    {
-                        X = 1,
-                        Y = 1,
-                        Width = Dim.Fill(1),
-                        Height = Dim.Height(this) - 7
-                    }, nameof(Message));
+            textView = new TextView()
+            {
+                X = 1,
+                Y = 1,
+                Width = Dim.Fill(1),
+                Height = Dim.Height(this) - 7,
+                Text = string.Empty
+            };
+
+            InitialFocusedView = textView;
+
+            Add(textView);
 
             // Set IsInitialized and raise Initialized at the end.
             base.EndInit();
         }
 
-        public string Message { get; set; }
+        public string Message => textView.Text.ToString();
 
         public string NewBranchName { get; private set; }
 

@@ -43,8 +43,6 @@ namespace Guit
 
             if (Control is TextField textField && textField != null)
                 textField.Changed += (sender, e) => SetValue(textField.Text?.ToString());
-            else if (Control is TextView textView && textView != null)
-                textView.TextChanged += (sender, e) => SetValue(textView.Text?.ToString());
             else if (Control is CheckBox checkBox && checkBox != null)
                 checkBox.Toggled += (sender, e) => SetValue(checkBox.Checked);
             else if (Control is RadioGroup radioGroup && radioGroup != null)
@@ -57,8 +55,6 @@ namespace Guit
         {
             if (Control is TextField textField && textField != null)
                 textField.Text = GetValue(string.Empty);
-            else if (Control is TextView textView && textView != null)
-                textView.Text = GetValue(string.Empty);
             else if (Control is CheckBox checkBox && checkBox != null)
                 checkBox.Checked = GetValue(false);
             else if (Control is RadioGroup radioGroup && radioGroup != null)
