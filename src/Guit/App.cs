@@ -48,10 +48,11 @@ namespace Guit
 
         Task RunAsync(Window view)
         {
-            main = view;
             threadContext.MainThread.Invoke(() =>
             {
                 main.Running = false;
+                
+                main = view;
 
                 // Check if the view is a MainView and if the CommandsView was not already set
                 if (main is ContentView mainView && mainView != null)
