@@ -14,7 +14,7 @@ namespace Guit
     class CommandService
     {
         readonly Dictionary<Tuple<int, string>, Lazy<IMenuCommand, MenuCommandMetadata>> commands;
-        
+
         [ImportingConstructor]
         public CommandService([ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands)
         {
@@ -29,7 +29,7 @@ namespace Guit
                 !commands.TryGetValue(Tuple.Create(hotKey, default(string)), out command))
                 return Task.CompletedTask;
 
-            return Task.Run(() => ExecuteAsync(command));
+            return ExecuteAsync(command);
         }
 
         public View GetCommands(ContentView view)
@@ -84,10 +84,11 @@ namespace Guit
         }
 
 
-        async Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, CancellationToken cancellation = default)
-        {
-            using (var progress = new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default))
-                await command.Value.ExecuteAsync(cancellation);
-        }
+        Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, CancellationToken cancellation = default) =>
+            Task.Run(async () =>
+            {
+                using (var progress = new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default))
+                    await command.Value.ExecuteAsync(cancellation);
+            });
     }
 }
