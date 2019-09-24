@@ -18,18 +18,17 @@
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.0.20" />
     <PackageReference Include="Microsoft.VisualStudio.Composition" Version="16.3.7" />
-    <!--<PackageReference Include="Terminal.Gui" Version="0.25.0" />-->
     <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.1" />
     <PackageReference Include="Microsoft.Alm.Authentication" Version="4.3.0" />
     <PackageReference Include="Merq.Core" Version="1.2.0" />
-    <PackageReference Include="RxFree" Version="1.0.0-beta" />
     <PackageReference Include="System.Composition" Version="1.2.0" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\gui.cs\Terminal.Gui\Terminal.Gui.csproj" />
+    <ProjectReference Include="..\Guit.Core\Guit.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

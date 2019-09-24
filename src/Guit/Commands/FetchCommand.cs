@@ -1,13 +1,13 @@
 ﻿using System.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
 using LibGit2Sharp;
+using LibGit2Sharp.Handlers;
 using Merq;
 using Terminal.Gui;
-using System.Linq;
 using Git = LibGit2Sharp.Commands;
-using LibGit2Sharp.Handlers;
 
 namespace Guit.Commands
 {
@@ -32,11 +32,11 @@ namespace Guit.Commands
             foreach (var remote in repository.Network.Remotes)
             {
                 eventStream.Push<Status>($"Fetching {remote.Name}...");
-                Git.Fetch(repository, remote.Name, remote.FetchRefSpecs.Select(x => x.Specification), new FetchOptions 
+                Git.Fetch(repository, remote.Name, remote.FetchRefSpecs.Select(x => x.Specification), new FetchOptions
                 {
                     CredentialsProvider = credentials,
-                    OnProgress = OnProgress, 
-                    OnTransferProgress = OnTransferProgress 
+                    OnProgress = OnProgress,
+                    OnTransferProgress = OnTransferProgress
                 }, "");
             }
 

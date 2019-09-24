@@ -2,7 +2,6 @@
 using System.Composition;
 using System.Globalization;
 using System.Resources;
-using Guit.Properties;
 using Terminal.Gui;
 
 namespace Guit
@@ -11,19 +10,26 @@ namespace Guit
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class MenuCommandAttribute : ExportAttribute
     {
-        public MenuCommandAttribute(string id, Key hotKey, string context = null) :
-            this(id, hotKey, (double)hotKey, context)
+        public MenuCommandAttribute(string id, Key hotKey, string context = null, Type resources = null) :
+            this(id, hotKey, (double)hotKey, context, resources)
         { }
 
-        public MenuCommandAttribute(string id, Key hotKey, double order, string context = null)
+        public MenuCommandAttribute(string id, Key hotKey, double order, string context = null, Type resources = null)
             : base(typeof(IMenuCommand))
         {
-            var resourceManager = new ResourceManager(typeof(Resources));
-            try
+            if (resources != null)
             {
-                DisplayName = resourceManager.GetString(id, CultureInfo.CurrentUICulture) ?? id;
+                var resourceManager = new ResourceManager(resources);
+                try
+                {
+                    DisplayName = resourceManager.GetString(id, CultureInfo.CurrentUICulture) ?? id;
+                }
+                catch (MissingManifestResourceException)
+                {
+                    DisplayName = id;
+                }
             }
-            catch (MissingManifestResourceException)
+            else
             {
                 DisplayName = id;
             }

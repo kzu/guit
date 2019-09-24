@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Terminal.Gui;
-using System.Threading;
-using Guit.Plugin;
 using System.Composition;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Guit.Plugin;
+using Terminal.Gui;
 
 namespace Guit
 {

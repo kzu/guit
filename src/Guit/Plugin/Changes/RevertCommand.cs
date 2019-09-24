@@ -1,10 +1,8 @@
-﻿using System;
-using System.Composition;
+﻿using System.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 using LibGit2Sharp;
-using Merq;
 using Terminal.Gui;
 using Git = LibGit2Sharp.Commands;
 

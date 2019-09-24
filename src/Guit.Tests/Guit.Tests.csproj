@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Guit.Core\Guit.Core.csproj" />
     <ProjectReference Include="..\Guit\Guit.csproj" />
   </ItemGroup>
 

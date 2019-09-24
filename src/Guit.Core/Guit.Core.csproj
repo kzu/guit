@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Guit</RootNamespace>
+
+    <Description>Library to build plugins for dotnet-guit.</Description>
+    <PackageId>Guit.Core</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GitInfo" Version="2.0.20" />
+    <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" />
+    <PackageReference Include="LibGit2Sharp" Version="0.26.1" />
+    <PackageReference Include="RxFree" Version="1.0.0-beta" />
+    <PackageReference Include="System.Composition" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\gui.cs\Terminal.Gui\Terminal.Gui.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Guit" />
+  </ItemGroup>
+
+</Project>

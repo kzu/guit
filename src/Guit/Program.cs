@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using LibGit2Sharp;
 using Microsoft.VisualStudio.Composition;
 using Terminal.Gui;
 
@@ -18,6 +17,7 @@ namespace Guit
                 var catalog = ComposableCatalog.Create(Resolver.DefaultInstance)
                     // TODO: pull plugins assemblies
                     .AddParts(discovery.CreatePartsAsync(Assembly.GetExecutingAssembly()).Result)
+                    .AddParts(discovery.CreatePartsAsync(typeof(IApp).Assembly).Result)
                     .WithCompositionService();
 
                 var config = CompositionConfiguration.Create(catalog);

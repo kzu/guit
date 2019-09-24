@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Linq;
 using System.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Guit.Properties;
 using LibGit2Sharp;
-using Merq;
 using Terminal.Gui;
 
 namespace Guit.Plugin.Sync
 {
     [Shared]
-    [MenuCommand("Sync.Pull", Key.F7, nameof(Sync))]
+    [MenuCommand("Sync.Pull", Key.F7, nameof(Sync), typeof(Resources))]
     public class PullCommand : IMenuCommand
     {
         readonly MainThread mainThread;
