@@ -41,7 +41,7 @@ namespace Guit
                 Console.ForegroundColor = ConsoleColor.Red;
 
                 if (e.InnerException != null)
-                    Console.Error.WriteLine(e.Message);
+                    Console.Error.WriteLine(e.InnerException.Message);
                 else
                     Console.Error.WriteLine(e.ToString());
 
