@@ -24,6 +24,15 @@ namespace Guit
 
         public virtual void Refresh() { }
 
+        public virtual void SelectAll(bool invertSelection = true)
+        {
+            if (Content is ListView listView && listView?.AllowsMarking == true)
+            {
+                listView.Source.MarkAll(!(invertSelection && listView.Source.All(true)));
+                listView.SetNeedsDisplay();
+            }
+        }
+
         protected View Content
         {
             get => content;

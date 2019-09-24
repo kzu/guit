@@ -20,7 +20,7 @@ namespace Guit
         {
             // TODO: handle duplicate global/local command keys
             this.commands = commands.ToDictionary(
-                x => Tuple.Create((int)x.Metadata.HotKey, x.Metadata.Context));
+                x => Tuple.Create((int)x.Metadata.Key, x.Metadata.Context));
         }
 
         public Task RunAsync(int hotKey, string context)
@@ -49,9 +49,9 @@ namespace Guit
             View current = new Label("");
             globals.Add(current);
             globals.Width = Dim.Width(current);
-            foreach (var command in commands.Values.Where(x => string.IsNullOrEmpty(x.Metadata.Context)).OrderBy(x => x.Metadata.Order))
+            foreach (var command in commands.Values.Where(x => string.IsNullOrEmpty(x.Metadata.Context) && x.Metadata.Visible).OrderBy(x => x.Metadata.Order))
             {
-                current = new Button(command.Metadata.HotKey + " " + command.Metadata.DisplayName)
+                current = new Button(GetKeyDisplayText(command.Metadata.Key) + " " + command.Metadata.DisplayName)
                 {
                     CanFocus = false,
                     X = Pos.Right(current),
@@ -67,9 +67,9 @@ namespace Guit
             current = new Label("");
             locals.Add(current);
             locals.Width = Dim.Width(current);
-            foreach (var command in commands.Values.Where(x => x.Metadata.Context == view.Context).OrderBy(x => x.Metadata.Order))
+            foreach (var command in commands.Values.Where(x => x.Metadata.Context == view.Context && x.Metadata.Visible).OrderBy(x => x.Metadata.Order))
             {
-                current = new Button(command.Metadata.HotKey + " " + command.Metadata.DisplayName)
+                current = new Button(GetKeyDisplayText(command.Metadata.Key) + " " + command.Metadata.DisplayName)
                 {
                     CanFocus = false,
                     X = Pos.Right(current),
@@ -83,6 +83,7 @@ namespace Guit
             return commandsView;
         }
 
+        string GetKeyDisplayText(int key) => Enum.GetName(typeof(Key), (Key)key) ?? ((char)key).ToString();
 
         Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, CancellationToken cancellation = default) =>
             Task.Run(async () =>

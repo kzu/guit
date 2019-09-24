@@ -14,7 +14,15 @@ namespace Guit
             this(id, hotKey, (double)hotKey, context, resources)
         { }
 
-        public MenuCommandAttribute(string id, Key hotKey, double order, string context = null, Type resources = null)
+        public MenuCommandAttribute(string id, int key, string context = null, Type resources = null) :
+            this(id, key, (double)key, context, resources)
+        { }
+
+        public MenuCommandAttribute(string id, Key hotKey, double order, string context = null, Type resources = null) :
+            this(id, (int)hotKey, order, context, resources)
+        { }
+
+        public MenuCommandAttribute(string id, int key, double order, string context = null, Type resources = null)
             : base(typeof(IMenuCommand))
         {
             if (resources != null)
@@ -35,16 +43,18 @@ namespace Guit
             }
 
             Context = context;
-            HotKey = hotKey;
+            Key = key;
             Order = order;
         }
 
         public string DisplayName { get; }
 
-        public Key HotKey { get; }
+        public int Key { get; }
 
         public double Order { get; }
 
         public string Context { get; }
+
+        public bool Visible { get; set; } = true;
     }
 }
