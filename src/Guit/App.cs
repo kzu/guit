@@ -2,7 +2,6 @@
 using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
-using Guit.Plugin;
 using Terminal.Gui;
 
 namespace Guit

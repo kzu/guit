@@ -1,0 +1,17 @@
+<Project>
+
+  <ItemDefinitionGroup>
+    <ReferencePath>
+      <IsPlugin>false</IsPlugin>
+    </ReferencePath>
+  </ItemDefinitionGroup>
+
+  <Target Name="AddPlugins" BeforeTargets="GetAssemblyAttributes" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <AssemblyAttribute Include="Guit.Plugin" Condition="%(ReferencePath.IsPlugin)">
+        <_Parameter1>%(ReferencePath.Filename)%(ReferencePath.Extension)</_Parameter1>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+
+</Project>

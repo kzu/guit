@@ -10,7 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.0.20" />
-    <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" />
+    <PackageReference Include="Merq" Version="1.1.1" />
+    <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" PrivateAssets="all" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.1" />
     <PackageReference Include="RxFree" Version="1.0.0-beta" />
     <PackageReference Include="System.Composition" Version="1.2.0" />

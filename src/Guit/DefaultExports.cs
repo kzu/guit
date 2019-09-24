@@ -10,10 +10,6 @@ namespace Guit
     [Shared]
     public class DefaultExports
     {
-        [Export(typeof(ISingleton))]
-        [Export]
-        public Repository Repository { get; } = new Repository(Directory.GetCurrentDirectory());
-
         [Export(typeof(CredentialsHandler))]
         public CredentialsHandler CredentialsHandler { get; } = new CredentialsHandler(OnHandleCredentials);
 

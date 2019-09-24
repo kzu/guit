@@ -1,0 +1,10 @@
+<Project>
+
+  <ItemDefinitionGroup>
+    <TargetPathWithTargetPlatformMoniker>
+      <IsPlugin>$(IsPlugin)</IsPlugin>
+    </TargetPathWithTargetPlatformMoniker>
+  </ItemDefinitionGroup>
+
+  <Import Project="..\Directory.Build.targets" />
+</Project>

@@ -1,6 +1,8 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Sources;
+using System.Xml;
 using Microsoft.VisualStudio.Composition;
 using Terminal.Gui;
 
@@ -12,15 +14,35 @@ namespace Guit
         {
             try
             {
+                var plugins = new PluginManager(new RepositoryProvider().Repository).GetPlugins(Console.Out);
+
                 // See https://github.com/microsoft/vs-mef/blob/master/doc/hosting.md
                 var discovery = new AttributedPartDiscovery(Resolver.DefaultInstance, true);
-                var catalog = ComposableCatalog.Create(Resolver.DefaultInstance)
-                    // TODO: pull plugins assemblies
+                var catalog = ComposableCatalog.Create(Resolver.DefaultInstance);
+
+                foreach (var plugin in plugins)
+                {
+                    //var name = AssemblyName.GetAssemblyName(plugin);
+                    catalog = catalog.AddParts(discovery.CreatePartsAsync(Assembly.LoadFrom(plugin)).Result);
+                }
+
+                catalog = catalog
                     .AddParts(discovery.CreatePartsAsync(Assembly.GetExecutingAssembly()).Result)
                     .AddParts(discovery.CreatePartsAsync(typeof(IApp).Assembly).Result)
                     .WithCompositionService();
 
                 var config = CompositionConfiguration.Create(catalog);
+                if (!config.CompositionErrors.IsEmpty)
+                {
+                    var color = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    foreach (var error in config.CompositionErrors)
+                        foreach (var diag in error)
+                            Console.Out.WriteLine(diag.Message);
+
+                    Console.ReadLine();
+                }
+
                 // Represents the container
                 var provider = config.CreateExportProviderFactory().CreateExportProvider();
 
@@ -35,7 +57,7 @@ namespace Guit
                 // Obtain our first exported value
                 Application.Run(provider.GetExportedValue<App>());
             }
-            catch (CompositionFailedException e)
+            catch (Exception e)
             {
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -43,7 +65,7 @@ namespace Guit
                 if (e.InnerException != null)
                     Console.Error.WriteLine(e.InnerException.Message);
                 else
-                    Console.Error.WriteLine(e.ToString());
+                    Console.Error.WriteLine(e.Message);
 
                 Console.ForegroundColor = color;
                 return;

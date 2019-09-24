@@ -5,7 +5,7 @@ namespace Guit
     /// <summary>
     /// Message box dialog for showing messages.
     /// </summary>
-    class MessageBox : DialogBox
+    public class MessageBox : DialogBox
     {
         public MessageBox(string title, string message)
             : base(title)
