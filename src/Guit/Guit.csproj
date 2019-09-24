@@ -32,6 +32,8 @@
     <ProjectReference Include="..\..\gui.cs\Terminal.Gui\Terminal.Gui.csproj" />
     <ProjectReference Include="..\Guit.Core\Guit.Core.csproj" />
     <ProjectReference Include="..\Plugins\Guit.Changes\Guit.Changes.csproj" />
+    <ProjectReference Include="..\Plugins\Guit.Log\Guit.Log.csproj" />
+    <ProjectReference Include="..\Plugins\Guit.Sync\Guit.Sync.csproj" />
   </ItemGroup>
 
   <ItemGroup>

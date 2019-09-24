@@ -2,7 +2,7 @@
 
 namespace Guit
 {
-    class StackPanel : View
+    public class StackPanel : View
     {
         public StackPanel(params View[] views)
         {
