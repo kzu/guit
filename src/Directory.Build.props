@@ -29,8 +29,11 @@
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <NoWarn>NU5105;$(NoWarn)</NoWarn>
 
-    <GeneratePackageOnBuild Condition="$(CI)">true</GeneratePackageOnBuild>
+    <!-- Because it's sooo much better than GeneratePackageOnBuild! -->
+    <PackOnBuild Condition="$(CI) or '$(BuildingInsideVisualStudio)' != 'true'">true</PackOnBuild>
 
+    <GeneratePackageOnBuild>$(PackOnBuild)</GeneratePackageOnBuild>
+    <PackageOutputPath Condition="'$(PackOnBuild)' == 'true' And '$(PackageOutputPath)' == ''">$(MSBuildThisFileDirectory)..\bin</PackageOutputPath>
     <DefaultItemExcludes>$(DefaultExcludeItems);*.binlog</DefaultItemExcludes>
   </PropertyGroup>
   
