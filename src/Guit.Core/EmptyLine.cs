@@ -2,7 +2,7 @@
 
 namespace Guit
 {
-    class EmptyLine : Label
+    public class EmptyLine : Label
     {
         public EmptyLine() : base(string.Empty) { }
     }

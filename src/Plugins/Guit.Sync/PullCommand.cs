@@ -3,7 +3,7 @@ using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Guit.Properties;
+using Guit.Sync.Properties;
 using LibGit2Sharp;
 using Terminal.Gui;
 
