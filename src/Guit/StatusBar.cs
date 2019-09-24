@@ -1,9 +1,9 @@
-﻿using System.Composition;
+﻿using System;
+using System.Composition;
+using Guit.Events;
+using LibGit2Sharp;
 using Merq;
 using Terminal.Gui;
-using System;
-using LibGit2Sharp;
-using Guit.Events;
 
 namespace Guit
 {

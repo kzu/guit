@@ -12,7 +12,7 @@ namespace Guit.Plugin
         {
             Width = Dim.Fill();
             Height = Dim.Fill();
-            
+
             // Seems like a bug in gui.cs since both are set with a margin of 2, 
             // which is 1 unnecessary extra value since X,Y are already 1.
             var content = Subviews[0];
@@ -24,7 +24,7 @@ namespace Guit.Plugin
 
         public virtual void Refresh() { }
 
-        protected View Content 
+        protected View Content
         {
             get => content;
             set

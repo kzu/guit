@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 using Guit.Events;
 using LibGit2Sharp;
 using Merq;

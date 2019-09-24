@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Composition;
+﻿using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 using Terminal.Gui;

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Composition;
+using System.Linq;
 using LibGit2Sharp;
 using Terminal.Gui;
 
