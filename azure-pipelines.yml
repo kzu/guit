@@ -2,6 +2,8 @@ variables:
 - group: Sleet
 - name: Configuration
   value: Release
+- name: PackageOutputPath
+  value: $(Build.ArtifactStagingDirectory)
 
 stages:
 
@@ -16,24 +18,11 @@ stages:
       clean: true
 
     - task: MSBuild@1
-      displayName: Restore
-      inputs:
-        solution: src/Guit.sln
-        configuration: $(Configuration)
-        msbuildArguments: -t:restore
-
-    - task: MSBuild@1
-      displayName: Set Version
-      inputs:
-        solution: src/Guit/Guit.csproj
-        msbuildArguments: -t:version
-
-    - task: MSBuild@1
       displayName: Build
       inputs:
         solution: src/Guit.sln
         configuration: $(Configuration)
-        msbuildArguments: -p:PackageOutputPath=$(Build.ArtifactStagingDirectory)
+        msbuildArguments: -r
 
     - task: VSTest@2
       displayName: Test
