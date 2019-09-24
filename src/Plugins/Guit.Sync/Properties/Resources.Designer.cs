@@ -68,5 +68,14 @@ namespace Guit.Sync.Properties {
                 return ResourceManager.GetString("Sync.Pull", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Push.
+        /// </summary>
+        internal static string Sync_Push {
+            get {
+                return ResourceManager.GetString("Sync.Push", resourceCulture);
+            }
+        }
     }
 }
