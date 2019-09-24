@@ -1,6 +1,6 @@
 ﻿using Terminal.Gui;
 
-namespace Guit.Plugin
+namespace Guit
 {
     public abstract class ContentView : Window
     {

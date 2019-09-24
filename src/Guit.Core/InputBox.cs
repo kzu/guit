@@ -5,7 +5,7 @@ namespace Guit
     /// <summary>
     /// Simple input box dialog for entering a single value.
     /// </summary>
-    class InputBox : DialogBox
+    public class InputBox : DialogBox
     {
         public InputBox(string title, string message)
             : base(title)

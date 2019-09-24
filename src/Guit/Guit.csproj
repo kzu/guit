@@ -13,12 +13,14 @@
 
     <!-- See https://github.com/microsoft/Git-Credential-Manager-for-Windows/issues/864. Authentication won't work on MacOS until it's fixed :( -->
     <NoWarn>NU1701</NoWarn>
+
+    <!-- We inherit this from Guit.Core -->
+    <GitThisAssembly>false</GitThisAssembly>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.0.20" />
     <PackageReference Include="Microsoft.VisualStudio.Composition" Version="16.3.7" />
-    <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.1" />
     <PackageReference Include="Microsoft.Alm.Authentication" Version="4.3.0" />
     <PackageReference Include="Merq.Core" Version="1.2.0" />
@@ -29,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\gui.cs\Terminal.Gui\Terminal.Gui.csproj" />
     <ProjectReference Include="..\Guit.Core\Guit.Core.csproj" />
+    <ProjectReference Include="..\Plugins\Guit.Changes\Guit.Changes.csproj" />
   </ItemGroup>
 
   <ItemGroup>
