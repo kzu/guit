@@ -120,4 +120,7 @@
   <data name="Sync.Pull" xml:space="preserve">
     <value>Pull</value>
   </data>
+  <data name="Sync.Push" xml:space="preserve">
+    <value>Push</value>
+  </data>
 </root>
