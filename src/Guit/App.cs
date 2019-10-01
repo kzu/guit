@@ -14,7 +14,7 @@ namespace Guit
     class App : Toplevel, IApp
     {
         readonly ConcurrentDictionary<ContentView, string> contexts = new ConcurrentDictionary<ContentView, string>();
-        readonly IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views;
+        readonly Lazy<ContentView, MenuCommandMetadata> defaultView;
         readonly MainThread mainThread;
         readonly Lazy<CommandService> commandService;
 
@@ -24,7 +24,11 @@ namespace Guit
             MainThread mainThread,
             Lazy<CommandService> commandService)
         {
-            this.views = views;
+            this.defaultView = views
+                .OrderBy(x => x.Metadata.Order)
+                .ThenBy(x => x.Metadata.Key)
+                .First();
+
             this.mainThread = mainThread;
             this.commandService = commandService;
         }
@@ -33,7 +37,6 @@ namespace Guit
 
         public override bool ProcessHotKey(KeyEvent keyEvent)
         {
-            
             commandService.Value.RunAsync(keyEvent.KeyValue, GetContext(Application.Current as ContentView));
 
             return base.ProcessHotKey(keyEvent);
@@ -53,7 +56,7 @@ namespace Guit
                 view != null ? GetCurrentContentView(view.SuperView as Toplevel) : null;
 
         // Run the main window as soon as the app is presented.
-        public override void WillPresent() => RunAsync(views.First().Value);
+        public override void WillPresent() => RunAsync(defaultView.Value);
 
         public Task RunAsync(ContentView view)
         {
