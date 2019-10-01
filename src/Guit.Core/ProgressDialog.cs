@@ -26,7 +26,8 @@ namespace Guit
                 CanFocus = false,
                 AllowsMarking = false,
                 Height = Dim.Fill() - 1,
-                Width = Dim.Fill()
+                Width = Dim.Fill() - 1,
+                X = 1, Y = 1
             };
 
             progressBar = new ProgressBar();
