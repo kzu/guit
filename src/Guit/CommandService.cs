@@ -22,7 +22,9 @@ namespace Guit
             [ImportMany] IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views)
         {
             var allCommands = commands.Concat(
-                views.Select(x =>
+                views
+                    .OrderBy(x => x.Metadata.Key)
+                    .Select(x =>
                     new Lazy<IMenuCommand, MenuCommandMetadata>(
                         () => new MenuCommandAdapter(x, app),
                         // We need a different metadata with a null context
