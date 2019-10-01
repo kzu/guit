@@ -10,7 +10,7 @@ using Terminal.Gui;
 namespace Guit.Plugin.Sync
 {
     [Shared]
-    [MenuCommand("Sync.Pull", Key.F7, nameof(Sync), typeof(Resources))]
+    [MenuCommand("Sync.Pull", 'p', nameof(Sync), typeof(Resources))]
     public class PullCommand : IMenuCommand
     {
         readonly MainThread mainThread;

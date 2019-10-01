@@ -12,7 +12,7 @@ using Git = LibGit2Sharp.Commands;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand("Commit", Key.F6, nameof(Changes))]
+    [MenuCommand("Commit", 'c', nameof(Changes))]
     public class CommitCommand : IMenuCommand
     {
         readonly IEventStream eventStream;

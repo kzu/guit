@@ -12,7 +12,7 @@ using Git = LibGit2Sharp.Commands;
 namespace Guit.Commands
 {
     [Shared]
-    [MenuCommand("Fetch", Key.F6, nameof(Plugin.Sync))]
+    [MenuCommand("Fetch", 'f', nameof(Plugin.Sync))]
     public class FetchCommand : IMenuCommand
     {
         readonly Repository repository;

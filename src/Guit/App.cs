@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
@@ -12,9 +13,8 @@ namespace Guit
     [Shared]
     class App : Toplevel, IApp
     {
-        ContentView main;
-        string context;
-
+        readonly ConcurrentDictionary<ContentView, string> contexts = new ConcurrentDictionary<ContentView, string>();
+        readonly IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views;
         readonly MainThread mainThread;
         readonly Lazy<CommandService> commandService;
 
@@ -24,41 +24,47 @@ namespace Guit
             MainThread mainThread,
             Lazy<CommandService> commandService)
         {
-            var defaultView = views.FirstOrDefault();
-
-            main = defaultView?.Value;
-            context = defaultView?.Metadata.Context;
-
+            this.views = views;
             this.mainThread = mainThread;
             this.commandService = commandService;
         }
 
-        public ContentView Current => main;
+        public ContentView Current => GetCurrentContentView(Application.Current);
 
         public override bool ProcessHotKey(KeyEvent keyEvent)
         {
-            commandService.Value.RunAsync(keyEvent.KeyValue, context);
+            
+            commandService.Value.RunAsync(keyEvent.KeyValue, GetContext(Application.Current as ContentView));
 
             return base.ProcessHotKey(keyEvent);
         }
 
-        // Run the main window as soon as the app is presented.
-        public override void WillPresent() => RunAsync(main, context);
+        string GetContext(ContentView view) =>
+            view != null ?
+                contexts.GetOrAdd(view, x =>
+                {
+                    var contentViewAttribute = x.GetType().GetCustomAttributes(typeof(ContentViewAttribute), false).FirstOrDefault() as ContentViewAttribute;
 
-        public Task RunAsync(ContentView view, string context = null)
+                    return contentViewAttribute?.Context;
+                }) : default;
+
+        ContentView GetCurrentContentView(Toplevel view) =>
+            view is ContentView contentView && contentView != null ? contentView :
+                view != null ? GetCurrentContentView(view.SuperView as Toplevel) : null;
+
+        // Run the main window as soon as the app is presented.
+        public override void WillPresent() => RunAsync(views.First().Value);
+
+        public Task RunAsync(ContentView view)
         {
-            main = view;
-            this.context = context;
             mainThread.Invoke(() =>
             {
-                main.Running = false;
+                if (view.Commands == null)
+                    view.Commands = commandService.Value.GetCommands(view, GetContext(view));
 
-                if (main.Commands == null)
-                    main.Commands = commandService.Value.GetCommands(main, context);
+                view.Refresh();
 
-                main.Refresh();
-
-                Application.Run(main);
+                Application.Run(view);
             });
 
             return Task.CompletedTask;
