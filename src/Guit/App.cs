@@ -59,6 +59,10 @@ namespace Guit
         {
             mainThread.Invoke(() =>
             {
+                var currentView = Current;
+                if (currentView != null)
+                    currentView.Running = false;
+
                 if (view.Commands == null)
                     view.Commands = commandService.Value.GetCommands(view, GetContext(view));
 
