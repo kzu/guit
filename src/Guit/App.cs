@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,55 +12,51 @@ namespace Guit
     [Shared]
     class App : Toplevel, IApp
     {
-        Window main;
+        ContentView main;
+        string context;
+
         readonly MainThread mainThread;
-        readonly CommandService commandService;
+        readonly Lazy<CommandService> commandService;
 
         [ImportingConstructor]
         public App(
-            [ImportMany] IEnumerable<ContentView> views,
+            [ImportMany] IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views,
             MainThread mainThread,
-            CommandService commandService)
+            Lazy<CommandService> commandService)
         {
-            // Show an error window if we did not get at least one MainView.
-            main = views.FirstOrDefault() ?? new Window("No MainView found!")
-            {
-                ColorScheme = Colors.Error,
-            };
+            var defaultView = views.FirstOrDefault();
+
+            main = defaultView?.Value;
+            context = defaultView?.Metadata.Context;
 
             this.mainThread = mainThread;
             this.commandService = commandService;
         }
 
-        public ContentView Current => main as ContentView;
+        public ContentView Current => main;
 
         public override bool ProcessHotKey(KeyEvent keyEvent)
         {
-            commandService.RunAsync(keyEvent.KeyValue, (main as ContentView)?.Context);
+            commandService.Value.RunAsync(keyEvent.KeyValue, context);
 
             return base.ProcessHotKey(keyEvent);
         }
 
         // Run the main window as soon as the app is presented.
-        public override void WillPresent() => RunAsync(main);
+        public override void WillPresent() => RunAsync(main, context);
 
-        Task IApp.RunAsync(ContentView view) => RunAsync(view);
-
-        Task RunAsync(Window view)
+        public Task RunAsync(ContentView view, string context = null)
         {
             main = view;
+            this.context = context;
             mainThread.Invoke(() =>
             {
                 main.Running = false;
 
-                // Check if the view is a MainView and if the CommandsView was not already set
-                if (main is ContentView mainView && mainView != null)
-                {
-                    if (mainView.Commands == null)
-                        mainView.Commands = commandService.GetCommands(mainView);
+                if (main.Commands == null)
+                    main.Commands = commandService.Value.GetCommands(main, context);
 
-                    mainView.Refresh();
-                }
+                main.Refresh();
 
                 Application.Run(main);
             });

@@ -20,8 +20,6 @@ namespace Guit
             content.Height = Dim.Fill(1);
         }
 
-        public virtual string Context => null;
-
         public virtual void Refresh() { }
 
         public virtual void SelectAll(bool invertSelection = true)

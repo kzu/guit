@@ -10,7 +10,7 @@ namespace Guit.Plugin.Changes
 {
     [Shared]
     [Export]
-    [Export(typeof(ContentView))]
+    [ContentView(nameof(Changes), '1')]
     public class ChangesView : ContentView
     {
         readonly Repository repository;
@@ -53,8 +53,6 @@ namespace Guit.Plugin.Changes
             foreach (var file in files.Where(x => x.Status == Status.Modified))
                 view.Source.SetMark(files.IndexOf(file), true);
         }
-
-        public override string Context => nameof(Changes);
 
         void OnSelectedChanged()
         {

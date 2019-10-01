@@ -5,6 +5,7 @@ namespace Guit.Plugin.Sync
 {
     [Shared]
     [Export]
+    [ContentView(nameof(Sync), '2')]
     public class SyncView : ContentView
     {
         [ImportingConstructor]
@@ -16,7 +17,5 @@ namespace Guit.Plugin.Sync
                 new Label("// TODO: Sync")
             };
         }
-
-        public override string Context => nameof(Sync);
     }
 }

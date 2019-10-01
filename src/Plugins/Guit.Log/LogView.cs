@@ -9,6 +9,7 @@ namespace Guit.Plugin.Log
 {
     [Shared]
     [Export]
+    [ContentView(nameof(Log), '3')]
     public class LogView : ContentView
     {
         readonly Repository repository;
@@ -29,8 +30,6 @@ namespace Guit.Plugin.Log
 
             Content = view;
         }
-
-        public override string Context => nameof(Log);
 
         public Commit SelectedCommit =>
             view.SelectedItem >= 0 && view.SelectedItem < commits.Count ?
