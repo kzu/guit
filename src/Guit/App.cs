@@ -14,7 +14,10 @@ namespace Guit
     class App : Toplevel, IApp
     {
         readonly ConcurrentDictionary<ContentView, string> contexts = new ConcurrentDictionary<ContentView, string>();
+
         readonly Lazy<ContentView, MenuCommandMetadata> defaultView;
+        readonly IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views;
+
         readonly MainThread mainThread;
         readonly Lazy<CommandService> commandService;
 
@@ -24,10 +27,11 @@ namespace Guit
             MainThread mainThread,
             Lazy<CommandService> commandService)
         {
-            this.defaultView = views
+            this.views = views
                 .OrderBy(x => x.Metadata.Order)
-                .ThenBy(x => x.Metadata.Key)
-                .First();
+                .ThenBy(x => x.Metadata.Key);
+
+            this.defaultView = this.views.First();
 
             this.mainThread = mainThread;
             this.commandService = commandService;
@@ -75,6 +79,32 @@ namespace Guit
             });
 
             return Task.CompletedTask;
+        }
+
+        public async Task RunNext()
+        {
+            var viewList = views.ToList();
+
+            var currentViewWithMetadata = viewList.FirstOrDefault(x => x.Metadata.Context == GetContext(Current));
+
+            var targetIndex = viewList.IndexOf(currentViewWithMetadata) + 1;
+            if (targetIndex >= viewList.Count)
+                targetIndex = 0;
+
+            await RunAsync(viewList[targetIndex].Value);
+        }
+
+        public async Task RunPrevious()
+        {
+            var viewList = views.ToList();
+
+            var currentViewWithMetadata = viewList.FirstOrDefault(x => x.Metadata.Context == GetContext(Current));
+
+            var targetIndex = viewList.IndexOf(currentViewWithMetadata) - 1;
+            if (targetIndex < 0)
+                targetIndex = viewList.Count - 1;
+
+            await RunAsync(viewList[targetIndex].Value);
         }
     }
 }
