@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Guit
 {
-    class MenuCommand : IMenuCommand
+    public class MenuCommand : IMenuCommand
     {
         readonly Action action;
         readonly Func<Task> function;
