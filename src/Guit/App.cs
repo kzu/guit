@@ -41,7 +41,8 @@ namespace Guit
 
         public override bool ProcessHotKey(KeyEvent keyEvent)
         {
-            commandService.Value.RunAsync(keyEvent.KeyValue, GetContext(Application.Current as ContentView));
+            if (Application.Current is ContentView contentView && contentView != null)
+                commandService.Value.RunAsync(keyEvent.KeyValue, GetContext(contentView));
 
             return base.ProcessHotKey(keyEvent);
         }
