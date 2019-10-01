@@ -79,7 +79,7 @@ namespace Guit
                 {
                     CanFocus = false,
                     X = Pos.Right(current),
-                    Clicked = async () => await ExecuteAsync(command),
+                    //Clicked = async () => await ExecuteAsync(command),
                 };
                 globals.Add(current);
                 // Not sure why we need to do this... seems like the containing view 
@@ -97,7 +97,7 @@ namespace Guit
                 {
                     CanFocus = false,
                     X = Pos.Right(current),
-                    Clicked = async () => await ExecuteAsync(command),
+                    //Clicked = async () => await ExecuteAsync(command),
                 };
                 locals.Add(current);
                 locals.Width += Dim.Width(current);
