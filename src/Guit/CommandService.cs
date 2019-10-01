@@ -13,14 +13,36 @@ namespace Guit
     [Export]
     class CommandService
     {
-        readonly Dictionary<Tuple<int, string>, Lazy<IMenuCommand, MenuCommandMetadata>> commands;
+        readonly Dictionary<Tuple<int, string>, Lazy<IMenuCommand, MenuCommandMetadata>> commands = new Dictionary<Tuple<int, string>, Lazy<IMenuCommand, MenuCommandMetadata>>();
 
         [ImportingConstructor]
-        public CommandService([ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands)
+        public CommandService(
+            IApp app,
+            [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands,
+            [ImportMany] IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views)
         {
-            // TODO: handle duplicate global/local command keys
-            this.commands = commands.ToDictionary(
-                x => Tuple.Create((int)x.Metadata.Key, x.Metadata.Context));
+            var allCommands = commands.Concat(
+                views.Select(x =>
+                    new Lazy<IMenuCommand, MenuCommandMetadata>(
+                        () => new MenuCommandAdapter(x, app),
+                        // We need a different metadata with a null context
+                        // to convert the ContentView into a global command
+                        new MenuCommandMetadata
+                        {
+                            DisplayName = x.Metadata.DisplayName,
+                            Key = x.Metadata.Key,
+                            Order = x.Metadata.Order,
+                            Visible = true
+                        })));
+
+            foreach (var command in allCommands)
+            {
+                var key = Tuple.Create(command.Metadata.Key, command.Metadata.Context);
+
+                if (!this.commands.TryGetValue(key, out var existingCommand) ||
+                    existingCommand.Metadata.Order > command.Metadata.Order)
+                    this.commands[key] = command;
+            }
         }
 
         public Task RunAsync(int hotKey, string context)
@@ -32,7 +54,7 @@ namespace Guit
             return ExecuteAsync(command);
         }
 
-        public View GetCommands(ContentView view)
+        public View GetCommands(ContentView view, string context)
         {
             var commandsView = new View
             {
@@ -67,7 +89,7 @@ namespace Guit
             current = new Label("");
             locals.Add(current);
             locals.Width = Dim.Width(current);
-            foreach (var command in commands.Values.Where(x => x.Metadata.Context == view.Context && x.Metadata.Visible).OrderBy(x => x.Metadata.Order))
+            foreach (var command in commands.Values.Where(x => x.Metadata.Context == context && x.Metadata.Visible).OrderBy(x => x.Metadata.Order))
             {
                 current = new Button(GetKeyDisplayText(command.Metadata.Key) + " " + command.Metadata.DisplayName)
                 {

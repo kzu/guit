@@ -16,6 +16,6 @@ namespace Guit
         /// <summary>
         /// Runs the given main view as the top-level view in the app.
         /// </summary>
-        Task RunAsync(ContentView view);
+        Task RunAsync(ContentView view, string context = null);
     }
 }
