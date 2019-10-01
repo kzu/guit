@@ -6,7 +6,7 @@ using Terminal.Gui;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand("Refresh", Key.F5)]
+    [MenuCommand("Refresh", Key.F5, Visible = false)]
     public class RefreshCommand : IMenuCommand
     {
         readonly IApp app;

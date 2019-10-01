@@ -10,7 +10,7 @@ using Terminal.Gui;
 namespace Guit.Commands
 {
     [Shared]
-    [MenuCommand("View", Key.F4)]
+    [MenuCommand("View", Key.F4, Visible = false)]
     public class ViewCommand : IMenuCommand
     {
         readonly Repository repository;
