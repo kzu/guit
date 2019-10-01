@@ -9,12 +9,18 @@ namespace Guit
     public class ReportStatusProgress : IDisposable
     {
         IDisposable statusSubscription;
+
         ProgressDialog progressDialog;
+        MinimalProgressDialog minimalProgressDialog;
+
         List<string> pendingMessages = new List<string>();
 
-        public ReportStatusProgress(string title, IEventStream eventStream)
+        readonly MainThread mainThread;
+
+        public ReportStatusProgress(string title, IEventStream eventStream, MainThread mainThread)
         {
             Title = title;
+            this.mainThread = mainThread;
 
             statusSubscription = eventStream.Of<Status>().Subscribe(OnStatus);
         }
@@ -23,32 +29,62 @@ namespace Guit
 
         void OnStatus(Status value)
         {
-            if (value.Progress > 0 && progressDialog == null)
+            if (value.Progress > 0 && string.IsNullOrEmpty(value.NewStatus) && minimalProgressDialog == null && progressDialog == null)
             {
+                minimalProgressDialog = new MinimalProgressDialog(Title);
+
+                mainThread.Invoke(() =>
+                {
+                    minimalProgressDialog.Report(value.Progress);
+
+                    Application.Run(minimalProgressDialog);
+                });
+            }
+            if (value.Progress > 0 && !string.IsNullOrEmpty(value.NewStatus) && progressDialog == null)
+            {
+                if (minimalProgressDialog != null)
+                {
+                    // Replce the minimal dialog with the full dialog
+                    minimalProgressDialog.Running = false;
+                    minimalProgressDialog = null;
+                }
+
                 progressDialog = new ProgressDialog(Title);
 
-                Update(progressDialog, x => Application.Run(x));
+                mainThread.Invoke(() =>
+                {
+                    foreach (var pendingMessage in pendingMessages)
+                        progressDialog.Report(pendingMessage, value.Progress);
 
-                foreach (var pendingMessage in pendingMessages)
-                    Update(progressDialog, x => x.Report(pendingMessage, value.Progress));
+                    progressDialog.Report(value.NewStatus, value.Progress);
 
-                pendingMessages.Clear();
+                    Application.Run(progressDialog);
+                });
             }
-
-            if (progressDialog != null)
-                Update(progressDialog, x => x.Report(value.NewStatus, value.Progress));
-            else
+            else if (progressDialog != null)
+            {
+                mainThread.Invoke(() => progressDialog.Report(value.NewStatus, value.Progress));
+            }
+            else if (minimalProgressDialog != null)
+            {
+                mainThread.Invoke(() => minimalProgressDialog.Report(value.Progress));
+            }
+            else if (!string.IsNullOrEmpty(value.NewStatus))
+            {
                 pendingMessages.Add(value.NewStatus);
+            }
         }
 
         public void Dispose()
         {
             statusSubscription.Dispose();
             statusSubscription = null;
-            progressDialog = null;
-        }
 
-        void Update(ProgressDialog dialog, Action<ProgressDialog> action) =>
-            Application.MainLoop.Invoke(() => action(dialog));
+            if (minimalProgressDialog != null)
+            {
+                // Auto dismiss the minimal dialog
+                minimalProgressDialog.Running = false;
+            }
+        }
     }
 }
