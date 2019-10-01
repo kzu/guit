@@ -16,6 +16,6 @@ namespace Guit
         }
 
         public async Task ExecuteAsync(CancellationToken cancellation) =>
-            await app.RunAsync(view.Value, view.Metadata.Context);
+            await app.RunAsync(view.Value);
     }
 }

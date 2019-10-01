@@ -7,7 +7,7 @@ using Terminal.Gui;
 namespace Guit.Plugin.Log
 {
     [Shared]
-    [MenuCommand("Reset", Key.F6, nameof(Log))]
+    [MenuCommand("Reset", 'r', nameof(Log))]
     public class ResetCommand : IMenuCommand
     {
         readonly MainThread mainThread;

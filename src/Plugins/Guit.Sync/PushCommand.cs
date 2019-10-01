@@ -13,7 +13,7 @@ using Terminal.Gui;
 namespace Guit.Plugin.Sync
 {
     [Shared]
-    [MenuCommand("Sync.Push", Key.F8, nameof(Sync), typeof(Resources))]
+    [MenuCommand("Sync.Push", 'u', nameof(Sync), typeof(Resources))]
     public class PushCommand : IMenuCommand
     {
         readonly IEventStream eventStream;
