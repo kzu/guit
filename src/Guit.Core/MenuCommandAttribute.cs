@@ -7,7 +7,7 @@ using Terminal.Gui;
 namespace Guit
 {
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = false)]
     public class MenuCommandAttribute : ExportAttribute
     {
         public MenuCommandAttribute(string id, Key hotKey, string context = null, Type resources = null) :
