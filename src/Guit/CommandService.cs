@@ -4,8 +4,6 @@ using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Guit.Plugin;
-using Terminal.Gui;
 
 namespace Guit
 {
@@ -51,6 +49,8 @@ namespace Guit
             this.mainThread = mainThread;
         }
 
+        public IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> Commands => commands.Values;
+
         public Task RunAsync(int hotKey, string context)
         {
             if (!commands.TryGetValue(Tuple.Create(hotKey, context), out var command) &&
@@ -59,59 +59,6 @@ namespace Guit
 
             return ExecuteAsync(command);
         }
-
-        public View GetCommands(ContentView view, string context)
-        {
-            var commandsView = new View
-            {
-                Height = 1
-            };
-
-            var globals = new View();
-            var spacer = new Label("||") { X = Pos.Right(globals), TextAlignment = TextAlignment.Centered };
-            var locals = new View { X = Pos.Right(spacer) };
-
-            spacer.Width = Dim.Width(view) - 2 - Dim.Width(globals) - Dim.Width(locals);
-            commandsView.Add(globals, spacer, locals);
-
-            View current = new Label("");
-            globals.Add(current);
-            globals.Width = Dim.Width(current);
-            foreach (var command in commands.Values.Where(x => string.IsNullOrEmpty(x.Metadata.Context) && x.Metadata.Visible).OrderBy(x => x.Metadata.Order))
-            {
-                current = new Button(GetKeyDisplayText(command.Metadata.Key) + " " + command.Metadata.DisplayName)
-                {
-                    CanFocus = false,
-                    X = Pos.Right(current),
-                    //Clicked = async () => await ExecuteAsync(command),
-                };
-                globals.Add(current);
-                // Not sure why we need to do this... seems like the containing view 
-                // width should equal the width of its subviews automatically unless 
-                // a different width is specified... 
-                globals.Width += Dim.Width(current);
-            }
-
-            current = new Label("");
-            locals.Add(current);
-            locals.Width = Dim.Width(current);
-            foreach (var command in commands.Values.Where(x => x.Metadata.Context == context && x.Metadata.Visible).OrderBy(x => x.Metadata.Order))
-            {
-                current = new Button(GetKeyDisplayText(command.Metadata.Key) + " " + command.Metadata.DisplayName)
-                {
-                    CanFocus = false,
-                    X = Pos.Right(current),
-                    //Clicked = async () => await ExecuteAsync(command),
-                };
-                locals.Add(current);
-                locals.Width += Dim.Width(current);
-            }
-
-
-            return commandsView;
-        }
-
-        string GetKeyDisplayText(int key) => Enum.GetName(typeof(Key), (Key)key) ?? ((char)key).ToString();
 
         Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, CancellationToken cancellation = default) =>
             Task.Run(async () =>
