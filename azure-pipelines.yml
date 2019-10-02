@@ -22,7 +22,7 @@ stages:
       inputs:
         solution: src/Guit.sln
         configuration: $(Configuration)
-        msbuildArguments: -r
+        msbuildArguments: -r -nowarn:NU5105;NU5125
 
     - task: VSTest@2
       displayName: Test
