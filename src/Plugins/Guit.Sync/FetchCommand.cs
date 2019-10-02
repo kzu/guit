@@ -6,7 +6,6 @@ using Guit.Events;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
-using Terminal.Gui;
 using Git = LibGit2Sharp.Commands;
 
 namespace Guit.Commands

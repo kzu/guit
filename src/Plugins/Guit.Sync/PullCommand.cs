@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Guit.Sync.Properties;
 using LibGit2Sharp;
-using Terminal.Gui;
 
 namespace Guit.Plugin.Sync
 {
@@ -14,10 +13,10 @@ namespace Guit.Plugin.Sync
     public class PullCommand : IMenuCommand
     {
         readonly MainThread mainThread;
-        readonly Repository repository;
+        readonly IRepository repository;
 
         [ImportingConstructor]
-        public PullCommand(MainThread mainThread, Repository repository)
+        public PullCommand(MainThread mainThread, IRepository repository)
         {
             this.mainThread = mainThread;
             this.repository = repository;

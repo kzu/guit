@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using LibGit2Sharp;
-using Terminal.Gui;
 
 namespace Guit.Plugin.Log
 {
@@ -11,11 +10,11 @@ namespace Guit.Plugin.Log
     public class ResetCommand : IMenuCommand
     {
         readonly MainThread mainThread;
-        readonly Repository repository;
+        readonly IRepository repository;
         readonly LogView log;
 
         [ImportingConstructor]
-        public ResetCommand(MainThread mainThread, Repository repository, LogView log)
+        public ResetCommand(MainThread mainThread, IRepository repository, LogView log)
         {
             this.mainThread = mainThread;
             this.repository = repository;

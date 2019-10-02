@@ -12,13 +12,13 @@ namespace Guit.Plugin.Log
     [ContentView(nameof(Log), '3')]
     public class LogView : ContentView
     {
-        readonly Repository repository;
+        readonly IRepository repository;
 
         List<CommitEntry> commits = new List<CommitEntry>();
         readonly ListView view;
 
         [ImportingConstructor]
-        public LogView(Repository repository)
+        public LogView(IRepository repository)
             : base("Log")
         {
             this.repository = repository;
