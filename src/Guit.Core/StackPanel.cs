@@ -4,18 +4,32 @@ namespace Guit
 {
     public class StackPanel : View
     {
-        public StackPanel(params View[] views)
-        {
-            for (int i = 1; i < views.Length; i++)
-                views[i].Y = Pos.Bottom(views[i - 1]);
+        readonly StackPanelOrientation orientation;
 
-            Add(views);
+        public StackPanel(params View[] views) : this(StackPanelOrientation.Vertical, views) { }
+
+        public StackPanel(StackPanelOrientation orientation, params View[] views)
+        {
+            this.orientation = orientation;
+
+            foreach (var view in views)
+                Add(view);
         }
 
         public override void Add(View view)
         {
             if (Subviews.Count > 0)
-                view.Y = Pos.Bottom(Subviews[Subviews.Count - 1]);
+            {
+                switch (orientation)
+                {
+                    case StackPanelOrientation.Vertical:
+                        view.Y = Pos.Bottom(Subviews[Subviews.Count - 1]);
+                        break;
+                    case StackPanelOrientation.Horizontal:
+                        view.X = Pos.Right(Subviews[Subviews.Count - 1]);
+                        break;
+                }
+            }
 
             base.Add(view);
         }

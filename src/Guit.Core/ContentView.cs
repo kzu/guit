@@ -2,23 +2,20 @@
 
 namespace Guit
 {
-    public abstract class ContentView : Window
+    public abstract class ContentView : View
     {
         View content;
-        View commands;
 
         public ContentView(string title)
-            : base(title)
+            : base()
         {
+            Title = title;
+
             Width = Dim.Fill();
             Height = Dim.Fill();
-
-            // Seems like a bug in gui.cs since both are set with a margin of 2, 
-            // which is 1 unnecessary extra value since X,Y are already 1.
-            var content = Subviews[0];
-            content.Width = Dim.Fill(1);
-            content.Height = Dim.Fill(1);
         }
+
+        public string Title { get; }
 
         public virtual void Refresh() { }
 
@@ -37,22 +34,10 @@ namespace Guit
             set
             {
                 content = value;
+                content.Width = Dim.Fill(1);
+                content.Height = Dim.Fill(1);
+
                 Add(content);
-            }
-        }
-
-        internal View Commands
-        {
-            get => commands;
-            set
-            {
-                commands = value;
-
-                commands.Y = Pos.Bottom(content);
-                content.Height = Height - commands.Height;
-                Add(commands);
-
-                LayoutSubviews();
             }
         }
     }
