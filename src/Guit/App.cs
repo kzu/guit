@@ -39,7 +39,7 @@ namespace Guit
             this.commandService = commandService;
         }
 
-        public ContentView CurrentContentView => GetCurrentContentView(Application.Current);
+        public ContentView CurrentView => GetCurrentContentView(Application.Current);
 
         public override bool ProcessHotKey(KeyEvent keyEvent)
         {
@@ -79,7 +79,7 @@ namespace Guit
         {
             var viewList = views.ToList();
 
-            var currentViewWithMetadata = viewList.FirstOrDefault(x => x.Metadata.Context == GetContext(CurrentContentView));
+            var currentViewWithMetadata = viewList.FirstOrDefault(x => x.Metadata.Context == GetContext(CurrentView));
 
             var targetIndex = viewList.IndexOf(currentViewWithMetadata) + 1;
             if (targetIndex >= viewList.Count)
@@ -92,7 +92,7 @@ namespace Guit
         {
             var viewList = views.ToList();
 
-            var currentViewWithMetadata = viewList.FirstOrDefault(x => x.Metadata.Context == GetContext(CurrentContentView));
+            var currentViewWithMetadata = viewList.FirstOrDefault(x => x.Metadata.Context == GetContext(CurrentView));
 
             var targetIndex = viewList.IndexOf(currentViewWithMetadata) - 1;
             if (targetIndex < 0)

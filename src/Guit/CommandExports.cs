@@ -24,9 +24,9 @@ namespace Guit
         IMenuCommand RunPreviousCommand => new MenuCommand(async () => await app.Value.RunPrevious());
 
         [MenuCommand("Refresh", Key.F5, Visible = false)]
-        IMenuCommand RefreshCommand => new MenuCommand(() => mainThread.Invoke(() => app.Value.CurrentContentView?.Refresh()));
+        IMenuCommand RefreshCommand => new MenuCommand(() => mainThread.Invoke(() => app.Value.CurrentView?.Refresh()));
 
         [MenuCommand("SelectAll", '*', Visible = false)]
-        IMenuCommand SelectAllCommand => new MenuCommand(() => mainThread.Invoke(() => app.Value.CurrentContentView?.SelectAll(invertSelection: true)));
+        IMenuCommand SelectAllCommand => new MenuCommand(() => mainThread.Invoke(() => app.Value.CurrentView?.SelectAll(invertSelection: true)));
     }
 }
