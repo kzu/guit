@@ -14,7 +14,7 @@
     <IsPackable Condition="'$(PackageId)' == ''">false</IsPackable>
   </PropertyGroup>
 
-  <Target Name="Version" DependsOnTargets="SetVersions">
+  <Target Name="Version" DependsOnTargets="SetVersions" AfterTargets="SetVersions">
     <Message Importance="high" Text="PackageVersion=$(PackageVersion)
 AssemblyVersion=$(AssemblyVersion)" />
     <Message Condition="$(CI)" Importance="high" Text="##vso[build.updatebuildnumber]$(BuildVersion)"/>
