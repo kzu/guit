@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LibGit2Sharp;
-using Terminal.Gui;
 using Git = LibGit2Sharp.Commands;
 
 namespace Guit.Plugin.Changes
@@ -13,11 +12,11 @@ namespace Guit.Plugin.Changes
     public class RevertCommand : IMenuCommand
     {
         readonly MainThread mainThread;
-        readonly Repository repository;
+        readonly IRepository repository;
         readonly ChangesView changes;
 
         [ImportingConstructor]
-        public RevertCommand(MainThread mainThread, Repository repository, ChangesView changes)
+        public RevertCommand(MainThread mainThread, IRepository repository, ChangesView changes)
         {
             this.mainThread = mainThread;
             this.repository = repository;

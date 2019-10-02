@@ -26,5 +26,9 @@ namespace Guit
         [Export(typeof(ISingleton))]
         [Export]
         public Repository Repository { get; }
+
+        [Export(typeof(ISingleton))]
+        [Export]
+        public IRepository IRepository => Repository;
     }
 }

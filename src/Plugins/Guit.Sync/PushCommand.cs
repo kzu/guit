@@ -8,7 +8,6 @@ using Guit.Sync.Properties;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
-using Terminal.Gui;
 
 namespace Guit.Plugin.Sync
 {

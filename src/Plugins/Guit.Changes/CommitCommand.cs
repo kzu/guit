@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Guit.Events;
 using LibGit2Sharp;
 using Merq;
-using Terminal.Gui;
 using Git = LibGit2Sharp.Commands;
 
 namespace Guit.Plugin.Changes
@@ -17,11 +16,11 @@ namespace Guit.Plugin.Changes
     {
         readonly IEventStream eventStream;
         readonly MainThread mainThread;
-        readonly Repository repository;
+        readonly IRepository repository;
         readonly ChangesView changes;
 
         [ImportingConstructor]
-        public CommitCommand(IEventStream eventStream, MainThread mainThread, Repository repository, ChangesView changes)
+        public CommitCommand(IEventStream eventStream, MainThread mainThread, IRepository repository, ChangesView changes)
         {
             this.eventStream = eventStream;
             this.mainThread = mainThread;

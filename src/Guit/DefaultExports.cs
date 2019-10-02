@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Composition;
-using System.IO;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Microsoft.Alm.Authentication;
