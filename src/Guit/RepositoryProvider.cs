@@ -7,9 +7,18 @@ namespace Guit
     [Shared]
     public class RepositoryProvider
     {
-        public RepositoryProvider()
+        [ImportingConstructor]
+        public RepositoryProvider() : this(Directory.GetCurrentDirectory()) { }
+
+        public RepositoryProvider(string currentDir)
         {
-            Repository = new Repository(Directory.GetCurrentDirectory());
+            var repoRoot = currentDir;
+            while (!string.IsNullOrEmpty(repoRoot) && !Repository.IsValid(repoRoot))
+            {
+                repoRoot = Directory.GetParent(repoRoot)?.FullName;
+            }
+
+            Repository = new Repository(repoRoot ?? currentDir);
             var version = Repository.Config.Get<string>("guit.version")?.Value;
             if (string.IsNullOrEmpty(version))
             {
