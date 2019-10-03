@@ -2,13 +2,13 @@
 
   <ItemDefinitionGroup>
     <ReferencePath>
-      <IsPlugin>false</IsPlugin>
+      <IsCorePlugin>false</IsCorePlugin>
     </ReferencePath>
   </ItemDefinitionGroup>
 
   <Target Name="AddPlugins" BeforeTargets="GetAssemblyAttributes" DependsOnTargets="ResolveReferences">
     <ItemGroup>
-      <AssemblyAttribute Include="Guit.Plugin" Condition="%(ReferencePath.IsPlugin)">
+      <AssemblyAttribute Include="Guit.CorePlugin" Condition="%(ReferencePath.IsCorePlugin)">
         <_Parameter1>%(ReferencePath.Filename)%(ReferencePath.Extension)</_Parameter1>
       </AssemblyAttribute>
     </ItemGroup>

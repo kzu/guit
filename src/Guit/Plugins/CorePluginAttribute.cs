@@ -6,9 +6,9 @@ namespace Guit
     /// Used in codegen from targets to inject the known built-in plugins.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    class PluginAttribute : Attribute
+    class CorePluginAttribute : Attribute
     {
-        public PluginAttribute(string assemblyFileName) => AssemblyFileName = assemblyFileName;
+        public CorePluginAttribute(string assemblyFileName) => AssemblyFileName = assemblyFileName;
 
         public string AssemblyFileName { get; }
     }

@@ -43,8 +43,8 @@ namespace Guit.Plugin.Changes
                     foreach (var entry in changes.GetMarkedEntries())
                         Git.Stage(repository, entry.FilePath);
 
-                    var signatrure = repository.Config.BuildSignature(DateTimeOffset.Now);
-                    repository.Commit(dialog.Message, signatrure, signatrure);
+                    var signature = repository.Config.BuildSignature(DateTimeOffset.Now);
+                    repository.Commit(dialog.Message, signature, signature);
 
                     changes.Refresh();
 

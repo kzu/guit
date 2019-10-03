@@ -1,8 +1,12 @@
 <Project>
 
   <PropertyGroup>
-    <IsPlugin>true</IsPlugin>
+    <IsCorePlugin>true</IsCorePlugin>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GitInfo" Version="2.0.20" />
+  </ItemGroup>
 
   <Import Project="..\Directory.Build.props" />
 </Project>

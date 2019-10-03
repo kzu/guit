@@ -2,7 +2,7 @@
 
   <ItemDefinitionGroup>
     <TargetPathWithTargetPlatformMoniker>
-      <IsPlugin>$(IsPlugin)</IsPlugin>
+      <IsCorePlugin>$(IsCorePlugin)</IsCorePlugin>
     </TargetPathWithTargetPlatformMoniker>
   </ItemDefinitionGroup>
 
