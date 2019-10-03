@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
 
     <AssemblyName>guit</AssemblyName>
     <RootNamespace>Guit</RootNamespace>
@@ -17,6 +17,19 @@
     <!-- We inherit this from Guit.Core -->
     <GitThisAssembly>false</GitThisAssembly>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Guit.Plugin.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Guit.Plugin.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Guit.Plugin.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.0.20" PrivateAssets="all" />

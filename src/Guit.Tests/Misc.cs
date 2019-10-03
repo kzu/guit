@@ -18,7 +18,9 @@ namespace Guit.Tests
             {
                 var plugins = repo.Config.OfType<ConfigurationEntry<string>>().Where(x => x.Key == "guit.plugin").ToArray();
 
-                output.WriteLine(repo.Branches.ToString());
+                repo.Config.Unset("guit.plugin");
+
+                plugins = repo.Config.OfType<ConfigurationEntry<string>>().Where(x => x.Key == "guit.plugin").ToArray();
 
                 // Object lookup
                 //var obj = repo.Lookup("sha");

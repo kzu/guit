@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!--<OutputType>Exe</OutputType>-->
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="$(PluginId)" Version="$(PluginVersion)" />
+  </ItemGroup>
+  <ItemDefinitionGroup>
+    <ReferencePath>
+      <NuGetPackageId />
+    </ReferencePath>
+  </ItemDefinitionGroup>
+  <Target Name="SaveReferences" AfterTargets="ResolveAssemblyReferences" DependsOnTargets="ResolveAssemblyReferences">
+    <WriteLinesToFile File="$(BaseIntermediateOutputPath)\ReferencePaths.txt"
+                      Lines="@(ReferencePath -> '%(FullPath)')"
+                      Condition="'%(ReferencePath.NuGetPackageId)' == '$(PluginId)'"
+                      Overwrite="true" />
+  </Target>
+</Project>
