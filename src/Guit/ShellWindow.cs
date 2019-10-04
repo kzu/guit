@@ -5,78 +5,59 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    class ShellWindow : Window
+    class ShellWindow : Window, IRefreshPattern
     {
-        View globalCommands;
-        View localCommands;
+        readonly Tuple<int, int, int, int> margin;
+        readonly IEnumerable<View> decorators;
 
-        public ShellWindow(string title, ContentView content, string context, CommandService commandService)
+        public ShellWindow(
+            string title,
+            ContentView content,
+            Tuple<int, int, int, int> margin,
+            params View[] decorators)
             : base(title)
         {
             Content = content;
 
-            InitializeCommands(commandService, context);
+            this.margin = margin;
+            this.decorators = decorators ?? Enumerable.Empty<View>();
 
-            Add(content, globalCommands, localCommands);
+            Add(content);
+            Add(decorators);
         }
 
         public ContentView Content { get; }
 
+        public void Refresh()
+        {
+            foreach (var decorator in decorators.OfType<IRefreshPattern>())
+                decorator.Refresh();
+        }
+
         public override Rect Frame
         {
             get => base.Frame;
-            // Make space for the bottom command bar
-            set => base.Frame = new Rect(value.X, value.Y, value.Width, value.Height - 1);
+            set => base.Frame = new Rect(
+                value.X - margin.Item1,
+                value.Y - margin.Item2,
+                value.Width - margin.Item3,
+                value.Height - margin.Item4);
         }
 
         public override void Redraw(Rect bounds)
         {
             base.Redraw(bounds);
 
-            globalCommands.Redraw(bounds);
-            localCommands.Redraw(bounds);
+            foreach (var decorator in decorators)
+                decorator.Redraw(bounds);
         }
 
         public override void LayoutSubviews()
         {
-            ClearCommands();
-
-            globalCommands.Y = localCommands.Y = Bounds.Height;
-            localCommands.X = Frame.Width - localCommands.Subviews.Select(x => x.Frame.Width).Sum() - 2;
+            foreach (var decorator in decorators)
+                decorator.LayoutSubviews();
 
             base.LayoutSubviews();
         }
-
-        void InitializeCommands(CommandService commandService, string context)
-        {
-            globalCommands = new StackPanel(
-                StackPanelOrientation.Horizontal,
-                commandService
-                    .Commands
-                    .Where(x => string.IsNullOrEmpty(x.Metadata.Context) && x.Metadata.Visible)
-                    .OrderBy(x => x.Metadata.Order)
-                    .Select(x => new Button(GetKeyDisplayText(x.Metadata.Key) + " " + x.Metadata.DisplayName) { CanFocus = false })
-                    .ToArray());
-
-            localCommands = new StackPanel(
-                StackPanelOrientation.Horizontal,
-                commandService
-                    .Commands
-                    .Where(x => x.Metadata.Context == context && x.Metadata.Visible)
-                    .OrderBy(x => x.Metadata.Order)
-                    .Select(x => new Button(GetKeyDisplayText(x.Metadata.Key) + " " + x.Metadata.DisplayName) { CanFocus = false })
-                    .ToArray());
-        }
-
-        void ClearCommands()
-        {
-            for (var col = 0; col < Frame.Width; col++)
-            {
-                Application.Driver.Move(col, Frame.Height);
-                Application.Driver.AddRune(' ');
-            }
-        }
-
-        string GetKeyDisplayText(int key) => Enum.GetName(typeof(Key), (Key)key) ?? ((char)key).ToString();
     }
 }

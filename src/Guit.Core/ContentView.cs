@@ -2,7 +2,7 @@
 
 namespace Guit
 {
-    public abstract class ContentView : View
+    public abstract class ContentView : View, IRefreshPattern
     {
         View content;
 
