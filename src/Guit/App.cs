@@ -6,6 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
 using Terminal.Gui;
+using LibGit2Sharp;
+using Merq;
+using Guit.Events;
 
 namespace Guit
 {
@@ -22,12 +25,16 @@ namespace Guit
 
         readonly MainThread mainThread;
         readonly Lazy<CommandService> commandService;
+        readonly Lazy<IEventStream> eventStream;
+        readonly IRepository repository;
 
         [ImportingConstructor]
         public App(
             [ImportMany] IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views,
             MainThread mainThread,
-            Lazy<CommandService> commandService)
+            Lazy<CommandService> commandService,
+            IEventStream eventStream,
+            IRepository repository)
         {
             this.views = views
                 .OrderBy(x => x.Metadata.Order)
@@ -37,6 +44,10 @@ namespace Guit
 
             this.mainThread = mainThread;
             this.commandService = commandService;
+            this.repository = repository;
+
+            eventStream.Of<BranchChanged>().Subscribe(x =>
+                mainThread.Invoke(() => (Application.Current as IRefreshPattern)?.Refresh()));
         }
 
         public ContentView CurrentView => GetCurrentContentView(Application.Current);
@@ -68,8 +79,18 @@ namespace Guit
 
                 view.Refresh();
 
-                Application.Run(shellWindows.GetOrAdd(view, x =>
-                    new ShellWindow(view.Title, view, GetContext(view), commandService.Value)));
+                shellWindow = shellWindows.GetOrAdd(view, x =>
+                    new ShellWindow(
+                        view.Title,
+                        view,
+                        Tuple.Create(0, 0, 0, 1),
+                        new CommandBar(commandService.Value, GetContext(view)),
+                        new RepoStatus(repository)
+                        ));
+
+                shellWindow.Refresh();
+
+                Application.Run(shellWindow);
             });
 
             return Task.CompletedTask;
