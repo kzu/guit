@@ -35,12 +35,12 @@ namespace Guit
         {
             get => UseCorePlugins ?
                 repository.Config.GetValueOrDefault("guit.plugins", "")
-                    .Split(';')
+                    .Split(';', StringSplitOptions.RemoveEmptyEntries)
                     .Concat(corePlugins)
                     .Select(ReadPlugin)
                     .Distinct() :
                 repository.Config.GetValueOrDefault("guit.plugins", "")
-                    .Split(';')
+                    .Split(';', StringSplitOptions.RemoveEmptyEntries)
                     .Select(ReadPlugin)
                     .Distinct();
             //get => UseCorePlugins ?
