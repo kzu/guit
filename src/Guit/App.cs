@@ -49,7 +49,7 @@ namespace Guit
                 mainThread.Invoke(() => (Application.Current as IRefreshPattern)?.Refresh()));
         }
 
-        public ContentView? CurrentView => GetCurrentContentView(Application.Current);
+        public ContentView? CurrentView { get; private set; }
 
         public override bool ProcessHotKey(KeyEvent keyEvent)
         {
@@ -62,10 +62,6 @@ namespace Guit
         string? GetContext(ContentView? view) =>
             view != null ? contexts.GetOrAdd(view, x => x.GetType().GetCustomAttribute<ContentViewAttribute>()?.Context) : default;
 
-        ContentView? GetCurrentContentView(Toplevel? view) =>
-            view is ShellWindow shellWindow ? shellWindow.Content :
-                view != null ? GetCurrentContentView(view.SuperView as Toplevel) : null;
-
         // Run the main window as soon as the app is presented.
         public override void WillPresent() => RunAsync(defaultView.Value);
 
@@ -75,6 +71,8 @@ namespace Guit
             {
                 if (Application.Current is ShellWindow shellWindow)
                     shellWindow.Running = false;
+
+                CurrentView = view;
 
                 view.Refresh();
 
