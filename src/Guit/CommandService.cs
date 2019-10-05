@@ -4,6 +4,8 @@ using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Guit.Events;
+using Merq;
 using Terminal.Gui;
 
 namespace Guit
@@ -14,11 +16,13 @@ namespace Guit
     {
         readonly Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>> commands = new Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>>();
         readonly MainThread mainThread;
+        readonly IEventStream eventStream;
 
         [ImportingConstructor]
         public CommandService(
             IApp app,
             MainThread mainThread,
+            IEventStream eventStream,
             [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands,
             [ImportMany] IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views)
         {
@@ -35,7 +39,8 @@ namespace Guit
                             DisplayName = x.Metadata.DisplayName,
                             Key = x.Metadata.Key,
                             Order = x.Metadata.Order,
-                            Visible = true
+                            Visible = true,
+                            ReportProgress = false
                         })));
 
             foreach (var command in allCommands)
@@ -48,6 +53,7 @@ namespace Guit
             }
 
             this.mainThread = mainThread;
+            this.eventStream = eventStream;
         }
 
         public IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> Commands => commands.Values;
@@ -64,8 +70,8 @@ namespace Guit
         Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, CancellationToken cancellation = default) =>
             Task.Run(async () =>
             {
-                var error = default(Exception);
-                using (var progress = new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default, mainThread))
+                using (var progress = command.Metadata.ReportProgress ?
+                    (IDisposable)new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default, mainThread) : new NullProgressStatus())
                 {
                     try
                     {
@@ -73,12 +79,9 @@ namespace Guit
                     }
                     catch (Exception ex)
                     {
-                        error = ex;
+                        mainThread.Invoke(() => Application.Run(new MessageBox("Error", ex.Message)));
                     }
                 }
-
-                if (error != null)
-                    mainThread.Invoke(() => Application.Run(new MessageBox("Error", error.Message)));
             });
     }
 }

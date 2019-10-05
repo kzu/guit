@@ -10,5 +10,6 @@ namespace Guit
         public double Order { get; set; }
         public string? Context { get; set; }
         public bool Visible { get; set; }
+        public bool ReportProgress { get; set; } = true;
     }
 }

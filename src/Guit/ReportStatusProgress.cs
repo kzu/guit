@@ -23,43 +23,32 @@ namespace Guit
             this.mainThread = mainThread;
 
             statusSubscription = eventStream.Of<Status>().Subscribe(OnStatus);
+
+            minimalProgressDialog = new MinimalProgressDialog(title);
+            mainThread.Invoke(() => Application.Run(minimalProgressDialog));
         }
 
         public string Title { get; }
 
         void OnStatus(Status value)
         {
-            if (value.Progress > 0 && string.IsNullOrEmpty(value.NewStatus) && minimalProgressDialog == null && progressDialog == null)
-            {
-                minimalProgressDialog = new MinimalProgressDialog(Title);
-
-                mainThread.Invoke(() =>
-                {
-                    minimalProgressDialog.Report(value.Progress);
-
-                    Application.Run(minimalProgressDialog);
-                });
-            }
             if (value.Progress > 0 && !string.IsNullOrEmpty(value.NewStatus) && progressDialog == null)
             {
                 if (minimalProgressDialog != null)
                 {
                     // Replce the minimal dialog with the full dialog
-                    minimalProgressDialog.Running = false;
+                    mainThread.Invoke(() => minimalProgressDialog.Running = false);
                     minimalProgressDialog = null;
                 }
 
                 progressDialog = new ProgressDialog(Title);
 
-                mainThread.Invoke(() =>
-                {
-                    foreach (var pendingMessage in pendingMessages)
-                        progressDialog.Report(pendingMessage, value.Progress);
+                foreach (var pendingMessage in pendingMessages)
+                    progressDialog.Report(pendingMessage, value.Progress);
 
-                    progressDialog.Report(value.NewStatus, value.Progress);
+                progressDialog.Report(value.NewStatus, value.Progress);
 
-                    Application.Run(progressDialog);
-                });
+                mainThread.Invoke(() => Application.Run(progressDialog));
             }
             else if (progressDialog != null)
             {
@@ -84,10 +73,7 @@ namespace Guit
             }
 
             if (minimalProgressDialog != null)
-            {
-                // Auto dismiss the minimal dialog
-                minimalProgressDialog.Running = false;
-            }
+                mainThread.Invoke(() => minimalProgressDialog.Running = false);
         }
     }
 }

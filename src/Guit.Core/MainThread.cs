@@ -19,9 +19,24 @@ namespace Guit
         public void Invoke(Action action)
         {
             if (Thread.CurrentThread.ManagedThreadId == mainThreadId)
+            {
                 action();
+            }
             else
-                Application.MainLoop.Invoke(action);
+            {
+                var ev = new ManualResetEventSlim();
+
+                Application.MainLoop.Invoke(() =>
+                {
+                    // In order to avoid deadlocks we should wait until the action is scheduled
+                    // and it's about to start running before returning control to the caller
+                    ev.Set();
+
+                    action();
+                });
+
+                ev.Wait();
+            }
         }
 
         public T Invoke<T>(Func<T> function)
