@@ -28,11 +28,17 @@ namespace Guit.Plugin.Changes
             this.changes = changes;
         }
 
+        protected bool Amend { get; set; }
+
         public Task ExecuteAsync(CancellationToken cancellation)
         {
             if (changes.GetMarkedEntries().Any())
             {
                 var dialog = new CommitDialog();
+
+                if (Amend)
+                    dialog.Message = repository.Commits.FirstOrDefault()?.Message;
+
                 var dialogResult = mainThread.Invoke(() => dialog.ShowDialog());
 
                 if (dialogResult == true)
@@ -46,7 +52,13 @@ namespace Guit.Plugin.Changes
                         Git.Stage(repository, entry.FilePath);
 
                     var signature = repository.Config.BuildSignature(DateTimeOffset.Now);
-                    repository.Commit(dialog.Message, signature, signature);
+
+                    var options = new CommitOptions
+                    {
+                        AmendPreviousCommit = Amend
+                    };
+
+                    repository.Commit(dialog.Message, signature, signature, options);
 
                     mainThread.Invoke(() => changes.Refresh());
                 }
