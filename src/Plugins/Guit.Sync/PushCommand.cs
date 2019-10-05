@@ -63,9 +63,11 @@ namespace Guit.Plugin.Sync
                         }
                     };
 
-                    eventStream.Push(new Status($"git push {dialog.Remote} '{pushRefSpec}'", 0.001f));
+                    eventStream.Push(Status.Start("git push {0} {1}", dialog.Remote, pushRefSpec));
+
                     repository.Network.Push(remote, pushRefSpec, pushOptions);
-                    eventStream.Push<Status>($"Push finished successfully");
+
+                    eventStream.Push(Status.Succeeded());
                 }
             }
 

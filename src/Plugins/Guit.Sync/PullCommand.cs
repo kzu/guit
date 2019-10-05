@@ -3,8 +3,10 @@ using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Guit.Events;
 using Guit.Sync.Properties;
 using LibGit2Sharp;
+using Merq;
 
 namespace Guit.Plugin.Sync
 {
@@ -14,12 +16,14 @@ namespace Guit.Plugin.Sync
     {
         readonly MainThread mainThread;
         readonly IRepository repository;
+        readonly IEventStream eventStream;
 
         [ImportingConstructor]
-        public PullCommand(MainThread mainThread, IRepository repository)
+        public PullCommand(MainThread mainThread, IRepository repository, IEventStream eventStream)
         {
             this.mainThread = mainThread;
             this.repository = repository;
+            this.eventStream = eventStream;
         }
 
         public Task ExecuteAsync(CancellationToken cancellation)
@@ -44,7 +48,9 @@ namespace Guit.Plugin.Sync
 
                 if (targetBranch != null)
                 {
-                    repository.Merge(
+                    eventStream.Push(Status.Start("Pull {0} {1} {2}", targetBranch.RemoteName, targetBranch.FriendlyName, dialog.IsFastForward ? "--ff-only" : string.Empty));
+
+                    var mergeResult = repository.Merge(
                         targetBranch,
                         repository.Config.BuildSignature(DateTimeOffset.Now),
                         new MergeOptions()
@@ -52,6 +58,8 @@ namespace Guit.Plugin.Sync
                             FastForwardStrategy = dialog.IsFastForward ?
                                 FastForwardStrategy.FastForwardOnly : FastForwardStrategy.NoFastForward
                         });
+
+                    eventStream.Push(Status.Finish(mergeResult.Status.ToString()));
                 }
             }
 

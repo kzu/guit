@@ -37,6 +37,8 @@ namespace Guit.Plugin.Changes
 
                 if (dialogResult == true)
                 {
+                    eventStream.Push<Status>(0.5f);
+
                     if (!string.IsNullOrEmpty(dialog.NewBranchName))
                         Git.Checkout(repository, repository.CreateBranch(dialog.NewBranchName));
 
@@ -46,9 +48,7 @@ namespace Guit.Plugin.Changes
                     var signature = repository.Config.BuildSignature(DateTimeOffset.Now);
                     repository.Commit(dialog.Message, signature, signature);
 
-                    changes.Refresh();
-
-                    eventStream.Push<Status>("Commit OK!");
+                    mainThread.Invoke(() => changes.Refresh());
                 }
             }
 
