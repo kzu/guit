@@ -22,5 +22,14 @@
         public static implicit operator Status(string? newStatus) => new Status(newStatus);
 
         public static implicit operator Status(float progress) => new Status(null, progress);
+
+        public static Status Get(float progress, string status, params string[] args) =>
+            new Status(args != null ? string.Format(status, args) : status, progress);
+
+        public static Status Start(string status, params string[] args) => Get(0.1f, status, args);
+
+        public static Status Finish(string status, params string[] args) => Get(1, status, args);
+
+        public static Status Succeeded() => Get(1, "Succeeded!");
     }
 }
