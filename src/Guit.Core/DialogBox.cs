@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Terminal.Gui;
@@ -30,6 +31,13 @@ namespace Guit
 
         void ISupportInitialize.EndInit() => EndInit();
 
+        protected Dictionary<DialogBoxButton, Action<DialogBox>> ButtonFactories { get; } =
+            new Dictionary<DialogBoxButton, Action<DialogBox>>
+            {
+                { DialogBoxButton.Ok, x => x.AddButton("Ok", () => x.Close(true), true) },
+                { DialogBoxButton.Cancel, x => x.AddButton("Cancel", () => x.Close(false)) },
+            };
+
         /// <summary>
         /// Begins the initialization of the dialog prior to display for the first time.
         /// </summary>
@@ -38,11 +46,8 @@ namespace Guit
             Height = 15;
             Width = Dim.Fill(20);
 
-            if (ShowDefaultButtons)
-            {
-                AddButton(AcceptButtonText, OnAcceptButtonClicked, true);
-                AddButton(CancelButtonText, OnCancelButtonClicked);
-            }
+            foreach (var factory in ButtonFactories.Where(x => (x.Key & Buttons) == x.Key))
+                factory.Value(this);
         }
 
         /// <summary>
@@ -66,15 +71,7 @@ namespace Guit
         /// <summary>
         /// Whether to add the default buttons.
         /// </summary>
-        protected bool ShowDefaultButtons { get; set; } = true;
-
-        protected virtual string AcceptButtonText => "OK";
-
-        protected virtual string CancelButtonText => "Cancel";
-
-        protected virtual void OnAcceptButtonClicked() => Close(result: true);
-
-        protected virtual void OnCancelButtonClicked() => Close(result: false);
+        protected DialogBoxButton Buttons { get; set; } = DialogBoxButton.Ok | DialogBoxButton.Cancel;
 
         public bool? Result { get; protected set; }
 
@@ -89,7 +86,7 @@ namespace Guit
 
         public override bool ProcessKey(KeyEvent kb)
         {
-            if (!ShowDefaultButtons && kb.KeyValue == (int)Key.Enter)
+            if (Buttons == DialogBoxButton.None && kb.KeyValue == (int)Key.Enter)
             {
                 Close(true);
                 return false;
