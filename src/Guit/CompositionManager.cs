@@ -68,11 +68,9 @@ namespace Guit
             public void Dispose()
             {
                 exports.Dispose();
-                exports = null;
                 // TODO: is this needed?
                 GC.Collect();
                 context.Dispose();
-                context = null;
             }
 
             public T GetExport<T>() => exports.GetExportedValue<T>();

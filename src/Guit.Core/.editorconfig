@@ -1,0 +1,13 @@
+﻿[Binding.cs]
+dotnet_diagnostic.CS8601.severity = none
+dotnet_diagnostic.CS8600.severity = none
+dotnet_diagnostic.CS8604.severity = none
+
+[MainThread.cs]
+dotnet_diagnostic.CS8653.severity = none
+
+[MenuCommandMetadata.cs]
+dotnet_diagnostic.CS8618.severity = none
+
+[PluginInfo.cs]
+dotnet_diagnostic.CS8618.severity = none

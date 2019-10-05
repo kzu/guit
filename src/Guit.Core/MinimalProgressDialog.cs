@@ -7,15 +7,8 @@ namespace Guit
     {
         ProgressBar progressBar;
 
-        readonly List<string> entries = new List<string>();
-
         public MinimalProgressDialog(string title)
             : base(title, 0, 0)
-        {
-            InitilizeComponents();
-        }
-
-        void InitilizeComponents()
         {
             Width = 60;
             Height = 6;

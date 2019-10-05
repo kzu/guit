@@ -11,7 +11,7 @@ namespace Guit
         /// <summary>
         /// Gets the current view being shown
         /// </summary>
-        ContentView CurrentView { get; }
+        ContentView? CurrentView { get; }
 
         /// <summary>
         /// Runs the given main view as the top-level view in the app.

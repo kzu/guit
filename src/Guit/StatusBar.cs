@@ -14,7 +14,7 @@ namespace Guit
         readonly Repository repository;
         readonly Label status;
         readonly Label clock;
-        object clearMessageToken;
+        object? clearMessageToken;
 
         [ImportingConstructor]
         public StatusBar(IEventStream eventStream, Repository repository)

@@ -12,7 +12,7 @@ namespace Guit
 
         public RepositoryProvider(string currentDir)
         {
-            var repoRoot = currentDir;
+            string? repoRoot = currentDir;
             while (!string.IsNullOrEmpty(repoRoot) && !Repository.IsValid(repoRoot))
             {
                 repoRoot = Directory.GetParent(repoRoot)?.FullName;

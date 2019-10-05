@@ -10,7 +10,7 @@ namespace Guit
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class ContentViewAttribute : ExportAttribute
     {
-        public ContentViewAttribute(string id, int key, double order = 100, string context = null, Type resources = null)
+        public ContentViewAttribute(string id, int key, double order = 100, string? context = null, Type? resources = null)
             : base(typeof(ContentView))
         {
             if (resources != null)
