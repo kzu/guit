@@ -4,6 +4,7 @@ using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Terminal.Gui;
 
 namespace Guit
 {
@@ -63,8 +64,21 @@ namespace Guit
         Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, CancellationToken cancellation = default) =>
             Task.Run(async () =>
             {
+                var error = default(Exception);
                 using (var progress = new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default, mainThread))
-                    await command.Value.ExecuteAsync(cancellation);
+                {
+                    try
+                    {
+                        await command.Value.ExecuteAsync(cancellation);
+                    }
+                    catch (Exception ex)
+                    {
+                        error = ex;
+                    }
+                }
+
+                if (error != null)
+                    mainThread.Invoke(() => Application.Run(new MessageBox("Error", error.Message)));
             });
     }
 }
