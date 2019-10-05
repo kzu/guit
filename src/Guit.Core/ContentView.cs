@@ -4,7 +4,7 @@ namespace Guit
 {
     public abstract class ContentView : View, IRefreshPattern
     {
-        View content;
+        View? content;
 
         public ContentView(string title)
             : base()
@@ -28,16 +28,20 @@ namespace Guit
             }
         }
 
-        protected View Content
+        protected View? Content
         {
             get => content;
             set
             {
                 content = value;
-                content.Width = Dim.Fill(1);
-                content.Height = Dim.Fill(1);
 
-                Add(content);
+                if (content != null)
+                {
+                    content.Width = Dim.Fill(1);
+                    content.Height = Dim.Fill(1);
+
+                    Add(content);
+                }
             }
         }
     }

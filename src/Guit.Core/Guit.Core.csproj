@@ -6,6 +6,7 @@
 
     <Description>Library to build plugins for dotnet-guit.</Description>
     <PackageId>Guit.Core</PackageId>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

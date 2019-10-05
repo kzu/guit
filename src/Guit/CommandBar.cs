@@ -6,19 +6,19 @@ namespace Guit
 {
     class CommandBar : View
     {
-        Window window;
+        Window? window;
 
         View globalCommands;
         View localCommands;
 
-        public CommandBar(CommandService commandService, string context)
+        public CommandBar(CommandService commandService, string? context)
         {
             InitializeCommands(commandService, context);
 
             Add(globalCommands, localCommands);
         }
 
-        void InitializeCommands(CommandService commandService, string context)
+        void InitializeCommands(CommandService commandService, string? context)
         {
             globalCommands = new StackPanel(
                 StackPanelOrientation.Horizontal,
@@ -39,7 +39,7 @@ namespace Guit
                     .ToArray());
         }
 
-        Window Window => window != null ? window : window = this.GetWindow();
+        Window? Window => window != null ? window : window = this.GetWindow();
 
         public override void Redraw(Rect region)
         {
@@ -53,18 +53,24 @@ namespace Guit
         {
             ClearCommands();
 
-            globalCommands.Y = localCommands.Y = Window.Frame.Height;
-            localCommands.X = Window.Frame.Width - localCommands.Subviews.Select(x => x.Frame.Width).Sum() - 2;
+            if (Window != null)
+            {
+                globalCommands.Y = localCommands.Y = Window.Frame.Height;
+                localCommands.X = Window.Frame.Width - localCommands.Subviews.Select(x => x.Frame.Width).Sum() - 2;
+            }
 
             base.LayoutSubviews();
         }
 
         void ClearCommands()
         {
-            for (var col = 0; col < Window.Frame.Width; col++)
+            if (Window != null)
             {
-                Application.Driver.Move(col, Window.Frame.Height);
-                Application.Driver.AddRune(' ');
+                for (var col = 0; col < Window.Frame.Width; col++)
+                {
+                    Application.Driver.Move(col, Window.Frame.Height);
+                    Application.Driver.AddRune(' ');
+                }
             }
         }
 

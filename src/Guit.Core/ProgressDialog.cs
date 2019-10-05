@@ -13,11 +13,6 @@ namespace Guit
         public ProgressDialog(string title)
             : base(title, 0, 0)
         {
-            InitilizeComponents();
-        }
-
-        void InitilizeComponents()
-        {
             Width = Dim.Fill(8);
             Height = Dim.Fill(8);
 
@@ -27,7 +22,8 @@ namespace Guit
                 AllowsMarking = false,
                 Height = Dim.Fill() - 1,
                 Width = Dim.Fill() - 1,
-                X = 1, Y = 1
+                X = 1,
+                Y = 1
             };
 
             progressBar = new ProgressBar();
@@ -46,7 +42,7 @@ namespace Guit
             return base.ProcessKey(kb);
         }
 
-        public void Report(string text, float progress)
+        public void Report(string? text, float progress)
         {
             if (text != null)
             {

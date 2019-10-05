@@ -12,8 +12,8 @@ namespace Guit
             View control,
             object dataContext,
             string propertyName,
-            Func<object, object> convertTo = null,
-            Func<object, object> convertFrom = null)
+            Func<object, object>? convertTo = null,
+            Func<object, object>? convertFrom = null)
         {
             Control = control;
             DataContext = dataContext;
@@ -30,9 +30,9 @@ namespace Guit
 
         public string PropertyName { get; }
 
-        public Func<object, object> ConvertTo { get; }
+        public Func<object, object>? ConvertTo { get; }
 
-        public Func<object, object> ConvertFrom { get; }
+        public Func<object, object>? ConvertFrom { get; }
 
         PropertyInfo Property => property.Value;
 
@@ -78,7 +78,7 @@ namespace Guit
             return (T)value;
         }
 
-        void SetValue(object value) =>
+        void SetValue(object? value) =>
             Property.SetValue(DataContext, ConvertFrom != null ? ConvertFrom(value) : value);
     }
 }

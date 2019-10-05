@@ -10,19 +10,19 @@ namespace Guit
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = false)]
     public class MenuCommandAttribute : ExportAttribute
     {
-        public MenuCommandAttribute(string id, Key hotKey, string context = null, Type resources = null) :
+        public MenuCommandAttribute(string id, Key hotKey, string? context = null, Type? resources = null) :
             this(id, hotKey, (double)hotKey, context, resources)
         { }
 
-        public MenuCommandAttribute(string id, int key, string context = null, Type resources = null) :
+        public MenuCommandAttribute(string id, int key, string? context = null, Type? resources = null) :
             this(id, key, (double)key, context, resources)
         { }
 
-        public MenuCommandAttribute(string id, Key hotKey, double order, string context = null, Type resources = null) :
+        public MenuCommandAttribute(string id, Key hotKey, double order, string? context = null, Type? resources = null) :
             this(id, (int)hotKey, order, context, resources)
         { }
 
-        public MenuCommandAttribute(string id, int key, double order, string context = null, Type resources = null)
+        public MenuCommandAttribute(string id, int key, double order, string? context = null, Type? resources = null)
             : base(typeof(IMenuCommand))
         {
             if (resources != null)
@@ -53,7 +53,7 @@ namespace Guit
 
         public double Order { get; }
 
-        public string Context { get; }
+        public string? Context { get; }
 
         public bool Visible { get; set; } = true;
     }

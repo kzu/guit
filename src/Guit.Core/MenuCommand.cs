@@ -6,8 +6,8 @@ namespace Guit
 {
     public class MenuCommand : IMenuCommand
     {
-        readonly Action action;
-        readonly Func<Task> function;
+        readonly Action? action;
+        readonly Func<Task>? function;
 
         public MenuCommand(Action action) => this.action = action;
 

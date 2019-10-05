@@ -8,10 +8,10 @@ namespace Guit
 {
     public class ReportStatusProgress : IDisposable
     {
-        IDisposable statusSubscription;
+        IDisposable? statusSubscription;
 
-        ProgressDialog progressDialog;
-        MinimalProgressDialog minimalProgressDialog;
+        ProgressDialog? progressDialog;
+        MinimalProgressDialog? minimalProgressDialog;
 
         List<string> pendingMessages = new List<string>();
 
@@ -77,8 +77,11 @@ namespace Guit
 
         public void Dispose()
         {
-            statusSubscription.Dispose();
-            statusSubscription = null;
+            if (statusSubscription != null)
+            {
+                statusSubscription.Dispose();
+                statusSubscription = null;
+            }
 
             if (minimalProgressDialog != null)
             {

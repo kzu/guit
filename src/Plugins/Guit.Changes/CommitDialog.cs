@@ -4,7 +4,7 @@ namespace Guit.Plugin.Changes
 {
     class CommitDialog : DialogBox
     {
-        TextView textView;
+        TextView textView = new TextView();
 
         public CommitDialog() : base("Commit") { }
 
@@ -14,14 +14,11 @@ namespace Guit.Plugin.Changes
 
             AddButton("Commit To", OnNewBranchClicked);
 
-            textView = new TextView()
-            {
-                X = 1,
-                Y = 1,
-                Width = Dim.Fill(1),
-                Height = Dim.Height(this) - 7,
-                Text = string.Empty
-            };
+            textView.X = 1;
+            textView.Y = 1;
+            textView.Width = Dim.Fill(1);
+            textView.Height = Dim.Height(this) - 7;
+            textView.Text = string.Empty;
 
             InitialFocusedView = textView;
 
@@ -33,7 +30,7 @@ namespace Guit.Plugin.Changes
 
         public string Message => textView.Text.ToString();
 
-        public string NewBranchName { get; private set; }
+        public string? NewBranchName { get; private set; }
 
         void OnNewBranchClicked()
         {

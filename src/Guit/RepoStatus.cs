@@ -7,7 +7,7 @@ namespace Guit
 {
     class RepoStatus : Label, IRefreshPattern
     {
-        Window window;
+        Window? window;
 
         readonly IRepository repository;
 
@@ -19,14 +19,17 @@ namespace Guit
             Refresh();
         }
 
-        Window Window => window != null ? window : window = this.GetWindow();
+        Window? Window => window != null ? window : window = this.GetWindow();
 
         public void Refresh() => Text = GetStatus();
 
         public override void LayoutSubviews()
         {
-            Y = -1;
-            X = Window.Frame.Width - Text.Length - 3;
+            if (Window != null)
+            {
+                Y = -1;
+                X = Window.Frame.Width - Text.Length - 3;
+            }
 
             base.LayoutSubviews();
         }

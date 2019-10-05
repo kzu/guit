@@ -11,7 +11,7 @@ namespace Guit
     [Export]
     class CommandService
     {
-        readonly Dictionary<Tuple<int, string>, Lazy<IMenuCommand, MenuCommandMetadata>> commands = new Dictionary<Tuple<int, string>, Lazy<IMenuCommand, MenuCommandMetadata>>();
+        readonly Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>> commands = new Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>>();
         readonly MainThread mainThread;
 
         [ImportingConstructor]
@@ -51,7 +51,7 @@ namespace Guit
 
         public IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> Commands => commands.Values;
 
-        public Task RunAsync(int hotKey, string context)
+        public Task RunAsync(int hotKey, string? context)
         {
             if (!commands.TryGetValue(Tuple.Create(hotKey, context), out var command) &&
                 !commands.TryGetValue(Tuple.Create(hotKey, default(string)), out command))

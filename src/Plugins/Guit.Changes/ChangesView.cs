@@ -41,9 +41,9 @@ namespace Guit.Plugin.Changes
         {
             var status = repository.RetrieveStatus(new StatusOptions());
             files = status
-                .Added.Concat(status.Untracked).Select(x => new FileStatus { Entry = x, Status = Status.Added })
-                .Concat(status.Removed.Concat(status.Missing).Select(x => new FileStatus { Entry = x, Status = Status.Deleted }))
-                .Concat(status.Modified.Select(x => new FileStatus { Entry = x, Status = Status.Modified }))
+                .Added.Concat(status.Untracked).Select(x => new FileStatus(x, Status.Added))
+                .Concat(status.Removed.Concat(status.Missing).Select(x => new FileStatus(x, Status.Deleted)))
+                .Concat(status.Modified.Select(x => new FileStatus(x, Status.Modified)))
                 .OrderBy(x => x.Entry.FilePath)
                 .ToList();
 
@@ -64,9 +64,15 @@ namespace Guit.Plugin.Changes
 
         class FileStatus
         {
-            public StatusEntry Entry { get; set; }
+            public FileStatus(StatusEntry entry, Status status)
+            {
+                Entry = entry;
+                Status = status;
+            }
 
-            public Status Status { get; set; }
+            public StatusEntry Entry { get; }
+
+            public Status Status { get; }
 
             public override string ToString()
             {

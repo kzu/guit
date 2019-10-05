@@ -15,6 +15,6 @@ namespace Guit
 
         void OnSelectionChanged(SelectionChanged changed) => Current = changed?.SelectedObject;
 
-        public object Current { get; private set; }
+        public object? Current { get; private set; }
     }
 }

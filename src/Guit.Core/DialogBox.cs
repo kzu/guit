@@ -19,7 +19,7 @@ namespace Guit
         /// Event raised when the dialog is initialized, which only happens once 
         /// before displaying it.
         /// </summary>
-        public event EventHandler Initialized;
+        public event EventHandler Initialized = (sender, e) => { };
 
         /// <summary>
         /// Whether the dialog has been initialized.
@@ -78,7 +78,7 @@ namespace Guit
 
         public bool? Result { get; protected set; }
 
-        protected View InitialFocusedView { get; set; }
+        protected View? InitialFocusedView { get; set; }
 
         public bool? ShowDialog()
         {
@@ -125,8 +125,8 @@ namespace Guit
         public T Bind<T>(
             T control,
             string propertyName,
-            Func<object, object> convertTo = null,
-            Func<object, object> convertFrom = null) where T : View
+            Func<object, object>? convertTo = null,
+            Func<object, object>? convertFrom = null) where T : View
         {
             var binding = new Binding(control, this, propertyName, convertTo, convertFrom);
 
@@ -141,8 +141,8 @@ namespace Guit
         public T Add<T>(
             T control,
             string propertyNameBinding,
-            Func<object, object> convertTo = null,
-            Func<object, object> convertFrom = null) where T : View
+            Func<object, object>? convertTo = null,
+            Func<object, object>? convertFrom = null) where T : View
         {
             Add(control);
 

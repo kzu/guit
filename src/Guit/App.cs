@@ -17,7 +17,7 @@ namespace Guit
     [Shared]
     class App : Toplevel, IApp
     {
-        readonly ConcurrentDictionary<ContentView, string> contexts = new ConcurrentDictionary<ContentView, string>();
+        readonly ConcurrentDictionary<ContentView, string?> contexts = new ConcurrentDictionary<ContentView, string?>();
         readonly ConcurrentDictionary<ContentView, ShellWindow> shellWindows = new ConcurrentDictionary<ContentView, ShellWindow>();
 
         readonly Lazy<ContentView, MenuCommandMetadata> defaultView;
@@ -25,7 +25,6 @@ namespace Guit
 
         readonly MainThread mainThread;
         readonly Lazy<CommandService> commandService;
-        readonly Lazy<IEventStream> eventStream;
         readonly IRepository repository;
 
         [ImportingConstructor]
@@ -40,7 +39,7 @@ namespace Guit
                 .OrderBy(x => x.Metadata.Order)
                 .ThenBy(x => x.Metadata.Key);
 
-            this.defaultView = this.views.First();
+            defaultView = this.views.First();
 
             this.mainThread = mainThread;
             this.commandService = commandService;
@@ -50,7 +49,7 @@ namespace Guit
                 mainThread.Invoke(() => (Application.Current as IRefreshPattern)?.Refresh()));
         }
 
-        public ContentView CurrentView => GetCurrentContentView(Application.Current);
+        public ContentView? CurrentView => GetCurrentContentView(Application.Current);
 
         public override bool ProcessHotKey(KeyEvent keyEvent)
         {
@@ -60,10 +59,10 @@ namespace Guit
             return base.ProcessHotKey(keyEvent);
         }
 
-        string GetContext(ContentView view) =>
+        string? GetContext(ContentView? view) =>
             view != null ? contexts.GetOrAdd(view, x => x.GetType().GetCustomAttribute<ContentViewAttribute>()?.Context) : default;
 
-        ContentView GetCurrentContentView(Toplevel view) =>
+        ContentView? GetCurrentContentView(Toplevel? view) =>
             view is ShellWindow shellWindow ? shellWindow.Content :
                 view != null ? GetCurrentContentView(view.SuperView as Toplevel) : null;
 

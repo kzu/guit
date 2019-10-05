@@ -11,6 +11,8 @@
     <ToolCommandName>guit</ToolCommandName>
     <PackAsTool>true</PackAsTool>
 
+    <Nullable>enable</Nullable>
+
     <!-- See https://github.com/microsoft/Git-Credential-Manager-for-Windows/issues/864. Authentication won't work on MacOS until it's fixed :( -->
     <NoWarn>NU1701</NoWarn>
 
@@ -20,6 +22,10 @@
 
   <ItemGroup>
     <Compile Remove="Guit.Plugin.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>

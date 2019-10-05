@@ -14,6 +14,6 @@ namespace Guit
             Default = this;
         }
 
-        public static ICommandBus Default { get; private set; }
+        public static ICommandBus? Default { get; private set; }
     }
 }

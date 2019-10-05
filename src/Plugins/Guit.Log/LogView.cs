@@ -31,7 +31,7 @@ namespace Guit.Plugin.Log
             Content = view;
         }
 
-        public Commit SelectedCommit =>
+        public Commit? SelectedCommit =>
             view.SelectedItem >= 0 && view.SelectedItem < commits.Count ?
                 commits[view.SelectedItem].Commit : null;
 

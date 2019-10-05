@@ -6,7 +6,7 @@ namespace Guit
 {
     abstract class PluginLoadContext : AssemblyLoadContext
     {
-        protected PluginLoadContext(string name = null, bool isCollectible = false) : base(name, isCollectible) { }
+        protected PluginLoadContext(string? name = null, bool isCollectible = false) : base(name, isCollectible) { }
 
         public abstract IEnumerable<Assembly> GetAssemblies();
     }

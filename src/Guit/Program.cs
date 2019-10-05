@@ -56,7 +56,7 @@ namespace Guit
             }
         }
 
-        static void WriteError(string message)
+        static void WriteError(string? message)
         {
             var color = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
@@ -75,7 +75,7 @@ namespace Guit
                         new XElement("Configuration", "Release"),
                         new XElement("TargetFramework", "netcoreapp" + 
                             new FrameworkName(
-                                Assembly.GetEntryAssembly().GetCustomAttribute<TargetFrameworkAttribute>().FrameworkName)
+                                Assembly.GetEntryAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName ?? "Unknown")
                             .Version),
                         new XElement("PackageReferencesHash", hash)),
                     new XElement("ItemGroup", plugins
@@ -93,7 +93,7 @@ namespace Guit
                 RedirectStandardOutput = true,
             };
 
-            psi.Environment["GuitPath"] = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            psi.Environment["GuitPath"] = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
 
             var ev = new ManualResetEventSlim();
             var dotnet = Process.Start(psi);
