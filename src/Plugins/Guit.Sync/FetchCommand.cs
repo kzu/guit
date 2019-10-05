@@ -1,5 +1,6 @@
 ﻿using System.Composition;
 using System.Linq;
+using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
@@ -7,6 +8,7 @@ using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
 using Git = LibGit2Sharp.Commands;
+using System;
 
 namespace Guit.Commands
 {
@@ -28,9 +30,12 @@ namespace Guit.Commands
 
         public Task ExecuteAsync(CancellationToken cancellation)
         {
-            foreach (var remote in repository.Network.Remotes)
+            var remotes = repository.Network.Remotes.ToList();
+
+            foreach (var remote in remotes)
             {
-                eventStream.Push<Status>($"Fetching {remote.Name}...");
+                eventStream.Push(new Status($"Fetching {remote.Name}...", (remotes.IndexOf(remote) + 1f) / (remotes.Count + 1f)));
+
                 Git.Fetch(repository, remote.Name, remote.FetchRefSpecs.Select(x => x.Specification), new FetchOptions
                 {
                     CredentialsProvider = credentials,
@@ -39,12 +44,14 @@ namespace Guit.Commands
                 }, "");
             }
 
+            eventStream.Push(new Status("Succeeded!", 1));
+
             return Task.CompletedTask;
         }
 
         bool OnProgress(string serverProgressOutput)
         {
-            eventStream.Push(new Status(serverProgressOutput, importance: StatusImportance.High));
+            eventStream.Push(new Status(serverProgressOutput));
             return true;
         }
 

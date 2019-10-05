@@ -1,4 +1,6 @@
-﻿using Terminal.Gui;
+﻿using System;
+using System.Linq;
+using Terminal.Gui;
 
 namespace Guit
 {
@@ -7,6 +9,8 @@ namespace Guit
     /// </summary>
     public class MessageBox : DialogBox
     {
+        const int MinWidth = 60;
+
         public MessageBox(string title, string message)
             : base(title)
         {
@@ -18,12 +22,33 @@ namespace Guit
         {
             base.EndInit();
 
-            Width = 60;
-            Height = 10;
+            var lines = Message
+                .Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-            Add(new Label(string.Empty) { Y = 1, X = 1, Width = Dim.Fill(2) }, nameof(Message));
+            var maxLineLength = lines
+                .Select(x => x.Length)
+                .Max();
+
+            if (maxLineLength > MinWidth)
+                Width = maxLineLength + 10;
+            else
+                Width = MinWidth;
+
+            Height = lines.Length <= 10 ? lines.Length + 7 : Dim.Fill(8);
+
+            var textView = new TextView()
+            {
+                Text = Message,
+                ReadOnly = true,
+                X = 1,
+                Y = 1,
+                Width = Dim.Fill(2),
+                Height = Dim.Height(this) - 6
+            };
+
+            Add(textView);
         }
 
-        public string Message { get; set; }
+        public string Message { get; }
     }
 }
