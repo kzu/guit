@@ -20,7 +20,7 @@ namespace Guit
 
         [ImportingConstructor]
         public CommandService(
-            IApp app,
+            IShell app,
             MainThread mainThread,
             IEventStream eventStream,
             [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands,

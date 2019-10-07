@@ -7,11 +7,11 @@ namespace Guit
     [Shared]
     class CommandExports
     {
-        readonly Lazy<IApp> app;
+        readonly Lazy<IShell> app;
         readonly MainThread mainThread;
 
         [ImportingConstructor]
-        public CommandExports(Lazy<IApp> app, MainThread mainThread)
+        public CommandExports(Lazy<IShell> app, MainThread mainThread)
         {
             this.app = app;
             this.mainThread = mainThread;

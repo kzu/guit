@@ -61,5 +61,7 @@ namespace Guit
 
             base.LayoutSubviews();
         }
+
+        public override string ToString() => Content.Title;
     }
 }

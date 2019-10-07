@@ -24,7 +24,7 @@ namespace Guit
             var discovery = new AttributedPartDiscovery(Resolver.DefaultInstance, true);
             var catalog = ComposableCatalog.Create(Resolver.DefaultInstance)
                 .AddParts(discovery.CreatePartsAsync(Assembly.GetExecutingAssembly()).Result)
-                .AddParts(discovery.CreatePartsAsync(typeof(IApp).Assembly).Result)
+                .AddParts(discovery.CreatePartsAsync(typeof(IShell).Assembly).Result)
                 .WithCompositionService();
 
             // Add parts from plugins
