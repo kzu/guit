@@ -28,39 +28,45 @@ namespace Guit.Plugin.Sync
 
         public Task ExecuteAsync(CancellationToken cancellation)
         {
-            var branch = repository.Head.TrackedBranch ?? repository.Head;
-            var remote = branch.RemoteName ?? "origin";
-            var branchName = branch
-                .FriendlyName
-                .Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                .FirstOrDefault() ?? string.Empty;
+            var localBranch = repository.Head;
 
-            var dialog = new PullDialog(remote, branchName, true);
+            var targetBranch = repository.Head.TrackedBranch ?? repository.Head;
+            var targetBranchName = targetBranch.GetName();
+
+            var dialog = new PullDialog(
+                targetBranch.RemoteName ?? repository.GetDefaultRemoteName(),
+                targetBranchName,
+                trackRemoteBranch: repository.Head.TrackedBranch != null,
+                remotes: repository.GetRemoteNames(),
+                branches: repository.GetBranchNames());
+
             var result = mainThread.Invoke(() => dialog.ShowDialog());
-
             if (result == true && !string.IsNullOrEmpty(dialog.Remote) && !string.IsNullOrEmpty(dialog.Branch))
             {
-                var targetBranch = repository
+                targetBranch = repository
                     .Branches
                     .FirstOrDefault(x =>
                         x.RemoteName == dialog.Remote &&
                         x.CanonicalName.EndsWith(dialog.Branch));
 
-                if (targetBranch != null)
-                {
-                    eventStream.Push(Status.Start("Pull {0} {1} {2}", targetBranch.RemoteName, targetBranch.FriendlyName, dialog.IsFastForward ? "--ff-only" : string.Empty));
+                if (targetBranch == null)
+                    throw new InvalidOperationException(string.Format("Branch {0}:{1} not found", dialog.Remote, dialog.Branch));
 
-                    var mergeResult = repository.Merge(
-                        targetBranch,
-                        repository.Config.BuildSignature(DateTimeOffset.Now),
-                        new MergeOptions()
-                        {
-                            FastForwardStrategy = dialog.IsFastForward ?
-                                FastForwardStrategy.FastForwardOnly : FastForwardStrategy.NoFastForward
-                        });
+                eventStream.Push(Status.Start("Pull {0} {1} {2}", targetBranch.RemoteName, targetBranch.FriendlyName, dialog.IsFastForward ? "--ff-only" : string.Empty));
 
-                    eventStream.Push(Status.Finish(mergeResult.Status.ToString()));
-                }
+                var mergeResult = repository.Merge(
+                    targetBranch,
+                    repository.Config.BuildSignature(DateTimeOffset.Now),
+                    new MergeOptions()
+                    {
+                        FastForwardStrategy = dialog.IsFastForward ?
+                            FastForwardStrategy.FastForwardOnly : FastForwardStrategy.NoFastForward
+                    });
+
+                if (dialog.TrackRemoteBranch)
+                    localBranch.Track(repository, targetBranch);
+
+                eventStream.Push(Status.Finish(mergeResult.Status.ToString()));
             }
 
             return Task.CompletedTask;

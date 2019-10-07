@@ -1,15 +1,30 @@
-﻿using Terminal.Gui;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Terminal.Gui;
 
 namespace Guit.Plugin.Sync
 {
     class PullDialog : DialogBox
     {
-        public PullDialog(string remote, string branchName, bool isFastForward)
+        readonly IEnumerable<string> remotes;
+        readonly IEnumerable<string> branches;
+
+        public PullDialog(
+            string remote,
+            string branchName,
+            bool isFastForward = true,
+            bool trackRemoteBranch = false,
+            IEnumerable<string>? remotes = null,
+            IEnumerable<string>? branches = null)
             : base("Pull")
         {
             Remote = remote;
             Branch = branchName;
             IsFastForward = isFastForward;
+            TrackRemoteBranch = trackRemoteBranch;
+
+            this.remotes = remotes ?? Enumerable.Empty<string>();
+            this.branches = branches ?? Enumerable.Empty<string>();
         }
 
         public string Remote { get; set; }
@@ -18,19 +33,23 @@ namespace Guit.Plugin.Sync
 
         public bool IsFastForward { get; set; }
 
+        public bool TrackRemoteBranch { get; set; }
+
         protected override void EndInit()
         {
             Width = 60;
-            Height = 15;
+            Height = 16;
 
             Add(new StackPanel(
                 new Label("Remote"),
-                Bind(new TextField(string.Empty) { Height = 1 }, nameof(Remote)),
+                Bind(new CompletionTextField(remotes.ToArray()) { Height = 1 }, nameof(Remote)),
                 new EmptyLine(),
                 new Label("Remote Branch"),
-                Bind(new TextField(string.Empty) { Height = 1 }, nameof(Branch)),
+                Bind(new CompletionTextField(branches.ToArray()) { Height = 1 }, nameof(Branch)),
                 new EmptyLine(),
-                Bind(new CheckBox("Fast Forward"), nameof(IsFastForward)))
+                Bind(new CheckBox("Fast Forward"), nameof(IsFastForward)),
+                new EmptyLine(),
+                Bind(new CheckBox("Track Remote Branch"), nameof(TrackRemoteBranch)))
             {
                 Y = 1,
                 X = 1,
