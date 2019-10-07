@@ -11,11 +11,15 @@ namespace Guit
     {
         const int MinWidth = 60;
 
-        public MessageBox(string title, string message)
+        public MessageBox(string title, string message, params string[] args)
+            : this(title, DialogBoxButton.Ok, message, args)
+        { }
+
+        public MessageBox(string title, DialogBoxButton buttons, string message, params string[] args)
             : base(title)
         {
-            Message = message;
-            Buttons = DialogBoxButton.Ok;
+            Message = args != null ? string.Format(message, args) : message;
+            Buttons = buttons;
         }
 
         protected override void EndInit()

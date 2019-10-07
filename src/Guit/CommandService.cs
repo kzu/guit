@@ -79,7 +79,12 @@ namespace Guit
                     }
                     catch (Exception ex)
                     {
-                        mainThread.Invoke(() => Application.Run(new MessageBox("Error", ex.Message)));
+                        mainThread.Invoke(() =>
+                        {
+                            eventStream.Push(Status.Failed());
+
+                            Application.Run(new MessageBox("Error", ex.Message));
+                        });
                     }
                 }
             });

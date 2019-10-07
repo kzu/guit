@@ -15,8 +15,7 @@ namespace Guit.Plugin.Log
             Width = 80;
             Height = 15;
 
-            InitialFocusedView = Add(
-                new RadioGroup(Enum.GetNames(typeof(ResetMode))),
+            Add(new RadioGroup(Enum.GetNames(typeof(ResetMode))),
                 nameof(ResetMode),
                 resetMode => (int)resetMode - 1,
                 selectedIndex => (ResetMode)selectedIndex + 1);

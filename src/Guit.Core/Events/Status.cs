@@ -31,5 +31,7 @@
         public static Status Finish(string status, params string[] args) => Get(1, status, args);
 
         public static Status Succeeded() => Get(1, "Succeeded!");
+
+        public static Status Failed() => Get(1, "Failed");
     }
 }

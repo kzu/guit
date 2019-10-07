@@ -56,5 +56,7 @@ namespace Guit
         public string? Context { get; }
 
         public bool Visible { get; set; } = true;
+
+        public bool ReportProgress { get; set; } = true;
     }
 }

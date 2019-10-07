@@ -21,8 +21,6 @@ namespace Guit.Plugin.Changes
             textView.Height = Dim.Height(this) - 7;
             textView.Text = message ?? string.Empty;
 
-            InitialFocusedView = textView;
-
             Add(textView);
 
             // Set IsInitialized and raise Initialized at the end.

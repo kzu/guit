@@ -32,7 +32,7 @@ namespace Guit
 
         void OnStatus(Status value)
         {
-            if (value.Progress > 0 && !string.IsNullOrEmpty(value.NewStatus) && progressDialog == null)
+            if (value.Progress > 0 && value.Progress < 1 && !string.IsNullOrEmpty(value.NewStatus) && progressDialog == null)
             {
                 if (minimalProgressDialog != null)
                 {

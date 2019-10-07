@@ -7,10 +7,13 @@ namespace Guit
     /// </summary>
     public class InputBox : DialogBox
     {
-        public InputBox(string title, string message)
+        readonly string[] completions;
+
+        public InputBox(string title, string message, params string[] completions)
             : base(title)
         {
             Message = message;
+            this.completions = completions;
         }
 
         protected override void EndInit()
@@ -19,17 +22,14 @@ namespace Guit
             Height = 10;
 
             var messageLabel = Bind(
-                new Label(string.Empty)
+                new Label(Message)
                 {
                     Y = 1,
-                    Width = Dim.Fill(2)
                 }, nameof(Message));
 
-            var textField = Bind(new TextField(string.Empty), nameof(Text));
+            var textField = Bind(new CompletionTextField(completions), nameof(Text));
 
-            InitialFocusedView = textField;
-
-            Add(new StackPanel(messageLabel, textField));
+            Add(new StackPanel(messageLabel, textField) { X = 1, Width = Dim.Fill(2) });
 
             base.EndInit();
         }
