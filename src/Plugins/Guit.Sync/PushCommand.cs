@@ -33,11 +33,10 @@ namespace Guit.Plugin.Sync
         {
             var localBranch = repository.Head;
             var targetBranch = repository.Head.TrackedBranch ?? repository.Head;
-            var targetBranchName = targetBranch.GetName();
 
             var dialog = new PushDialog(
                 targetBranch.RemoteName ?? repository.GetDefaultRemoteName(),
-                targetBranchName,
+                targetBranch.GetName(),
                 trackRemoteBranch: repository.Head.TrackedBranch != null,
                 remotes: repository.GetRemoteNames(),
                 branches: repository.GetBranchNames());

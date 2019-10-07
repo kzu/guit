@@ -23,9 +23,11 @@
 
         public static implicit operator Status(float progress) => new Status(null, progress);
 
+        public static Status Create(string status, params string[] args) => Create(default, status, args);
+
         public static Status Create(float progress, string status, params string[] args) =>
             new Status(args != null ? string.Format(status, args) : status, progress);
-        
+
         public static Status Start(string status, params string[] args) => Create(0.1f, status, args);
 
         public static Status Finish(string status, params string[] args) => Create(1, status, args);

@@ -31,29 +31,29 @@ namespace Guit.Plugin.Sync
             var localBranch = repository.Head;
 
             var targetBranch = repository.Head.TrackedBranch ?? repository.Head;
-            var targetBranchName = targetBranch.GetName();
 
             var dialog = new PullDialog(
                 targetBranch.RemoteName ?? repository.GetDefaultRemoteName(),
-                targetBranchName,
-                trackRemoteBranch: repository.Head.TrackedBranch != null,
+                targetBranch.GetName(),
+                trackRemoteBranch: false,
                 remotes: repository.GetRemoteNames(),
                 branches: repository.GetBranchNames());
 
             var result = mainThread.Invoke(() => dialog.ShowDialog());
-            if (result == true && !string.IsNullOrEmpty(dialog.Remote) && !string.IsNullOrEmpty(dialog.Branch))
+            if (result == true && !string.IsNullOrEmpty(dialog.Branch))
             {
-                targetBranch = repository
-                    .Branches
-                    .FirstOrDefault(x =>
-                        x.RemoteName == dialog.Remote &&
-                        x.CanonicalName.EndsWith(dialog.Branch));
+                var targetBranchFriendlyName = string.IsNullOrEmpty(dialog.Remote) ?
+                    dialog.Branch : $"{dialog.Remote}/{dialog.Branch}";
+
+                targetBranch = repository.Branches
+                    .FirstOrDefault(x => x.FriendlyName == targetBranchFriendlyName);
 
                 if (targetBranch == null)
-                    throw new InvalidOperationException(string.Format("Branch {0}:{1} not found", dialog.Remote, dialog.Branch));
+                    throw new InvalidOperationException(string.Format("Branch {0} not found", targetBranchFriendlyName));
 
-                eventStream.Push(Status.Start("Pull {0} {1} {2}", targetBranch.RemoteName, targetBranch.FriendlyName, dialog.IsFastForward ? "--ff-only" : string.Empty));
+                eventStream.Push(Status.Start("Pull {0} {1}", targetBranchFriendlyName, dialog.IsFastForward ? "With Fast Fordward" : string.Empty));
 
+                // 1. Merge
                 var mergeResult = repository.Merge(
                     targetBranch,
                     repository.Config.BuildSignature(DateTimeOffset.Now),
@@ -63,8 +63,16 @@ namespace Guit.Plugin.Sync
                             FastForwardStrategy.FastForwardOnly : FastForwardStrategy.NoFastForward
                     });
 
+                // 2. Track
                 if (dialog.TrackRemoteBranch)
                     localBranch.Track(repository, targetBranch);
+
+                // 3. Update submodules
+                if (dialog.UpdateSubmodules)
+                {
+                    eventStream.Push(Status.Create(0.8f, "Updating submodules..."));
+                    repository.UpdateSubmodules(eventStream: eventStream);
+                }
 
                 eventStream.Push(Status.Finish(mergeResult.Status.ToString()));
             }

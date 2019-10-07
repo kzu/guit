@@ -14,6 +14,7 @@ namespace Guit.Plugin.Sync
             string branchName,
             bool isFastForward = true,
             bool trackRemoteBranch = false,
+            bool updateSubmodules = true,
             IEnumerable<string>? remotes = null,
             IEnumerable<string>? branches = null)
             : base("Pull")
@@ -22,6 +23,7 @@ namespace Guit.Plugin.Sync
             Branch = branchName;
             IsFastForward = isFastForward;
             TrackRemoteBranch = trackRemoteBranch;
+            UpdateSubmodules = updateSubmodules;
 
             this.remotes = remotes ?? Enumerable.Empty<string>();
             this.branches = branches ?? Enumerable.Empty<string>();
@@ -35,10 +37,12 @@ namespace Guit.Plugin.Sync
 
         public bool TrackRemoteBranch { get; set; }
 
+        public bool UpdateSubmodules { get; set; }
+
         protected override void EndInit()
         {
             Width = 60;
-            Height = 16;
+            Height = 19;
 
             Add(new StackPanel(
                 new Label("Remote"),
@@ -48,6 +52,8 @@ namespace Guit.Plugin.Sync
                 Bind(new CompletionTextField(branches.ToArray()) { Height = 1 }, nameof(Branch)),
                 new EmptyLine(),
                 Bind(new CheckBox("Fast Forward"), nameof(IsFastForward)),
+                new EmptyLine(),
+                Bind(new CheckBox("Update Submodules"), nameof(UpdateSubmodules)),
                 new EmptyLine(),
                 Bind(new CheckBox("Track Remote Branch"), nameof(TrackRemoteBranch)))
             {
