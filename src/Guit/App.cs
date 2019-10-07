@@ -46,7 +46,11 @@ namespace Guit
             this.repository = repository;
 
             eventStream.Of<BranchChanged>().Subscribe(x =>
-                mainThread.Invoke(() => (Application.Current as IRefreshPattern)?.Refresh()));
+                mainThread.Invoke(() =>
+                {
+                    if (CurrentView != null && shellWindows.TryGetValue(CurrentView, out var shellWindow))
+                        shellWindow.Refresh();
+                }));
         }
 
         public ContentView? CurrentView { get; private set; }

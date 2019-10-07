@@ -21,7 +21,10 @@ namespace Guit
 
         Window? Window => window != null ? window : window = this.GetWindow();
 
-        public void Refresh() => Text = GetStatus();
+        public void Refresh()
+        {
+            Text = GetStatus();
+        }
 
         public override void LayoutSubviews()
         {

@@ -30,6 +30,8 @@ namespace Guit
 
         public void Refresh()
         {
+            Content.Refresh();
+
             foreach (var decorator in decorators.OfType<IRefreshPattern>())
                 decorator.Refresh();
         }

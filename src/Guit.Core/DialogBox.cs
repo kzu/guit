@@ -75,8 +75,6 @@ namespace Guit
 
         public bool? Result { get; protected set; }
 
-        protected View? InitialFocusedView { get; set; }
-
         public bool? ShowDialog()
         {
             Application.Run(this);
@@ -107,9 +105,18 @@ namespace Guit
 
             try
             {
-                // Ensure to set initial focus to the specified view
-                if (!initialFocusSet && InitialFocusedView != null)
-                    SetFocus(InitialFocusedView);
+                if (!initialFocusSet)
+                {
+                    // Try to set initial focus to the first text-based input control
+                    var inputView = this.TraverseSubViews().FirstOrDefault(x =>
+                        (x is TextField textField) ||
+                        (x is TextView textView && !textView.ReadOnly) ||
+                        x is CheckBox ||
+                        x is RadioGroup);
+
+                    if (inputView != null)
+                        SetFocus(inputView);
+                }
             }
             finally
             {
