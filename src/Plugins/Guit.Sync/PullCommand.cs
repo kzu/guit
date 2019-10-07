@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Guit.Events;
 using Guit.Sync.Properties;
 using LibGit2Sharp;
+using LibGit2Sharp.Handlers;
 using Merq;
 
 namespace Guit.Plugin.Sync
@@ -17,13 +18,15 @@ namespace Guit.Plugin.Sync
         readonly MainThread mainThread;
         readonly IRepository repository;
         readonly IEventStream eventStream;
+        readonly CredentialsHandler credentials;
 
         [ImportingConstructor]
-        public PullCommand(MainThread mainThread, IRepository repository, IEventStream eventStream)
+        public PullCommand(MainThread mainThread, IRepository repository, IEventStream eventStream, CredentialsHandler credentials)
         {
             this.mainThread = mainThread;
             this.repository = repository;
             this.eventStream = eventStream;
+            this.credentials = credentials;
         }
 
         public Task ExecuteAsync(CancellationToken cancellation)
@@ -53,7 +56,20 @@ namespace Guit.Plugin.Sync
 
                 eventStream.Push(Status.Start("Pull {0} {1}", targetBranchFriendlyName, dialog.IsFastForward ? "With Fast Fordward" : string.Empty));
 
-                // 1. Merge
+                // 1. Try Fetch
+                if (targetBranch.IsRemote)
+                {
+                    try
+                    {
+                        repository.Fetch(targetBranch.RemoteName, credentials);
+                    }
+                    catch (Exception ex)
+                    {
+                        eventStream.Push(Status.Create("Unable to fetch from remote '{0}': {1}", targetBranch.RemoteName, ex.Message));
+                    }
+                }
+
+                // 2. Merge
                 var mergeResult = repository.Merge(
                     targetBranch,
                     repository.Config.BuildSignature(DateTimeOffset.Now),
@@ -63,11 +79,11 @@ namespace Guit.Plugin.Sync
                             FastForwardStrategy.FastForwardOnly : FastForwardStrategy.NoFastForward
                     });
 
-                // 2. Track
+                // 3. Track
                 if (dialog.TrackRemoteBranch)
                     localBranch.Track(repository, targetBranch);
 
-                // 3. Update submodules
+                // 4. Update submodules
                 if (dialog.UpdateSubmodules)
                 {
                     eventStream.Push(Status.Create(0.8f, "Updating submodules..."));

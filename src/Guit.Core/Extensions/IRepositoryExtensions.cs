@@ -4,6 +4,8 @@ using System.ComponentModel;
 using Merq;
 using Guit.Events;
 using System.IO;
+using Git = LibGit2Sharp.Commands;
+using LibGit2Sharp.Handlers;
 
 namespace LibGit2Sharp
 {
@@ -55,5 +57,30 @@ namespace LibGit2Sharp
                 }
             }
         }
+
+        public static void Fetch(this IRepository repository, string remoteName, CredentialsHandler credentials, IEventStream? eventStream = null)
+        {
+            if (repository.Network.Remotes.FirstOrDefault(x => x.Name == remoteName) is Remote remote)
+                repository.Fetch(remote, credentials, eventStream);
+        }
+
+        public static void Fetch(this IRepository repository, Remote remote, CredentialsHandler credentials, IEventStream? eventStream = null) =>
+            Git.Fetch(
+                (Repository)repository,
+                remote.Name,
+                remote.FetchRefSpecs.Select(x => x.Specification), new FetchOptions
+                {
+                    CredentialsProvider = credentials,
+                    OnProgress = serverProgressOutput =>
+                    {
+                        eventStream?.Push(new Status(serverProgressOutput));
+                        return true;
+                    },
+                    OnTransferProgress = progress =>
+                    {
+                        eventStream?.Push(new Status($"Received {progress.ReceivedObjects} of {progress.TotalObjects}", progress.ReceivedObjects / (float)progress.TotalObjects));
+                        return true;
+                    }
+                }, string.Empty);
     }
 }

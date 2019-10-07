@@ -1,14 +1,12 @@
-﻿using System.Composition;
+﻿using System;
+using System.Composition;
 using System.Linq;
-using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
-using Git = LibGit2Sharp.Commands;
-using System;
 
 namespace Guit.Commands
 {
@@ -16,12 +14,12 @@ namespace Guit.Commands
     [MenuCommand("Fetch", 'f', nameof(Plugin.Sync))]
     public class FetchCommand : IMenuCommand
     {
-        readonly Repository repository;
+        readonly IRepository repository;
         readonly IEventStream eventStream;
         readonly CredentialsHandler credentials;
 
         [ImportingConstructor]
-        public FetchCommand(Repository repository, IEventStream eventStream, CredentialsHandler credentials)
+        public FetchCommand(IRepository repository, IEventStream eventStream, CredentialsHandler credentials)
         {
             this.repository = repository;
             this.eventStream = eventStream;
@@ -36,29 +34,12 @@ namespace Guit.Commands
             {
                 eventStream.Push(Status.Create((remotes.IndexOf(remote) + 1f) / (remotes.Count + 1f), "Fetching {0}...", remote.Name));
 
-                Git.Fetch(repository, remote.Name, remote.FetchRefSpecs.Select(x => x.Specification), new FetchOptions
-                {
-                    CredentialsProvider = credentials,
-                    OnProgress = OnProgress,
-                    OnTransferProgress = OnTransferProgress
-                }, "");
+                repository.Fetch(remote, credentials, eventStream);
             }
 
             eventStream.Push(Status.Succeeded());
 
             return Task.CompletedTask;
-        }
-
-        bool OnProgress(string serverProgressOutput)
-        {
-            eventStream.Push(new Status(serverProgressOutput));
-            return true;
-        }
-
-        bool OnTransferProgress(TransferProgress progress)
-        {
-            eventStream.Push(new Status($"Received {progress.ReceivedObjects} of {progress.TotalObjects}", progress.ReceivedObjects / (float)progress.TotalObjects));
-            return true;
         }
     }
 }
