@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.ComponentModel;
 
 namespace LibGit2Sharp
 {
@@ -16,5 +18,20 @@ namespace LibGit2Sharp
                 repository.Head.FriendlyName,
                 filePaths,
                 new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
+
+        public static IEnumerable<string> GetBranchNames(this IRepository repository) =>
+            repository
+                .Branches
+                .Select(x => x.GetName())
+                .Distinct()
+                .OrderBy(x => x);
+
+        public static IEnumerable<string> GetRemoteNames(this IRepository repository) =>
+            repository
+                .Network
+                .Remotes
+                .Select(x => x.Name)
+                .Distinct()
+                .OrderBy(x => x);
     }
 }
