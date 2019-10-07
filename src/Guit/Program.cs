@@ -29,15 +29,7 @@ namespace Guit
                 var compositionManager = new CompositionManager(pluginManager);
 
                 Application.Init();
-
-                var composition = compositionManager.CreateComposition();
-                // Force all singletons to be instantiated.
-                composition.GetExports<ISingleton>();
-
-                // Obtain our first exported value
-                Application.Run(composition.GetExport<App>());
-
-                Console.ReadLine();
+                Application.Run(new App(compositionManager));
             }
             catch (Exception e)
             {

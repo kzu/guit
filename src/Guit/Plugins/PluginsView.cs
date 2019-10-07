@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Composition;
+using System.Security;
 using LibGit2Sharp;
 using Terminal.Gui;
 

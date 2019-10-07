@@ -1,23 +1,24 @@
 ﻿using System.Composition;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
-using Terminal.Gui;
 
 namespace Guit
 {
     [Shared]
-    [MenuCommand("Save", 's', "Plugins")]
+    [MenuCommand("Save", 's', "Plugins", ReportProgress = false)]
     public class SavePluginsCommand : IMenuCommand
     {
-        readonly IApp app;
+        readonly IShell app;
 
         [ImportingConstructor]
-        public SavePluginsCommand(IApp app) => this.app = app;
+        public SavePluginsCommand(IShell app) => this.app = app;
 
         public Task ExecuteAsync(CancellationToken cancellation)
         {
-            // TODO: stop app
-            //app.Stop();
+            // TODO: save selected plugins list.
+
+            app.Shutdown();
             return Task.CompletedTask;
         }
     }

@@ -13,7 +13,7 @@ namespace Guit
         readonly Func<Task> run;
 
         [ImportingConstructor]
-        public PluginsCommand(PluginsView view, IApp app) => run = () => app.RunAsync(view);
+        public PluginsCommand(PluginsView view, IShell app) => run = () => app.RunAsync(view);
 
         public Task ExecuteAsync(CancellationToken cancellation) => run();
     }

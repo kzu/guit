@@ -7,9 +7,9 @@ namespace Guit
     class MenuCommandAdapter : IMenuCommand
     {
         readonly Lazy<ContentView, MenuCommandMetadata> view;
-        readonly IApp app;
+        readonly IShell app;
 
-        public MenuCommandAdapter(Lazy<ContentView, MenuCommandMetadata> view, IApp app)
+        public MenuCommandAdapter(Lazy<ContentView, MenuCommandMetadata> view, IShell app)
         {
             this.view = view;
             this.app = app;

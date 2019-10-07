@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Text.RegularExpressions;
 using System.Threading;
 using LibGit2Sharp;
 
@@ -12,6 +13,7 @@ namespace Guit
 {
     class PluginManager : IPluginManager
     {
+        static readonly Regex pluginVersionExpr = new Regex("<PluginVersion>(.*)</PluginVersion>", RegexOptions.Compiled);
         static readonly string[] corePlugins = Assembly
             .GetExecutingAssembly()
             .GetCustomAttributes<CorePluginAttribute>()
@@ -88,25 +90,40 @@ namespace Guit
             var baseDir = Path.Combine(repository.Info.Path, "guit");
 
             var contexts = new List<PluginLoadContext>();
+            var template = Path.Combine(guitDir, "Guit.Plugin.csproj");
+            var plugins = Plugins.ToList();
 
-            if (guitDir != null)
+            foreach (var plugin in plugins.Where(x => !x.Id.EndsWith(".dll")))
             {
-                var template = Path.Combine(guitDir, "Guit.Plugin.csproj");
-                var plugins = Plugins.ToList();
+                var pluginLib = "Guit.Plugin." + plugin.Id;
+                var pluginDir = Path.Combine(baseDir, plugin.Id);
+                var pluginProject = Path.Combine(pluginDir, pluginLib + ".csproj");
+                var pluginReferences = Path.Combine(pluginDir, "obj", "ReferencePaths.txt");
 
-                foreach (var plugin in plugins.Where(x => !x.Id.EndsWith(".dll")))
+                if (!File.Exists(pluginProject) ||
+                    File.ReadLines(pluginProject)
+                        .Select(line => pluginVersionExpr.Match(line))
+                        .Where(m => m.Success)
+                        .Select(m => m.Groups[1].Value)
+                        .FirstOrDefault() != plugin.Version)
                 {
-                    // TODO: skip if hash/version hasn't changed.
-                    var pluginLib = "Guit.Plugin." + plugin.Id;
-                    var pluginDir = Path.Combine(baseDir, plugin.Id);
-                    var pluginProject = Path.Combine(pluginDir, pluginLib + ".csproj");
                     Directory.CreateDirectory(pluginDir);
                     File.Copy(Path.Combine(guitDir, "Guit.Plugin.cs"), Path.Combine(pluginDir, "Program.cs"), true);
                     File.Copy(template, pluginProject, true);
-                    File.WriteAllText(pluginProject, File.ReadAllText(pluginProject)
-                        .Replace("$(PluginId)", plugin.Id)
-                        .Replace("$(PluginVersion)", plugin.Version));
 
+                    File.WriteAllText(pluginProject, File.ReadAllText(pluginProject)
+                        .Replace("$PluginId$", plugin.Id)
+                        .Replace("$PluginVersion$", plugin.Version));
+
+                    if (File.Exists(pluginReferences))
+                        File.Delete(pluginReferences);
+                }
+
+                // If reference paths file exists and any of its referenced assemblies are 
+                // not found, we need to perform a restore.
+                if (!File.Exists(pluginReferences) || 
+                    File.ReadLines(pluginReferences).Any(assemblyFile => !File.Exists(assemblyFile)))
+                {
                     var psi = new ProcessStartInfo("dotnet")
                     {
                         RedirectStandardError = true,
@@ -115,7 +132,9 @@ namespace Guit
 
                     psi.ArgumentList.Add("msbuild");
                     psi.ArgumentList.Add("-r");
+                    psi.ArgumentList.Add("-nologo");
                     psi.ArgumentList.Add($"-bl:\"{Path.Combine(pluginDir, "msbuild.binlog")}\"");
+                    psi.ArgumentList.Add("-t:ResolveAssemblyReferences");
                     psi.ArgumentList.Add($"\"{pluginProject}\"");
 
                     var ev = new ManualResetEventSlim();
@@ -132,17 +151,22 @@ namespace Guit
 
                     if (dotnet.ExitCode != 0)
                         throw new ArgumentException("Failed to refresh configured plugins.");
-
-                    contexts.Add(new NuGetPluginLoadContext(
-                        plugin.Id,
-                        plugin.Version,
-                        Path.Combine(pluginDir, "bin", "Debug", pluginLib + ".dll"),
-                        File.ReadAllLines(Path.Combine(pluginDir, "obj", "ReferencePaths.txt")),
-                        AssemblyLoadContext.Default));
+                }
+                else
+                {
+                    // We don't need to do anything!
+                    Console.WriteLine($"Plugin {plugin.Id},{plugin.Version} is up-to-date");
                 }
 
-                contexts.Add(new CorePluginLoadContext(plugins.Where(x => x.Id.EndsWith(".dll")).Select(x => x.Id)));
+                contexts.Add(new NuGetPluginLoadContext(
+                    plugin.Id,
+                    plugin.Version,
+                    Path.Combine(pluginDir, "bin", "Debug", pluginLib + ".dll"),
+                    File.ReadAllLines(Path.Combine(pluginDir, "obj", "ReferencePaths.txt")),
+                    AssemblyLoadContext.Default));
             }
+
+            contexts.Add(new CorePluginLoadContext(plugins.Where(x => x.Id.EndsWith(".dll")).Select(x => x.Id)));
 
             return new PluginContext(contexts);
         }

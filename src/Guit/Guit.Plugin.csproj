@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <PluginId>$PluginId$</PluginId>
+    <PluginVersion>$PluginVersion$</PluginVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="$(PluginId)" Version="$(PluginVersion)" />
@@ -17,6 +19,7 @@
     <WriteLinesToFile File="$(BaseIntermediateOutputPath)\ReferencePaths.txt"
                       Lines="@(ReferencePath -> '%(FullPath)')"
                       Condition="'%(ReferencePath.NuGetPackageId)' == '$(PluginId)'"
+                      WriteOnlyWhenDifferent="true"
                       Overwrite="true" />
   </Target>
 </Project>
