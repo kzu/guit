@@ -31,13 +31,17 @@ namespace Guit.Plugin.Sync
 
         public Task ExecuteAsync(CancellationToken cancellation)
         {
-            var branch = repository.Head.TrackedBranch ?? repository.Head;
-            var branchName = branch
-                .FriendlyName
-                .Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                .FirstOrDefault() ?? string.Empty;
+            var localBranch = repository.Head;
+            var targetBranch = repository.Head.TrackedBranch ?? repository.Head;
+            var targetBranchName = targetBranch.GetName();
 
-            var dialog = new PushDialog(branch.RemoteName ?? "origin", branchName);
+            var dialog = new PushDialog(
+                targetBranch.RemoteName ?? repository.GetRemoteNames().FirstOrDefault() ?? "origin",
+                targetBranchName,
+                trackRemoteBranch: repository.Head.TrackedBranch != null,
+                remotes: repository.GetRemoteNames(),
+                branches: repository.GetBranchNames());
+
             var result = mainThread.Invoke(() => dialog.ShowDialog());
 
             if (result == true && !string.IsNullOrEmpty(dialog.Remote))
@@ -49,7 +53,7 @@ namespace Guit.Plugin.Sync
 
                 if (remote != null)
                 {
-                    var pushRefSpec = $"refs/heads/{branchName}:refs/heads/{dialog.Branch}";
+                    var pushRefSpec = $"refs/heads/{localBranch.GetName()}:refs/heads/{dialog.Branch}";
                     if (dialog.Force)
                         pushRefSpec = "+" + pushRefSpec;
 
@@ -66,6 +70,15 @@ namespace Guit.Plugin.Sync
                     eventStream.Push(Status.Start("git push {0} {1}", dialog.Remote, pushRefSpec));
 
                     repository.Network.Push(remote, pushRefSpec, pushOptions);
+
+                    if (dialog.TrackRemoteBranch)
+                    {
+                        var trackedBranch = repository.Branches.FirstOrDefault(x =>
+                            x.RemoteName == dialog.Remote && x.GetName() == dialog.Branch);
+
+                        if (trackedBranch != null)
+                            localBranch.Track(repository, trackedBranch);
+                    }
 
                     eventStream.Push(Status.Succeeded());
                 }

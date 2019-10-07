@@ -1,15 +1,30 @@
-﻿using Terminal.Gui;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Terminal.Gui;
 
 namespace Guit.Plugin.Sync
 {
     class PushDialog : DialogBox
     {
-        public PushDialog(string remote, string branchName, bool force = false)
+        readonly IEnumerable<string> remotes;
+        readonly IEnumerable<string> branches;
+
+        public PushDialog(
+            string remote,
+            string branchName,
+            bool force = false,
+            bool trackRemoteBranch = false,
+            IEnumerable<string>? remotes = null,
+            IEnumerable<string>? branches = null)
             : base("Push")
         {
             Remote = remote;
             Branch = branchName;
+            TrackRemoteBranch = trackRemoteBranch;
             Force = force;
+
+            this.remotes = remotes ?? Enumerable.Empty<string>();
+            this.branches = branches ?? Enumerable.Empty<string>();
         }
 
         public string Remote { get; set; }
@@ -18,6 +33,8 @@ namespace Guit.Plugin.Sync
 
         public bool Force { get; set; }
 
+        public bool TrackRemoteBranch { get; set; }
+
         protected override void EndInit()
         {
             Width = 60;
@@ -25,10 +42,12 @@ namespace Guit.Plugin.Sync
 
             Add(new StackPanel(
                 new Label("Remote"),
-                Bind(new TextField(string.Empty) { Height = 1 }, nameof(Remote)),
+                Bind(new CompletionTextField(remotes.ToArray()) { Height = 1 }, nameof(Remote)),
                 new EmptyLine(),
                 new Label("Remote Branch"),
-                Bind(new TextField(string.Empty) { Height = 1 }, nameof(Branch)),
+                Bind(new CompletionTextField(branches.ToArray()) { Height = 1 }, nameof(Branch)),
+                new EmptyLine(),
+                Bind(new CheckBox("Track Remote Branch"), nameof(TrackRemoteBranch)),
                 new EmptyLine(),
                 Bind(new CheckBox("Force"), nameof(Force)))
             {

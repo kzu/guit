@@ -13,7 +13,7 @@ namespace Guit
         ustring previousText = string.Empty;
         int bestMatchPosition = -1;
 
-        public CompletionTextField(params string[] completionValues) : base(ustring.Empty)
+        public CompletionTextField(params string[]? completionValues) : base(ustring.Empty)
         {
             this.completionValues = completionValues ?? Enumerable.Empty<string>();
 
