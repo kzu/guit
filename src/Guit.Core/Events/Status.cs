@@ -23,15 +23,15 @@
 
         public static implicit operator Status(float progress) => new Status(null, progress);
 
-        public static Status Get(float progress, string status, params string[] args) =>
+        public static Status Create(float progress, string status, params string[] args) =>
             new Status(args != null ? string.Format(status, args) : status, progress);
+        
+        public static Status Start(string status, params string[] args) => Create(0.1f, status, args);
 
-        public static Status Start(string status, params string[] args) => Get(0.1f, status, args);
+        public static Status Finish(string status, params string[] args) => Create(1, status, args);
 
-        public static Status Finish(string status, params string[] args) => Get(1, status, args);
+        public static Status Succeeded() => Create(1, "Succeeded!");
 
-        public static Status Succeeded() => Get(1, "Succeeded!");
-
-        public static Status Failed() => Get(1, "Failed");
+        public static Status Failed() => Create(1, "Failed");
     }
 }

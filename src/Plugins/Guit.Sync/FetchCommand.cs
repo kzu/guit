@@ -34,7 +34,7 @@ namespace Guit.Commands
 
             foreach (var remote in remotes)
             {
-                eventStream.Push(Status.Get((remotes.IndexOf(remote) + 1f) / (remotes.Count + 1f), "Fetching {0}...", remote.Name));
+                eventStream.Push(Status.Create((remotes.IndexOf(remote) + 1f) / (remotes.Count + 1f), "Fetching {0}...", remote.Name));
 
                 Git.Fetch(repository, remote.Name, remote.FetchRefSpecs.Select(x => x.Specification), new FetchOptions
                 {
