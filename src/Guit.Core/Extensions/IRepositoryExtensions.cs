@@ -33,5 +33,8 @@ namespace LibGit2Sharp
                 .Select(x => x.Name)
                 .Distinct()
                 .OrderBy(x => x);
+
+        public static string GetDefaultRemoteName(this IRepository repository, string defaultRemoteName = "origin") =>
+            repository.GetRemoteNames().Contains(defaultRemoteName) ? defaultRemoteName : repository.GetRemoteNames().FirstOrDefault();
     }
 }
