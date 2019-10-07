@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
+using Merq;
+using Guit.Events;
+using System.IO;
 
 namespace LibGit2Sharp
 {
@@ -36,5 +39,21 @@ namespace LibGit2Sharp
 
         public static string GetDefaultRemoteName(this IRepository repository, string defaultRemoteName = "origin") =>
             repository.GetRemoteNames().Contains(defaultRemoteName) ? defaultRemoteName : repository.GetRemoteNames().FirstOrDefault();
+
+        public static void UpdateSubmodules(this IRepository repository, bool recursive = true, IEventStream? eventStream = null)
+        {
+            foreach (var submodule in repository.Submodules)
+            {
+                eventStream?.Push(Status.Create("Submodule update {0}", submodule.Name));
+
+                repository.Submodules.Update(submodule.Name, new SubmoduleUpdateOptions());
+
+                if (recursive)
+                {
+                    using (var subRepository = new Repository(Path.Combine(repository.Info.WorkingDirectory, submodule.Path)))
+                        subRepository.UpdateSubmodules(eventStream: eventStream);
+                }
+            }
+        }
     }
 }

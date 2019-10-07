@@ -28,14 +28,14 @@ namespace Guit.Plugin.Changes
 
         public Task ExecuteAsync(CancellationToken cancellation)
         {
-            var dialog = new InputBox("Switch/Checkout", "Branch", repository.Branches.Select(x => x.FriendlyName).OrderBy(x => x).ToArray());
+            var dialog = new SwitchDialog(branches: repository.Branches.Select(x => x.FriendlyName).OrderBy(x => x).ToArray());
 
-            if (mainThread.Invoke(() => dialog.ShowDialog()) == true && dialog.Text != null && !string.IsNullOrEmpty(dialog.Text))
+            if (mainThread.Invoke(() => dialog.ShowDialog()) == true && !string.IsNullOrEmpty(dialog.Branch))
             {
-                var branch = repository.Branches.FirstOrDefault(x => x.FriendlyName == dialog.Text);
+                var branch = repository.Branches.FirstOrDefault(x => x.FriendlyName == dialog.Branch);
 
                 var targetBranch = branch;
-                var targetBranchName = dialog.Text;
+                var targetBranchName = dialog.Branch;
                 var overwriteTargetBranch = false;
 
                 // Check if the selected branch is remote
@@ -90,6 +90,13 @@ namespace Guit.Plugin.Changes
                 // 4. Checkout the branch
                 eventStream.Push(Status.Create(0.6f, "Swithing to branch {0}", targetBranchName));
                 Git.Checkout(repository, targetBranch);
+
+                if (dialog.UpdateSubmodules)
+                {
+                    // 5. Update sub modules
+                    eventStream.Push(Status.Create(0.8f, "Updating submodules..."));
+                    repository.UpdateSubmodules(eventStream: eventStream);
+                }
 
                 eventStream.Push(new BranchChanged(targetBranchName));
                 eventStream.Push(Status.Succeeded());
