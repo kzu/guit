@@ -76,19 +76,19 @@ namespace Guit.Plugin.Changes
                 // 2. Remove the existing branch if the user decided to overwrite it
                 if (overwriteTargetBranch && targetBranch != null)
                 {
-                    eventStream.Push(Status.Get(0.2f, "Removing branch {0}", targetBranch.FriendlyName));
+                    eventStream.Push(Status.Create(0.2f, "Removing branch {0}", targetBranch.FriendlyName));
                     repository.Branches.Remove(targetBranch);
                 }
 
                 // 3. Create the branch if it does not exist
                 if (targetBranch == null)
                 {
-                    eventStream.Push(Status.Get(0.4f, "Creating branch {0}", targetBranchName));
+                    eventStream.Push(Status.Create(0.4f, "Creating branch {0}", targetBranchName));
                     targetBranch = repository.CreateBranch(targetBranchName);
                 }
 
                 // 4. Checkout the branch
-                eventStream.Push(Status.Get(0.6f, "Swithing to branch {0}", targetBranchName));
+                eventStream.Push(Status.Create(0.6f, "Swithing to branch {0}", targetBranchName));
                 Git.Checkout(repository, targetBranch);
 
                 eventStream.Push(new BranchChanged(targetBranchName));
