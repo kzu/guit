@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Terminal.Gui;
 
 namespace Guit
@@ -6,9 +8,10 @@ namespace Guit
     class ProgressDialog : Dialog
     {
         ProgressBar progressBar;
-        ListView listview;
+        TextView outputTextView;
 
-        readonly List<string> entries = new List<string>();
+        int line = 0;
+        StringBuilder lines = new StringBuilder();
 
         public ProgressDialog(string title)
             : base(title, 0, 0)
@@ -16,19 +19,18 @@ namespace Guit
             Width = Dim.Fill(8);
             Height = Dim.Fill(8);
 
-            listview = new ListView()
+            outputTextView = new TextView
             {
-                CanFocus = false,
-                AllowsMarking = false,
-                Height = Dim.Fill() - 1,
-                Width = Dim.Fill() - 1,
+                ReadOnly = false,
+                Height = Dim.Fill(2),
+                Width = Dim.Fill(2),
                 X = 1,
                 Y = 1
             };
 
             progressBar = new ProgressBar();
 
-            Add(new StackPanel(listview, progressBar));
+            Add(new StackPanel(outputTextView, new EmptyLine(), progressBar));
         }
 
         public override bool ProcessKey(KeyEvent kb)
@@ -46,13 +48,11 @@ namespace Guit
         {
             if (text != null)
             {
-                entries.Add(text);
+                lines.AppendLine(text);
+                outputTextView.Text = lines.ToString();
 
-                listview.SetSource(entries);
-
-                var pageSize = listview.Bounds.Height;
-                if (pageSize > 0)
-                    listview.SelectedItem = ((entries.Count - 1) / pageSize) * pageSize;
+                if (++line > outputTextView.Frame.Height)
+                    outputTextView.ScrollTo(line - outputTextView.Frame.Height);
             }
 
             if (progress > progressBar.Fraction)
