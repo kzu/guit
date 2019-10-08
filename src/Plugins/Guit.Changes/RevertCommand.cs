@@ -37,7 +37,22 @@ namespace Guit.Plugin.Changes
                     {
                         switch (entry.State)
                         {
-                            case FileStatus.ModifiedInWorkdir: repository.RevertFileChanges(entry.FilePath); break;
+                            case FileStatus.ModifiedInWorkdir:
+                                {
+                                    var submodule = repository.Submodules.FirstOrDefault(x => x.Path == entry.FilePath);
+                                    if (submodule != null)
+                                    {
+                                        using (var subRepo = new Repository(submodule.Path))
+                                            subRepo.Reset(ResetMode.Hard, subRepo.Head.Tip);
+
+                                        repository.Submodules.Update(submodule.Name, new SubmoduleUpdateOptions());
+                                    }
+                                    else
+                                    {
+                                        repository.RevertFileChanges(entry.FilePath);
+                                    }
+                                    break;
+                                }
                             case FileStatus.NewInWorkdir: repository.Remove(entry.FilePath); break;
                         }
                     }
