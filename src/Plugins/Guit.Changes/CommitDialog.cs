@@ -7,7 +7,7 @@ namespace Guit.Plugin.Changes
         TextView textView = new TextView();
         string? message;
 
-        public CommitDialog() : base("Commit") { }
+        public CommitDialog(string? title = null) : base(title ?? "Commit") { }
 
         protected override void EndInit()
         {

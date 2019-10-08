@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Composition;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,21 +35,48 @@ namespace Guit.Plugin.Changes
         {
             if (changes.GetMarkedEntries().Any())
             {
-                var dialog = new CommitDialog();
+                foreach (var submoduleEntry in changes.GetMarkedEntries(true))
+                {
+                    var submodule = repository.Submodules.FirstOrDefault(x => x.Path == submoduleEntry.FilePath);
+                    if (submodule != null)
+                    {
+                        using (var subRepo = new Repository(Path.Combine(repository.Info.WorkingDirectory, submodule.Path)))
+                        {
+                            var status = subRepo.RetrieveStatus();
+                            var entries = status.Added
+                                .Concat(status.Removed)
+                                .Concat(status.Modified)
+                                .Concat(status.Untracked)
+                                .Concat(status.Missing);
+
+                            Commit(subRepo, entries, string.Format("Commit Submodule {0}", submodule.Name));
+                        }
+                    }
+                }
+
+                Commit(repository, changes.GetMarkedEntries(), reportProgress: true);
+
+                mainThread.Invoke(() => changes.Refresh());
+            }
+
+            return Task.CompletedTask;
+        }
+
+        void Commit(IRepository repository, IEnumerable<StatusEntry> entries, string title = "Commit", bool reportProgress = false)
+        {
+            if (entries.Any())
+            {
+                var dialog = new CommitDialog(title);
 
                 if (Amend)
                     dialog.Message = repository.Commits.FirstOrDefault()?.Message;
 
-                var dialogResult = mainThread.Invoke(() => dialog.ShowDialog());
-
-                if (dialogResult == true)
+                if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
                 {
-                    eventStream.Push<Status>(0.5f);
-
                     if (!string.IsNullOrEmpty(dialog.NewBranchName))
                         repository.Checkout(repository.CreateBranch(dialog.NewBranchName));
 
-                    foreach (var entry in changes.GetMarkedEntries())
+                    foreach (var entry in entries)
                         repository.Stage(entry.FilePath);
 
                     var signature = repository.Config.BuildSignature(DateTimeOffset.Now);
@@ -57,13 +86,11 @@ namespace Guit.Plugin.Changes
                         AmendPreviousCommit = Amend
                     };
 
-                    repository.Commit(dialog.Message, signature, signature, options);
+                    eventStream.Push<Status>(0.5f);
 
-                    mainThread.Invoke(() => changes.Refresh());
+                    repository.Commit(dialog.Message, signature, signature, options);
                 }
             }
-
-            return Task.CompletedTask;
         }
     }
 }

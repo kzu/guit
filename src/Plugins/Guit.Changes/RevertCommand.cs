@@ -1,4 +1,5 @@
 ﻿using System.Composition;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,7 +43,7 @@ namespace Guit.Plugin.Changes
                                     var submodule = repository.Submodules.FirstOrDefault(x => x.Path == entry.FilePath);
                                     if (submodule != null)
                                     {
-                                        using (var subRepo = new Repository(submodule.Path))
+                                        using (var subRepo = new Repository(Path.Combine(repository.Info.WorkingDirectory, submodule.Path)))
                                             subRepo.Reset(ResetMode.Hard, subRepo.Head.Tip);
 
                                         repository.Submodules.Update(submodule.Name, new SubmoduleUpdateOptions());
