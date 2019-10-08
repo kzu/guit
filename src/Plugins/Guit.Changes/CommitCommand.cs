@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Guit.Events;
 using LibGit2Sharp;
 using Merq;
-using Git = LibGit2Sharp.Commands;
 
 namespace Guit.Plugin.Changes
 {
@@ -46,10 +45,10 @@ namespace Guit.Plugin.Changes
                     eventStream.Push<Status>(0.5f);
 
                     if (!string.IsNullOrEmpty(dialog.NewBranchName))
-                        Git.Checkout(repository, repository.CreateBranch(dialog.NewBranchName));
+                        repository.Checkout(repository.CreateBranch(dialog.NewBranchName));
 
                     foreach (var entry in changes.GetMarkedEntries())
-                        Git.Stage(repository, entry.FilePath);
+                        repository.Stage(entry.FilePath);
 
                     var signature = repository.Config.BuildSignature(DateTimeOffset.Now);
 

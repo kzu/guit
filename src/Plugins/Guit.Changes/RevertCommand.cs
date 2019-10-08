@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LibGit2Sharp;
-using Git = LibGit2Sharp.Commands;
 
 namespace Guit.Plugin.Changes
 {
@@ -39,7 +38,7 @@ namespace Guit.Plugin.Changes
                         switch (entry.State)
                         {
                             case FileStatus.ModifiedInWorkdir: repository.RevertFileChanges(entry.FilePath); break;
-                            case FileStatus.NewInWorkdir: Git.Remove(repository, entry.FilePath); break;
+                            case FileStatus.NewInWorkdir: repository.Remove(entry.FilePath); break;
                         }
                     }
 

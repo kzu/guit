@@ -4,7 +4,6 @@ using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 using LibGit2Sharp;
-using Git = LibGit2Sharp.Commands;
 using Merq;
 using Guit.Events;
 
@@ -71,7 +70,7 @@ namespace Guit.Plugin.Sync
 
                 // 1. Check the remote branch if remote was selected
                 if (branch?.IsRemote == true)
-                    Git.Checkout(repository, branch);
+                    repository.Checkout(branch);
 
                 // 2. Remove the existing branch if the user decided to overwrite it
                 if (overwriteTargetBranch && targetBranch != null)
@@ -89,11 +88,11 @@ namespace Guit.Plugin.Sync
 
                 // 4. Checkout the branch
                 eventStream.Push(Status.Create(0.6f, "Swithing to branch {0}", targetBranchName));
-                Git.Checkout(repository, targetBranch);
+                repository.Checkout(targetBranch);
 
+                // 5. Update sub modules
                 if (dialog.UpdateSubmodules)
                 {
-                    // 5. Update sub modules
                     eventStream.Push(Status.Create(0.8f, "Updating submodules..."));
                     repository.UpdateSubmodules(eventStream: eventStream);
                 }
