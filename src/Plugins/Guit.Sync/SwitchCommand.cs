@@ -8,10 +8,10 @@ using Git = LibGit2Sharp.Commands;
 using Merq;
 using Guit.Events;
 
-namespace Guit.Plugin.Changes
+namespace Guit.Plugin.Sync
 {
     [Shared]
-    [MenuCommand("Switch/Checkout", 's', nameof(Changes))]
+    [MenuCommand("Switch/Checkout", 's', nameof(Sync))]
     public class SwitchCommand : IMenuCommand
     {
         readonly MainThread mainThread;
