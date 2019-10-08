@@ -64,8 +64,10 @@ namespace Guit.Plugin.Changes
             eventStream.Push<SelectionChanged>(files[view.SelectedItem].Entry);
         }
 
-        public IEnumerable<StatusEntry> GetMarkedEntries() =>
-            files.Where(x => view.Source.IsMarked(files.IndexOf(x))).Select(x => x.Entry);
+        public IEnumerable<StatusEntry> GetMarkedEntries(bool? submoduleEntriesOnly = null) => files
+            .Where(x => view.Source.IsMarked(files.IndexOf(x)) &&
+                (submoduleEntriesOnly == null || IsSubmodule(x.Entry.FilePath) == submoduleEntriesOnly))
+            .Select(x => x.Entry);
 
         class FileStatus
         {
