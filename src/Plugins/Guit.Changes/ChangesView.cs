@@ -13,14 +13,14 @@ namespace Guit.Plugin.Changes
     [ContentView(nameof(Changes), '1')]
     public class ChangesView : ContentView
     {
-        readonly Repository repository;
+        readonly IRepository repository;
         readonly IEventStream eventStream;
 
         List<FileStatus> files = new List<FileStatus>();
         ListView view;
 
         [ImportingConstructor]
-        public ChangesView(Repository repository, IEventStream eventStream)
+        public ChangesView(IRepository repository, IEventStream eventStream)
             : base("Changes")
         {
             this.repository = repository;
@@ -44,7 +44,9 @@ namespace Guit.Plugin.Changes
                 .Added.Concat(status.Untracked).Select(x => new FileStatus(x, Status.Added))
                 .Concat(status.Removed.Concat(status.Missing).Select(x => new FileStatus(x, Status.Deleted)))
                 .Concat(status.Modified.Select(x => new FileStatus(x, Status.Modified)))
-                .OrderBy(x => x.Entry.FilePath)
+                .OrderByDescending(x => IsSubmodule(x.Entry.FilePath))
+                .ThenBy(x => x.Status)
+                .ThenBy(x => x.Entry.FilePath)
                 .ToList();
 
             view.SetSource(files);
@@ -53,6 +55,9 @@ namespace Guit.Plugin.Changes
             foreach (var file in files.Where(x => x.Status == Status.Modified))
                 view.Source.SetMark(files.IndexOf(file), true);
         }
+
+        bool IsSubmodule(string filepath) =>
+            repository.Submodules.Any(x => x.Path == filepath);
 
         void OnSelectedChanged()
         {
@@ -92,9 +97,9 @@ namespace Guit.Plugin.Changes
 
         enum Status
         {
-            Added,
-            Deleted,
             Modified,
+            Added,
+            Deleted
         }
     }
 }
