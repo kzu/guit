@@ -10,7 +10,7 @@ namespace Guit.Plugin.Changes
 {
     [Shared]
     [Export]
-    [ContentView(nameof(Changes), '1')]
+    [ContentView(ContentViewIds.Changes, '1')]
     public class ChangesView : ContentView
     {
         readonly IRepository repository;
@@ -41,9 +41,8 @@ namespace Guit.Plugin.Changes
         {
             var status = repository.RetrieveStatus(new StatusOptions());
             files = status
-                .Added.Concat(status.Untracked).Select(x => new FileStatus(x, Status.Added))
-                .Concat(status.Removed.Concat(status.Missing).Select(x => new FileStatus(x, Status.Deleted)))
-                .Concat(status.Modified.Select(x => new FileStatus(x, Status.Modified)))
+                .Where(x => x.State != LibGit2Sharp.FileStatus.Ignored)
+                .Select(x => new FileStatus(x))
                 .OrderByDescending(x => IsSubmodule(x.Entry.FilePath))
                 .ThenBy(x => x.Status)
                 .ThenBy(x => x.Entry.FilePath)
@@ -52,7 +51,7 @@ namespace Guit.Plugin.Changes
             view.SetSource(files);
 
             // Mark modified files by default
-            foreach (var file in files.Where(x => x.Status == Status.Modified))
+            foreach (var file in files.Where(x => x.Status == Status.Modified || status.Staged.Contains(x.Entry)))
                 view.Source.SetMark(files.IndexOf(file), true);
         }
 
@@ -71,10 +70,32 @@ namespace Guit.Plugin.Changes
 
         class FileStatus
         {
-            public FileStatus(StatusEntry entry, Status status)
+            public FileStatus(StatusEntry entry)
             {
                 Entry = entry;
-                Status = status;
+
+                switch (entry.State)
+                {
+                    case LibGit2Sharp.FileStatus.Conflicted:
+                        Status = Status.Conflicted;
+                        break;
+                    case LibGit2Sharp.FileStatus.DeletedFromIndex:
+                    case LibGit2Sharp.FileStatus.DeletedFromWorkdir:
+                        Status = Status.Deleted;
+                        break;
+                    case LibGit2Sharp.FileStatus.ModifiedInIndex:
+                    case LibGit2Sharp.FileStatus.ModifiedInWorkdir:
+                        Status = Status.Modified;
+                        break;
+                    case LibGit2Sharp.FileStatus.NewInIndex:
+                    case LibGit2Sharp.FileStatus.NewInWorkdir:
+                        Status = Status.Added;
+                        break;
+                    case LibGit2Sharp.FileStatus.RenamedInIndex:
+                    case LibGit2Sharp.FileStatus.RenamedInWorkdir:
+                        Status = Status.Renamed;
+                        break;
+                }
             }
 
             public StatusEntry Entry { get; }
@@ -91,6 +112,10 @@ namespace Guit.Plugin.Changes
                         return "- " + Entry.FilePath;
                     case Status.Modified:
                         return "* " + Entry.FilePath;
+                    case Status.Conflicted:
+                        return "! " + Entry.FilePath;
+                    case Status.Renamed:
+                        return "~ " + Entry.FilePath;
                     default:
                         return "+ " + Entry.FilePath;
                 }
@@ -99,9 +124,11 @@ namespace Guit.Plugin.Changes
 
         enum Status
         {
-            Modified,
+            Conflicted,
             Added,
-            Deleted
+            Modified,
+            Deleted,
+            Renamed
         }
     }
 }

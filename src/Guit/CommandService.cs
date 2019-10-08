@@ -12,7 +12,8 @@ namespace Guit
 {
     [Shared]
     [Export]
-    class CommandService
+    [Export(typeof(ICommandService))]
+    class CommandService : ICommandService
     {
         readonly Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>> commands = new Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>>();
         readonly MainThread mainThread;
@@ -67,6 +68,16 @@ namespace Guit
             return ExecuteAsync(command);
         }
 
+        public Task RunAsync(string commandId, CancellationToken cancellation = default)
+        {
+            var command = commands.Values.FirstOrDefault(x => x.Metadata.Id == commandId);
+
+            if (command != null)
+                return ExecuteAsync(command, cancellation);
+
+            return Task.CompletedTask;
+        }
+
         Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, CancellationToken cancellation = default) =>
             Task.Run(async () =>
             {
@@ -87,6 +98,10 @@ namespace Guit
                         });
                     }
                 }
+
+
+                if (command.Value is IAfterExecuteCallback afterCallback)
+                    await afterCallback.AfterExecuteAsync(cancellation);
             });
     }
 }

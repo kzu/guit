@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Terminal.Gui;
 
 namespace Guit
 {
-    class ShellWindow : Window, IRefreshPattern
+    class ShellWindow : Window, IRefreshPattern, ISupportInitializeNotification
     {
         readonly Tuple<int, int, int, int> margin;
         readonly IEnumerable<View> decorators;
+
+        public event EventHandler? Initialized;
 
         public ShellWindow(
             string title,
@@ -46,6 +49,8 @@ namespace Guit
                 value.Height - margin.Item4);
         }
 
+        public bool IsInitialized { get; private set; }
+
         public override void Redraw(Rect bounds)
         {
             base.Redraw(bounds);
@@ -63,5 +68,24 @@ namespace Guit
         }
 
         public override string ToString() => Content.Title;
+
+        void ISupportInitialize.BeginInit()
+        {
+            (Content as ISupportInitialize)?.BeginInit();
+
+            foreach (var decorator in decorators.OfType<ISupportInitializeNotification>())
+                decorator.BeginInit();
+        }
+
+        void ISupportInitialize.EndInit()
+        {
+            (Content as ISupportInitialize)?.EndInit();
+
+            foreach (var decorator in decorators.OfType<ISupportInitializeNotification>())
+                decorator.EndInit();
+
+            IsInitialized = true;
+            Initialized?.Invoke(this, new EventArgs());
+        }
     }
 }

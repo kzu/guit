@@ -10,7 +10,7 @@ using Merq;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand("Resolve", 'r', nameof(Changes))]
+    [MenuCommand(CommandIds.ResolveConflicts, 'r', ContentViewIds.Changes, typeof(ResolveConflictsCommand))]
     public class ResolveConflictsCommand : IMenuCommand
     {
         readonly IEventStream eventStream;

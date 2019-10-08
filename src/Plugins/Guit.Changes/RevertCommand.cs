@@ -8,7 +8,7 @@ using LibGit2Sharp;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand("Revert", 'r', nameof(Changes))]
+    [MenuCommand("Revert", 'r', ContentViewIds.Changes)]
     public class RevertCommand : IMenuCommand
     {
         readonly MainThread mainThread;

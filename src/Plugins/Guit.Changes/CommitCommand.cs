@@ -12,7 +12,7 @@ using Merq;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand("Commit", 'c', nameof(Changes))]
+    [MenuCommand("Commit", 'c', ContentViewIds.Changes)]
     public class CommitCommand : IMenuCommand
     {
         readonly IEventStream eventStream;
