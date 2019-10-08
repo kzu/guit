@@ -82,5 +82,14 @@ namespace LibGit2Sharp
                         return true;
                     }
                 }, string.Empty);
+
+        public static void Checkout(this IRepository repository, Branch branch) =>
+            Git.Checkout(repository, branch);
+
+        public static void Stage(this IRepository repository, string filepath) =>
+            Git.Stage(repository, filepath);
+
+        public static void Remove(this IRepository repository, string filepath) =>
+            Git.Remove(repository, filepath);
     }
 }
