@@ -7,7 +7,9 @@ using Terminal.Gui;
 namespace Guit
 {
     [Shared]
+#if DEBUG
     [MenuCommand("Plugins", Key.F10)]
+#endif
     public class PluginsCommand : IMenuCommand
     {
         readonly Func<Task> run;
