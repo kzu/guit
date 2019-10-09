@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
-using Guit.Sync.Properties;
+using Guit.Plugin.Sync.Properties;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
@@ -78,7 +78,7 @@ namespace Guit.Plugin.Sync
                         FastForwardStrategy = dialog.IsFastForward ?
                             FastForwardStrategy.FastForwardOnly : FastForwardStrategy.NoFastForward
                     });
-
+                
                 // 3. Track
                 if (dialog.TrackRemoteBranch)
                     localBranch.Track(repository, targetBranch);
