@@ -3,10 +3,22 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <RootNamespace>Guit.Plugin.Changes</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="vswhere" Version="2.7.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Guit.Core\Guit.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(VSWhereDir)vswhere.exe" CopyToOutputDirectory="PreserveNewest" Pack="true" />
   </ItemGroup>
 
 </Project>
