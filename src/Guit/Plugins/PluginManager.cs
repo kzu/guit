@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,8 @@ using LibGit2Sharp;
 
 namespace Guit
 {
+    [Shared]
+    [Export(typeof(IPluginManager))]
     class PluginManager : IPluginManager
     {
         static readonly Regex pluginVersionExpr = new Regex("<PluginVersion>(.*)</PluginVersion>", RegexOptions.Compiled);
@@ -22,6 +25,7 @@ namespace Guit
 
         readonly IRepository repository;
 
+        [ImportingConstructor]
         public PluginManager(IRepository repository)
         {
             this.repository = repository;

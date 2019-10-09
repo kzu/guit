@@ -1,29 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Composition;
-using System.Security;
-using LibGit2Sharp;
+﻿using System.Composition;
+using System.Linq;
 using Terminal.Gui;
 
 namespace Guit
 {
     [Shared]
+#if DEBUG
+    [Export]
     [ContentView("Plugins", '6')]
+#endif
     public class PluginsView : ContentView
     {
-        readonly IRepository repository;
+        readonly IPluginManager manager;
 
         ListView view;
 
         [ImportingConstructor]
-        public PluginsView(IRepository repository)
+        public PluginsView(IPluginManager manager)
             : base("Plugins")
         {
-            this.repository = repository;
+            this.manager = manager;
 
-            view = new ListView(new List<string> { "Super", "Duper" })
-            {
-                AllowsMarking = true
-            };
+            view = new ListView(manager.Plugins.ToList());
 
             Content = view;
         }
