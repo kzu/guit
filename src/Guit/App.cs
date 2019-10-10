@@ -1,17 +1,11 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Guit.Events;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
 namespace Guit
 {
     class App : Toplevel
     {
         private CompositionManager manager;
-        private Label spinner = new Label("Reloading plugins...")
+        private Label spinner = new Label("Loading plugins...")
         {
             X = Pos.Center(),
             Y = Pos.Center(),
@@ -54,8 +48,12 @@ namespace Guit
                     //Force all singletons to be instantiated.
                     composition.GetExports<ISingleton>();
 
+                    spinner.Text = "";
+
                     //Obtain our first exported value
                     Application.Run(composition.GetExport<Shell>());
+
+                    spinner.Text = "Reloading plugins...";
                 }
             }
         }
