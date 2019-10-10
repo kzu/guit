@@ -64,7 +64,7 @@ namespace Guit.Plugin.Changes
         }
 
         public IEnumerable<StatusEntry> GetMarkedEntries(bool? submoduleEntriesOnly = null) => files
-            .Where(x => view.Source.IsMarked(files.IndexOf(x)) &&
+            .Where((x, i) => view.Source.IsMarked(i) &&
                 (submoduleEntriesOnly == null || IsSubmodule(x.Entry.FilePath) == submoduleEntriesOnly))
             .Select(x => x.Entry);
 
