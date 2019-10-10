@@ -1,16 +1,14 @@
-﻿using System;
-using System.Composition;
+﻿using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LibGit2Sharp;
-using LibGit2Sharp.Core;
 using Merq;
 
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand(CommandIds.ResolveConflicts, 'r', ContentViewIds.Changes, typeof(ResolveConflictsCommand))]
+    [MenuCommand(CommandIds.ResolveConflicts, 'v', ContentViewIds.Changes, typeof(ResolveConflictsCommand))]
     public class ResolveConflictsCommand : IMenuCommand
     {
         readonly IEventStream eventStream;
@@ -32,11 +30,11 @@ namespace Guit.Plugin.Changes
             var dialog = new ResolveConflictsDialog(repository, repository.Index.Conflicts);
             if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
             {
-                Console.WriteLine("Resolved");
-            }
-            else
-            {
-                Console.WriteLine("Not resolved");
+                foreach (var resolved in dialog.GetResolvedConflicts().ToArray())
+                {
+                    repository.Index.Add(resolved.Ours.Path);
+                    repository.Index.Write();
+                }
             }
 
             return Task.CompletedTask;

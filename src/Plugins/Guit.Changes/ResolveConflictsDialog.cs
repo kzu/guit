@@ -33,15 +33,30 @@ namespace Guit.Plugin.Changes
             base.EndInit();
         }
 
+        public override void WillPresent()
+        {
+            base.WillPresent();
+            if (conflicts.Count != 0)
+            {
+                // Force focus to go to the first entry. Tried everything 
+                // else without success:
+                // Focus(view)
+                // SetNeedsDisplay() (and (view))
+                // view.SelectedItem = 0 && ^
+                ProcessKey(new KeyEvent(Key.Tab));
+            }
+        }
+
+        public IEnumerable<Conflict> GetResolvedConflicts() => conflicts.Where((x, i) => view.Source.IsMarked(i));
+
         public override bool ProcessKey(KeyEvent kb)
         {
-            if (kb.KeyValue == (int)Key.Enter)
+            if (kb.KeyValue == (int)Key.Enter && MostFocused == view)
             {
                 // We always handle Enter, either on the current entry or 
                 // via Ok/Cancel buttons on the base dialog, which is why 
                 // we will always return true.
                 ShowMerge();
-                base.ProcessKey(kb);
                 return true;
             }
 
@@ -147,7 +162,12 @@ namespace Guit.Plugin.Changes
                         // Automatically mark if exit code was success.
                         view.Source.SetMark(conflicts.IndexOf(conflict), true);
                         // This is not repainting the new checkmark :(
-                        Application.MainLoop.Invoke(() => Redraw(Bounds));
+                        Application.MainLoop.Invoke(() =>
+                        {
+                            Redraw(Bounds);
+                            Application.MainLoop.Driver.Wakeup();
+                        });
+                        
                         //Console.WriteLine("Merged");
                     }
                     else
