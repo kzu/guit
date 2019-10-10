@@ -24,8 +24,6 @@ namespace Guit
 
             try
             {
-                Directory.SetCurrentDirectory(@"c:\GitHub\Moq");
-
                 var repositoryProvider = new RepositoryProvider(Directory.GetCurrentDirectory());
                 var pluginManager = new PluginManager(repositoryProvider.Repository);
                 var compositionManager = new CompositionManager(pluginManager);
