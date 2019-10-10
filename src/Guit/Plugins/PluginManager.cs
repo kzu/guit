@@ -104,7 +104,8 @@ namespace Guit
                 var pluginProject = Path.Combine(pluginDir, pluginLib + ".csproj");
                 var pluginReferences = Path.Combine(pluginDir, "obj", "ReferencePaths.txt");
 
-                if (!File.Exists(pluginProject) ||
+                if (!File.Exists(pluginProject) || 
+                    !File.Exists(Path.Combine(pluginDir, "bin", "Debug", pluginLib + ".dll")) ||
                     File.ReadLines(pluginProject)
                         .Select(line => pluginVersionExpr.Match(line))
                         .Where(m => m.Success)
@@ -138,7 +139,6 @@ namespace Guit
                     psi.ArgumentList.Add("-r");
                     psi.ArgumentList.Add("-nologo");
                     psi.ArgumentList.Add($"-bl:\"{Path.Combine(pluginDir, "msbuild.binlog")}\"");
-                    psi.ArgumentList.Add("-t:ResolveAssemblyReferences");
                     psi.ArgumentList.Add($"\"{pluginProject}\"");
 
                     var ev = new ManualResetEventSlim();
