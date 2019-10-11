@@ -53,15 +53,16 @@ namespace Guit.Plugin.Changes
             // Mark modified files by default
             foreach (var file in files.Where(x => x.Status == Status.Modified || status.Staged.Contains(x.Entry)))
                 view.Source.SetMark(files.IndexOf(file), true);
+
+            if (files.Count > 0)
+                OnSelectedChanged();
         }
 
         bool IsSubmodule(string filepath) =>
             repository.Submodules.Any(x => x.Path == filepath);
 
-        void OnSelectedChanged()
-        {
-            eventStream.Push<SelectionChanged>(files[view.SelectedItem].Entry);
-        }
+        void OnSelectedChanged() => 
+            eventStream.Push<SelectionChanged>(files[view.SelectedItem].Entry.FilePath);
 
         public IEnumerable<StatusEntry> GetMarkedEntries(bool? submoduleEntriesOnly = null) => files
             .Where((x, i) => view.Source.IsMarked(i) &&

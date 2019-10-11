@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guit.Log", "Plugins\Guit.Lo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guit.Sync", "Plugins\Guit.Sync\Guit.Sync.csproj", "{CAC536C9-C79E-4EFA-AAB5-CA7E81F70119}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guit.Open", "Plugins\Guit.Open\Guit.Open.csproj", "{E448AB68-712C-46F1-80E5-BE0A7278897C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{CAC536C9-C79E-4EFA-AAB5-CA7E81F70119}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAC536C9-C79E-4EFA-AAB5-CA7E81F70119}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAC536C9-C79E-4EFA-AAB5-CA7E81F70119}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E448AB68-712C-46F1-80E5-BE0A7278897C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E448AB68-712C-46F1-80E5-BE0A7278897C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E448AB68-712C-46F1-80E5-BE0A7278897C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E448AB68-712C-46F1-80E5-BE0A7278897C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +81,7 @@ Global
 		{96AE1DA7-4309-4009-B6B7-179D5B474793} = {2750D3F6-F482-49FE-9B4E-5B8D8B3F4DB8}
 		{3BB1E431-878D-401F-A076-F49492A45AEE} = {2750D3F6-F482-49FE-9B4E-5B8D8B3F4DB8}
 		{CAC536C9-C79E-4EFA-AAB5-CA7E81F70119} = {2750D3F6-F482-49FE-9B4E-5B8D8B3F4DB8}
+		{E448AB68-712C-46F1-80E5-BE0A7278897C} = {2750D3F6-F482-49FE-9B4E-5B8D8B3F4DB8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CD07195-12C2-4DFF-B5DF-03C8F9FECF76}

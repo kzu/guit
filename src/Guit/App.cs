@@ -46,7 +46,7 @@ namespace Guit
                 using (var composition = manager.CreateComposition())
                 {
                     //Force all singletons to be instantiated.
-                    composition.GetExports<ISingleton>();
+                    var singletons = composition.GetExports("Singleton").ToList();
 
                     spinner.Text = "";
 

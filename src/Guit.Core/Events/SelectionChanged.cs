@@ -9,8 +9,12 @@ namespace Guit.Events
 
         public object SelectedObject { get; private set; }
 
+        public static implicit operator SelectionChanged(string selectedFile) => new SelectionChanged(selectedFile);
+
         public static implicit operator SelectionChanged(FileInfo selectedFile) => new SelectionChanged(selectedFile);
 
-        public static implicit operator SelectionChanged(StatusEntry fileStatus) => new SelectionChanged(fileStatus);
+        public static implicit operator SelectionChanged(StatusEntry selectedStatus) => new SelectionChanged(selectedStatus);
+
+        public static implicit operator SelectionChanged(Conflict selectedConflict) => new SelectionChanged(selectedConflict);
     }
 }

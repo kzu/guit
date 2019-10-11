@@ -7,8 +7,8 @@ namespace Guit
 {
     [Shared]
     [Export]
-    [Export(typeof(ISingleton))]
-    public class Selection : ISingleton
+    [Singleton]
+    public class Selection 
     {
         [ImportingConstructor]
         public Selection(IEventStream eventStream) => eventStream.Of<SelectionChanged>().Subscribe(OnSelectionChanged);

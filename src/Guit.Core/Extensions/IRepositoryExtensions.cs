@@ -15,6 +15,10 @@ namespace LibGit2Sharp
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class IRepositoryExtensions
     {
+        public static string GetFullPath(this IRepository repository, string filePath) =>
+            Path.IsPathRooted(filePath) ? Path.GetFullPath(filePath) :
+            Path.GetFullPath(Path.Combine(repository.Info.WorkingDirectory, filePath));
+
         /// <summary>
         /// Reverts the given <paramref name="filePaths"/> to the current head state.
         /// </summary>

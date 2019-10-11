@@ -11,30 +11,28 @@ namespace Guit.Plugin.Changes
     [MenuCommand(WellKnownCommands.ResolveConflicts, 'v', WellKnownViews.Changes, typeof(ResolveConflictsCommand))]
     public class ResolveConflictsCommand : IMenuCommand
     {
-        readonly IEventStream eventStream;
-        readonly MainThread mainThread;
         readonly IRepository repository;
-        readonly ChangesView changes;
+        readonly ICommandService commands;
+        readonly MainThread mainThread;
 
         [ImportingConstructor]
-        public ResolveConflictsCommand(IEventStream eventStream, MainThread mainThread, IRepository repository, ChangesView changes)
+        public ResolveConflictsCommand(IRepository repository, ICommandService commands, MainThread mainThread)
         {
-            this.eventStream = eventStream;
-            this.mainThread = mainThread;
             this.repository = repository;
-            this.changes = changes;
+            this.commands = commands;
+            this.mainThread = mainThread;
         }
 
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
-            var dialog = new ResolveConflictsDialog(repository, repository.Index.Conflicts);
+            var dialog = new ResolveConflictsDialog(repository, commands);
             if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
             {
-                foreach (var resolved in dialog.GetResolvedConflicts().ToArray())
-                {
-                    repository.Index.Add(resolved.Ours.Path);
-                    repository.Index.Write();
-                }
+                //foreach (var resolved in dialog.GetResolvedConflicts().ToArray())
+                //{
+                //    repository.Index.Add(resolved.Ours.Path);
+                //    repository.Index.Write();
+                //}
             }
 
             return Task.CompletedTask;
