@@ -40,7 +40,7 @@ namespace Guit.Plugin.Sync
             this.shell = shell;
         }
 
-        public async Task ExecuteAsync(CancellationToken cancellation)
+        public async Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             var repositoryStatus = repository.RetrieveStatus();
 
@@ -134,7 +134,7 @@ namespace Guit.Plugin.Sync
         public Task AfterExecuteAsync(CancellationToken cancellation)
         {
             if (repository.RetrieveStatus().IsDirty)
-                return shell.RunAsync(ContentViewIds.Changes);
+                return shell.RunAsync(WellKnownViews.Changes);
 
             return Task.CompletedTask;
         }

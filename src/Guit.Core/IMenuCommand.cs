@@ -5,6 +5,6 @@ namespace Guit
 {
     public interface IMenuCommand
     {
-        Task ExecuteAsync(CancellationToken cancellation);
+        Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default);
     }
 }

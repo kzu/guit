@@ -26,7 +26,7 @@ namespace Guit.Commands
             this.credentials = credentials;
         }
 
-        public Task ExecuteAsync(CancellationToken cancellation)
+        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             var remotes = repository.Network.Remotes.ToList();
 

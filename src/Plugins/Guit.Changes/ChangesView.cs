@@ -10,7 +10,7 @@ namespace Guit.Plugin.Changes
 {
     [Shared]
     [Export]
-    [ContentView(ContentViewIds.Changes, '1')]
+    [ContentView(WellKnownViews.Changes, '1')]
     public class ChangesView : ContentView
     {
         readonly IRepository repository;

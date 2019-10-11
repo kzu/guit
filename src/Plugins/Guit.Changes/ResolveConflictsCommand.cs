@@ -8,7 +8,7 @@ using Merq;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand(CommandIds.ResolveConflicts, 'v', ContentViewIds.Changes, typeof(ResolveConflictsCommand))]
+    [MenuCommand(WellKnownCommands.ResolveConflicts, 'v', WellKnownViews.Changes, typeof(ResolveConflictsCommand))]
     public class ResolveConflictsCommand : IMenuCommand
     {
         readonly IEventStream eventStream;
@@ -25,7 +25,7 @@ namespace Guit.Plugin.Changes
             this.changes = changes;
         }
 
-        public Task ExecuteAsync(CancellationToken cancellation)
+        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             var dialog = new ResolveConflictsDialog(repository, repository.Index.Conflicts);
             if (mainThread.Invoke(() => dialog.ShowDialog()) == true)

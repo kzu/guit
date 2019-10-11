@@ -14,7 +14,7 @@ namespace Guit
         [ImportingConstructor]
         public SavePluginsCommand(IShell app) => this.app = app;
 
-        public Task ExecuteAsync(CancellationToken cancellation)
+        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             // TODO: save selected plugins list.
 

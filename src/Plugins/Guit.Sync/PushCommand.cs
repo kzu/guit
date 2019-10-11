@@ -28,7 +28,7 @@ namespace Guit.Plugin.Sync
             this.credentialsProvider = credentialsProvider;
         }
 
-        public Task ExecuteAsync(CancellationToken cancellation)
+        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             var localBranch = repository.Head;
             var targetBranch = repository.Head.TrackedBranch ?? repository.Head;

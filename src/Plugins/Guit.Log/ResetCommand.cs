@@ -21,7 +21,7 @@ namespace Guit.Plugin.Log
             this.log = log;
         }
 
-        public Task ExecuteAsync(CancellationToken cancellation)
+        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             var selectedCommit = log.SelectedCommit;
 
