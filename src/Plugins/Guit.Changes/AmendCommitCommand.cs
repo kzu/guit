@@ -1,12 +1,11 @@
-﻿using System;
-using System.Composition;
+﻿using System.Composition;
 using LibGit2Sharp;
 using Merq;
 
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand("Amend", 'a', nameof(Changes))]
+    [MenuCommand("Amend", 'a', WellKnownViews.Changes)]
     public class AmendCommitCommand : CommitCommand
     {
         [ImportingConstructor]

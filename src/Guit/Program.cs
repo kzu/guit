@@ -6,11 +6,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Microsoft.VisualStudio.Composition;
 using Terminal.Gui;
 using System.Runtime.Versioning;
 using System.Diagnostics;
-using System.Runtime.Loader;
 using System.Threading;
 
 namespace Guit

@@ -22,7 +22,7 @@ namespace Guit
         readonly ConcurrentDictionary<ContentView, string?> contexts = new ConcurrentDictionary<ContentView, string?>();
         readonly ConcurrentDictionary<ContentView, ShellWindow> shellWindows = new ConcurrentDictionary<ContentView, ShellWindow>();
         readonly ConcurrentDictionary<ContentView, ManualResetEventSlim> runningViews = new ConcurrentDictionary<ContentView, ManualResetEventSlim>();
-        
+
         readonly Lazy<ContentView, MenuCommandMetadata> defaultView;
         readonly IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views;
 
@@ -78,6 +78,16 @@ namespace Guit
         {
             RunAsync(defaultView.Value);
             exitEvent.Wait();
+        }
+
+        public Task RunAsync(string contentViewId)
+        {
+            var view = views.FirstOrDefault(x => x.Metadata.Id == contentViewId);
+
+            if (view is null)
+                throw new InvalidOperationException(string.Format("View {0} not found", contentViewId));
+
+            return RunAsync(view.Value);
         }
 
         public Task RunAsync(ContentView view)

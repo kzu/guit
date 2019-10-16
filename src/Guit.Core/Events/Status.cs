@@ -34,6 +34,8 @@
 
         public static Status Succeeded() => Create(1, "Succeeded!");
 
-        public static Status Failed() => Create(1, "Failed");
+        public static Status Failed() => Failed("Failed");
+
+        public static Status Failed(string message) => Create(1, message);
     }
 }

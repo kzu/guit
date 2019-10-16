@@ -42,10 +42,13 @@ namespace Guit
                 DisplayName = id;
             }
 
+            Id = id;
             Context = context;
             Key = key;
             Order = order;
         }
+
+        public string Id { get; set; }
 
         public string DisplayName { get; }
 

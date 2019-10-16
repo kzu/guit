@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System.Linq;
+using Terminal.Gui;
 
 namespace Guit
 {
@@ -6,14 +7,17 @@ namespace Guit
     {
         readonly StackPanelOrientation orientation;
 
-        public StackPanel(params View[] views) : this(StackPanelOrientation.Vertical, views) { }
+        public StackPanel(params View?[] views) : this(StackPanelOrientation.Vertical, views) { }
 
-        public StackPanel(StackPanelOrientation orientation, params View[] views)
+        public StackPanel(StackPanelOrientation orientation, params View?[] views)
         {
             this.orientation = orientation;
 
             foreach (var view in views)
-                Add(view);
+            {
+                if (view != null)
+                    Add(view);
+            }
         }
 
         public override void Add(View view)

@@ -12,7 +12,7 @@ using Merq;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand("Commit", 'c', nameof(Changes))]
+    [MenuCommand("Commit", 'c', WellKnownViews.Changes)]
     public class CommitCommand : IMenuCommand
     {
         readonly IEventStream eventStream;
@@ -31,7 +31,7 @@ namespace Guit.Plugin.Changes
 
         protected bool Amend { get; set; }
 
-        public Task ExecuteAsync(CancellationToken cancellation)
+        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             if (changes.GetMarkedEntries().Any())
             {

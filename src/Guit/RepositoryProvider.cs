@@ -32,11 +32,11 @@ namespace Guit
             }
         }
 
-        [Export(typeof(ISingleton))]
+        [Singleton]
         [Export]
         public Repository Repository { get; }
 
-        [Export(typeof(ISingleton))]
+        [Singleton]
         [Export]
         public IRepository IRepository => Repository;
     }

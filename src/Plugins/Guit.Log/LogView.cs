@@ -12,9 +12,16 @@ namespace Guit.Plugin.Log
     [ContentView(nameof(Log), '3')]
     public class LogView : ContentView
     {
-        readonly IRepository repository;
+        readonly ListViewItemSelector<Commit>[] commitSelectors = new ListViewItemSelector<Commit>[]
+            {
+                new ListViewItemSelector<Commit>(x => x.MessageShort, "*"),
+                new ListViewItemSelector<Commit>(x => x.Author.Name, 15),
+                new ListViewItemSelector<Commit>(x => x.Committer.When.ToString("g"), 19)
+            };
 
-        List<CommitEntry> commits = new List<CommitEntry>();
+        List<Commit> commits = new List<Commit>();
+
+        readonly IRepository repository;
         readonly ListView view;
 
         [ImportingConstructor]
@@ -23,7 +30,7 @@ namespace Guit.Plugin.Log
         {
             this.repository = repository;
 
-            view = new ListView(commits)
+            view = new ListView(new List<ListViewItem<Commit>>())
             {
                 AllowsMarking = true
             };
@@ -33,7 +40,7 @@ namespace Guit.Plugin.Log
 
         public Commit? SelectedCommit =>
             view.SelectedItem >= 0 && view.SelectedItem < commits.Count ?
-                commits[view.SelectedItem].Commit : null;
+                commits[view.SelectedItem] : null;
 
         public override void Refresh()
         {
@@ -41,36 +48,28 @@ namespace Guit.Plugin.Log
 
             commits = repository.Commits
                 .QueryBy(new CommitFilter())
-                .Select(x => new CommitEntry(x))
-                .Take(50)
+                .Take(100)
                 .ToList();
 
-            view.SetSource(commits);
+            if (Frame.Width > 0)
+                RefreshCommits();
         }
 
-        class CommitEntry
+        protected override void EndInit()
         {
-            public CommitEntry(Commit commit)
-            {
-                Commit = commit;
-            }
+            base.EndInit();
 
-            public Commit Commit { get; }
-
-            public override string ToString()
-            {
-                return GetNormalizedString(Commit.MessageShort, 70) +
-                    GetNormalizedString(Commit.Author.Name, 25) +
-                    Commit.Committer.When;
-            }
-
-            string GetNormalizedString(string value, int length)
-            {
-                if (value.Length < length)
-                    return string.Concat(value, new String(' ', length - value.Length));
-
-                return value;
-            }
+            //RefreshCommits();
         }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            RefreshCommits();
+        }
+
+        void RefreshCommits() =>
+            view.SetSource(commits.Select(x => new ListViewItem<Commit>(x, Frame.Width - 10, commitSelectors.ToArray())).ToList());
     }
 }

@@ -5,6 +5,7 @@ namespace Guit
 {
     public class MenuCommandMetadata
     {
+        public string Id { get; set; }
         public string DisplayName { get; set; }
         public int Key { get; set; }
         public double Order { get; set; }

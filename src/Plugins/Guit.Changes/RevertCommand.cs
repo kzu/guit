@@ -8,7 +8,7 @@ using LibGit2Sharp;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand("Revert", 'r', nameof(Changes))]
+    [MenuCommand("Revert", 'r', WellKnownViews.Changes)]
     public class RevertCommand : IMenuCommand
     {
         readonly MainThread mainThread;
@@ -23,7 +23,7 @@ namespace Guit.Plugin.Changes
             this.changes = changes;
         }
 
-        public Task ExecuteAsync(CancellationToken cancellation)
+        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             var entries = changes.GetMarkedEntries().ToList();
 

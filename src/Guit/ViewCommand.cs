@@ -23,7 +23,7 @@ namespace Guit.Commands
             this.selection = selection;
         }
 
-        public Task ExecuteAsync(CancellationToken cancellation)
+        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             var psi = new ProcessStartInfo("code")
             {

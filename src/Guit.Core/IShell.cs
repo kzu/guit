@@ -24,6 +24,11 @@ namespace Guit
         Task RunAsync(ContentView view);
 
         /// <summary>
+        /// Runs the given main view as the top-level view in the app.
+        /// </summary>
+        Task RunAsync(string contentViewId);
+
+        /// <summary>
         /// Runs the next registered content view
         /// </summary>
         Task RunNext();

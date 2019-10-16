@@ -12,17 +12,20 @@ namespace Guit
 {
     [Shared]
     [Export]
-    class CommandService
+    [Export(typeof(ICommandService))]
+    class CommandService : ICommandService
     {
         readonly Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>> commands = new Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>>();
         readonly MainThread mainThread;
         readonly IEventStream eventStream;
+        readonly Selection selection;
 
         [ImportingConstructor]
         public CommandService(
             IShell app,
             MainThread mainThread,
             IEventStream eventStream,
+            Selection selection,
             [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands,
             [ImportMany] IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views)
         {
@@ -54,20 +57,31 @@ namespace Guit
 
             this.mainThread = mainThread;
             this.eventStream = eventStream;
+            this.selection = selection;
         }
 
         public IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> Commands => commands.Values;
 
-        public Task RunAsync(int hotKey, string? context)
+        public Task RunAsync(int hotKey, string? context, object? parameter = null, CancellationToken cancellation = default)
         {
             if (!commands.TryGetValue(Tuple.Create(hotKey, context), out var command) &&
                 !commands.TryGetValue(Tuple.Create(hotKey, default(string)), out command))
                 return Task.CompletedTask;
 
-            return ExecuteAsync(command);
+            return ExecuteAsync(command, parameter ?? selection.Current, cancellation);
         }
 
-        Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, CancellationToken cancellation = default) =>
+        public Task RunAsync(string commandId, object? parameter = null, CancellationToken cancellation = default)
+        {
+            var command = commands.Values.FirstOrDefault(x => x.Metadata.Id == commandId);
+
+            if (command != null)
+                return ExecuteAsync(command, parameter ?? selection.Current, cancellation);
+
+            return Task.CompletedTask;
+        }
+
+        Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, object? parameter = null, CancellationToken cancellation = default) =>
             Task.Run(async () =>
             {
                 using (var progress = command.Metadata.ReportProgress ?
@@ -75,7 +89,7 @@ namespace Guit
                 {
                     try
                     {
-                        await command.Value.ExecuteAsync(cancellation);
+                        await command.Value.ExecuteAsync(parameter, cancellation);
                     }
                     catch (Exception ex)
                     {
@@ -87,6 +101,10 @@ namespace Guit
                         });
                     }
                 }
+
+
+                if (command.Value is IAfterExecuteCallback afterCallback)
+                    await afterCallback.AfterExecuteAsync(cancellation);
             });
     }
 }

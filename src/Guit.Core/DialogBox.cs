@@ -112,7 +112,8 @@ namespace Guit
                         (x is TextField textField) ||
                         (x is TextView textView && !textView.ReadOnly) ||
                         x is CheckBox ||
-                        x is RadioGroup);
+                        x is RadioGroup || 
+                        x is ListView);
 
                     if (inputView != null)
                         SetFocus(inputView);

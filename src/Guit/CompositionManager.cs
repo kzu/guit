@@ -76,6 +76,8 @@ namespace Guit
             public T GetExport<T>() => exports.GetExportedValue<T>();
 
             public IEnumerable<T> GetExports<T>() => exports.GetExportedValues<T>();
+
+            public IEnumerable<object> GetExports(string contractName) => exports.GetExportedValues<object>(contractName);
         }
     }
 }

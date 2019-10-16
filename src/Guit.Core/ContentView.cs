@@ -1,10 +1,14 @@
-﻿using Terminal.Gui;
+﻿using System;
+using System.ComponentModel;
+using Terminal.Gui;
 
 namespace Guit
 {
-    public abstract class ContentView : View, IRefreshPattern
+    public abstract class ContentView : View, IRefreshPattern, ISupportInitializeNotification
     {
         View? content;
+
+        public event EventHandler? Initialized;
 
         public ContentView(string title)
             : base()
@@ -14,6 +18,8 @@ namespace Guit
             Width = Dim.Fill();
             Height = Dim.Fill();
         }
+
+        public bool IsInitialized { get; private set; }
 
         public string Title { get; }
 
@@ -27,6 +33,20 @@ namespace Guit
                 listView.SetNeedsDisplay();
             }
         }
+
+        void ISupportInitialize.BeginInit() => BeginInit();
+
+        void ISupportInitialize.EndInit()
+        {
+            EndInit();
+
+            IsInitialized = true;
+            Initialized?.Invoke(this, new EventArgs());
+        }
+
+        protected virtual void BeginInit() { }
+
+        protected virtual void EndInit() { }
 
         protected View? Content
         {

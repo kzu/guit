@@ -1,10 +1,9 @@
-﻿using System;
-using System.Composition;
+﻿using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
-using Guit.Sync.Properties;
+using Guit.Plugin.Sync.Properties;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
@@ -29,7 +28,7 @@ namespace Guit.Plugin.Sync
             this.credentialsProvider = credentialsProvider;
         }
 
-        public Task ExecuteAsync(CancellationToken cancellation)
+        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             var localBranch = repository.Head;
             var targetBranch = repository.Head.TrackedBranch ?? repository.Head;

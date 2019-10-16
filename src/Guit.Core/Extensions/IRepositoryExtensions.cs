@@ -15,6 +15,10 @@ namespace LibGit2Sharp
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class IRepositoryExtensions
     {
+        public static string GetFullPath(this IRepository repository, string filePath) =>
+            Path.IsPathRooted(filePath) ? Path.GetFullPath(filePath) :
+            Path.GetFullPath(Path.Combine(repository.Info.WorkingDirectory, filePath));
+
         /// <summary>
         /// Reverts the given <paramref name="filePaths"/> to the current head state.
         /// </summary>
@@ -48,12 +52,19 @@ namespace LibGit2Sharp
             {
                 eventStream?.Push(Status.Create("Submodule update {0}", submodule.Name));
 
-                repository.Submodules.Update(submodule.Name, new SubmoduleUpdateOptions());
-
-                if (recursive)
+                try
                 {
-                    using (var subRepository = new Repository(Path.Combine(repository.Info.WorkingDirectory, submodule.Path)))
-                        subRepository.UpdateSubmodules(eventStream: eventStream);
+                    repository.Submodules.Update(submodule.Name, new SubmoduleUpdateOptions() { Init = true });
+
+                    if (recursive)
+                    {
+                        using (var subRepository = new Repository(Path.Combine(repository.Info.WorkingDirectory, submodule.Path)))
+                            subRepository.UpdateSubmodules(eventStream: eventStream);
+                    }
+                }
+                catch
+                {
+                    eventStream?.Push(Status.Create("Failed to update submodule {0}", submodule.Name));
                 }
             }
         }
@@ -91,5 +102,16 @@ namespace LibGit2Sharp
 
         public static void Remove(this IRepository repository, string filepath) =>
             Git.Remove(repository, filepath);
+
+        public static IEnumerable<Commit> GetCommitsToBeRebased(this IRepository repository, Branch branch)
+        {
+            foreach (var commit in repository.Commits)
+            {
+                if (!branch.Commits.Contains(commit))
+                    yield return commit;
+                else
+                    break;
+            }
+        }
     }
 }

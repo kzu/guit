@@ -8,5 +8,7 @@ namespace Guit
         T GetExport<T>();
 
         IEnumerable<T> GetExports<T>();
+
+        IEnumerable<object> GetExports(string contractName);
     }
 }

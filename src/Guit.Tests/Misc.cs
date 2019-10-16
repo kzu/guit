@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using LibGit2Sharp;
+using LibGit2Sharp.Core;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -10,6 +12,76 @@ namespace Guit.Tests
         ITestOutputHelper output;
 
         public Misc(ITestOutputHelper output) => this.output = output;
+
+        [Fact]
+        public void ConflictFromChange()
+        {
+            using (var repository = new Repository(@"..\..\..\.."))
+            {
+                var changed = repository.RetrieveStatus(new StatusOptions()).Modified;
+                foreach (var status in changed)
+                {
+                    var changes = repository.Diff.Compare<TreeChanges>().Modified.First(x => x.Path == status.FilePath);
+                    var oldBlob = repository.Lookup<Blob>(changes.OldOid);
+                    var old = repository.Lookup<Blob>(changes.OldOid);
+
+                    output.WriteLine("#### Changed ####");
+                    output.WriteLine(File.ReadAllText(Path.Combine(repository.Info.WorkingDirectory, status.FilePath)));
+
+                    output.WriteLine("#### Unmodified ####");
+                    output.WriteLine(old.GetContentText());
+
+                    //var history = new FileHistory(repository, status.FilePath).Skip(3).First();
+
+                    //output.WriteLine("#### Base ####");
+                    //output.WriteLine(repository.Lookup<Blob>(history.Commit.Tree[status.FilePath].Target.Id).GetContentText());
+                }
+            }
+        }
+
+        class FakeConflict : Conflict
+        {
+            IndexEntry ancestor;
+            IndexEntry ours;
+            IndexEntry theirs;
+
+            public FakeConflict(IndexEntry ancestor, IndexEntry ours, IndexEntry theirs)
+            {
+                this.ancestor = ancestor;
+                this.ours = ours;
+                this.theirs = theirs;
+            }
+
+            public override IndexEntry Ancestor => ancestor;
+
+            public override IndexEntry Ours => ours;
+
+            public override IndexEntry Theirs => theirs;
+
+            public override string ToString() => ancestor.Path;
+        }
+
+        class FakeEntry : IndexEntry
+        {
+            ObjectId id;
+            string path;
+            StageLevel level;
+
+            public FakeEntry(ObjectId id, string path, StageLevel level)
+            {
+                this.id = id;
+                this.path = path;
+                this.level = level;
+            }
+
+            public override ObjectId Id => id;
+
+            public override Mode Mode => Mode.NonExecutableFile;
+
+            public override string Path => path;
+
+            public override StageLevel StageLevel => level;
+        }
 
         [Fact]
         public void Test()
