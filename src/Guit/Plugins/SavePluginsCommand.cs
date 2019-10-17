@@ -10,14 +10,20 @@ namespace Guit
     public class SavePluginsCommand : IMenuCommand
     {
         readonly IShell app;
+        readonly IPluginManager manager;
+        readonly PluginsView view;
 
         [ImportingConstructor]
-        public SavePluginsCommand(IShell app) => this.app = app;
+        public SavePluginsCommand(IShell app, IPluginManager manager, PluginsView view)
+        {
+            this.app = app;
+            this.manager = manager;
+            this.view = view;
+        }
 
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
-            // TODO: save selected plugins list.
-
+            manager.EnabledPlugins = view.EnabledPlugins;
             app.Shutdown();
             return Task.CompletedTask;
         }

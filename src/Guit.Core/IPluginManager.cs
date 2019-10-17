@@ -6,6 +6,8 @@ namespace Guit
     {
         bool UseCorePlugins { get; set; }
 
-        IEnumerable<PluginInfo> Plugins { get; set; }
+        IEnumerable<PluginInfo> AvailablePlugins { get; }
+
+        IEnumerable<PluginInfo> EnabledPlugins { get; set; }
     }
 }

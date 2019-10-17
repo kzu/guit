@@ -39,6 +39,8 @@ namespace Guit.Plugin.Changes
 
         public override void Refresh()
         {
+            base.Refresh();
+
             var status = repository.RetrieveStatus(new StatusOptions());
             files = status
                 .Where(x => x.State != LibGit2Sharp.FileStatus.Ignored)
