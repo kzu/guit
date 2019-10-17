@@ -40,38 +40,26 @@ namespace Guit
         public IEnumerable<PluginInfo> Plugins
         {
             get => UseCorePlugins ?
-                repository.Config.GetValueOrDefault("guit.plugins", "")
-                    .Split(';', StringSplitOptions.RemoveEmptyEntries)
+                repository.Config
+                    .OfType<ConfigurationEntry<string>>()
+                    .Where(x => x.Key == "guit.plugin")
+                    .Select(x => x.Value)
                     .Concat(corePlugins)
                     .Select(ReadPlugin)
                     .Distinct() :
-                repository.Config.GetValueOrDefault("guit.plugins", "")
-                    .Split(';', StringSplitOptions.RemoveEmptyEntries)
+                repository.Config
+                    .OfType<ConfigurationEntry<string>>()
+                    .Where(x => x.Key == "guit.plugin")
+                    .Select(x => x.Value)
                     .Select(ReadPlugin)
                     .Distinct();
-            //get => UseCorePlugins ?
-            //    repository.Config
-            //        .OfType<ConfigurationEntry<string>>()
-            //        .Where(x => x.Key == "guit.plugin")
-            //        .Select(x => x.Value)
-            //        .Concat(corePlugins)
-            //        .Distinct() :
-            //    repository.Config
-            //        .OfType<ConfigurationEntry<string>>()
-            //        .Where(x => x.Key == "guit.plugin")
-            //        .Select(x => x.Value)
-            //        .Distinct();
             set
             {
-                //repository.Config
-                //    .Set()
-                //    .OfType<ConfigurationEntry<string>>()
-                //    .Where(x => x.Key == "guit.plugin")
-                //    .ToList().ForEach(x => x.)
-                //    .Select(x => x.Value)
-                //    .Concat(corePlugins)
-                //    .Distinct() :
-
+                repository.Config.UnsetAll("guit.plugin");
+                foreach (var plugin in value)
+                {
+                    repository.Config.Add("guit.plugin", plugin.Id);
+                }
             }
         }
 
@@ -207,7 +195,7 @@ namespace Guit
                 {
                     // TODO: check if plugin is currently enabled.
                     IsAvailable = true,
-                    Id = parts[0],
+                    Id = identity,
                     Title = parts[0],
                     Version = parts[1],
                 };
