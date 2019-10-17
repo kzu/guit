@@ -7,13 +7,13 @@ namespace Guit.Plugin.Releaseator
 {
     class CommitEntry
     {
-        public CommitEntry(IRepository repository, Commit commit)
+        public CommitEntry(RepositoryConfig config, Commit commit)
         {
-            Repository = repository;
+            Config = config;
             Commit = commit;
         }
 
-        public IRepository Repository { get; }
+        public RepositoryConfig Config { get; }
 
         public Commit Commit { get; }
     }

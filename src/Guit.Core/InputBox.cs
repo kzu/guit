@@ -7,6 +7,8 @@ namespace Guit
     /// </summary>
     public class InputBox : DialogBox
     {
+        const int MinWidth = 60;
+
         readonly string[] completions;
 
         public InputBox(string title, string message, params string[] completions)
@@ -18,8 +20,9 @@ namespace Guit
 
         protected override void EndInit()
         {
-            Width = 60;
             Height = 10;
+
+            Width = Message.Length > MinWidth ? Message.Length + 10 : MinWidth;
 
             var messageLabel = Bind(
                 new Label(Message)
@@ -34,7 +37,7 @@ namespace Guit
             base.EndInit();
         }
 
-        public string? Message { get; set; }
+        public string Message { get; set; }
 
         public string? Text { get; set; }
     }

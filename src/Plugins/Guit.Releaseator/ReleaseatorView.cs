@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Composition;
 using LibGit2Sharp;
 using Terminal.Gui;
+using LibGit2Sharp.Handlers;
+using System.IO;
 
 namespace Guit.Plugin.Releaseator
 {
@@ -14,7 +16,8 @@ namespace Guit.Plugin.Releaseator
     {
         readonly ListViewItemSelector<CommitEntry>[] commitSelectors = new ListViewItemSelector<CommitEntry>[]
             {
-                new ListViewItemSelector<CommitEntry>(x => x.Repository.GetName(), 30),
+                new ListViewItemSelector<CommitEntry>(x => x.Config.Repository.GetName(), 30),
+                new ListViewItemSelector<CommitEntry>(x => x.Commit.Sha.Substring(0, 7), 10),
                 new ListViewItemSelector<CommitEntry>(x => x.Commit.MessageShort, "*"),
                 new ListViewItemSelector<CommitEntry>(x => x.Commit.Author.Name, 15),
                 new ListViewItemSelector<CommitEntry>(x => x.Commit.Committer.When.ToString("g"), 19)
@@ -22,16 +25,16 @@ namespace Guit.Plugin.Releaseator
 
         List<CommitEntry> commits = new List<CommitEntry>();
 
-        readonly IEnumerable<IRepository> repositories;
-        readonly RepositoryConfigProvider repositoryConfigProvider;
+        readonly IEnumerable<RepositoryConfig> repositories;
+        readonly CredentialsHandler credentials;
         readonly ListView view;
 
         [ImportingConstructor]
-        public ReleaseatorView(IEnumerable<IRepository> repositories, RepositoryConfigProvider repositoryConfigProvider)
+        public ReleaseatorView(IEnumerable<RepositoryConfig> repositories, CredentialsHandler credentials)
             : base(nameof(Releaseator))
         {
             this.repositories = repositories;
-            this.repositoryConfigProvider = repositoryConfigProvider;
+            this.credentials = credentials;
 
             view = new ListView(new List<ListViewItem<CommitEntry>>())
             {
@@ -55,20 +58,35 @@ namespace Guit.Plugin.Releaseator
 
             commits.Clear();
 
-            foreach (var repository in repositories)
+            foreach (var config in repositories)
             {
-                var config = repositoryConfigProvider.GetConfig(repository);
+                var repository = config.Repository;
 
-                if (config != null)
+                var ignoredCommits = new List<string>();
+                if (File.Exists(Constants.NoReleaseFile))
                 {
-                    var baseCommits = GetCommits(repository, config.BaseBranch, config.BaseBranchSha, config.IgnoreCommits).ToList();
-                    var targetCommits = GetCommits(repository, config.TargetBranch, config.TargetBranchSha, config.IgnoreCommits).ToList();
-
-                    var missingCommits = baseCommits
-                        .Where(baseCommit => !targetCommits.Any(targetCommit => baseCommit.MessageShort == targetCommit.MessageShort));
-
-                    commits.AddRange(missingCommits.Select(x => new CommitEntry(repository, x)));
+                    ignoredCommits = File
+                        .ReadAllLines(Constants.NoReleaseFile)
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .Select(x => x.Split('\t').LastOrDefault())
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .Distinct()
+                        .ToList();
                 }
+
+                var baseCommits = GetCommits(repository, config.BaseBranch, config.BaseBranchSha, config.IgnoreCommits, 500).ToList();
+                var releaseCommits = GetCommits(repository, config.ReleaseBranch, config.ReleaseBranchSha, config.IgnoreCommits, 1000).ToList();
+
+                var mergeBranch = repository.SwitchToMergeBranch(config);
+                var mergeCommits = mergeBranch is null ? new List<Commit>() : GetCommits(mergeBranch, null, new string[0]).ToList();
+
+                var missingCommits = baseCommits
+                    .Where(baseCommit =>
+                        !releaseCommits.Any(targetCommit => baseCommit.Message == targetCommit.Message) &&
+                        !mergeCommits.Any(mergeCommit => baseCommit.Message == mergeCommit.Message) &&
+                        !ignoredCommits.Contains(baseCommit.Sha));
+
+                commits.AddRange(missingCommits.Select(x => new CommitEntry(config, x)));
             }
 
             if (Frame.Width > 0)
@@ -90,22 +108,20 @@ namespace Guit.Plugin.Releaseator
                     .ToList());
         }
 
-        IEnumerable<Commit> GetCommits(IRepository repository, string branchName, string? sha, string[]? commitMessagesToBeIgnored) =>
-            GetCommits(repository.Branches.Single(x => x.FriendlyName == branchName), sha, commitMessagesToBeIgnored ?? new string[0]);
+        IEnumerable<Commit> GetCommits(IRepository repository, string branchName, string? sha, string[]? commitMessagesToBeIgnored, int count = 500) =>
+            GetCommits(repository.Branches.Single(x => x.FriendlyName == "origin/" + branchName), sha, commitMessagesToBeIgnored ?? new string[0], count);
 
-        IEnumerable<Commit> GetCommits(Branch branch, string? sha, string[] commitMessagesToBeIgnored)
+        IEnumerable<Commit> GetCommits(Branch branch, string? sha, string[] commitMessagesToBeIgnored, int count = 500)
         {
-            var count = 0;
-
             foreach (var commit in branch.Commits)
             {
                 if (!commitMessagesToBeIgnored.Any(x => commit.MessageShort.StartsWith(x)))
                 {
-                    count++;
+                    count--;
                     yield return commit;
                 }
 
-                if (commit.Sha == sha || count >= 200)
+                if (commit.Sha == sha || count <= 0)
                     break;
             }
         }
