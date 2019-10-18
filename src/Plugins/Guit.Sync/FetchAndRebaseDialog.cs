@@ -8,11 +8,11 @@ namespace Guit.Plugin.Sync
 {
     class FetchAndRebaseDialog : DialogBox
     {
-        readonly ListViewItemSelector<Commit>[] commitSelectors = new ListViewItemSelector<Commit>[]
+        readonly ColumnDefinition<Commit>[] columnDefinitions = new ColumnDefinition<Commit>[]
             {
-                new ListViewItemSelector<Commit>(x => x.MessageShort, "*"),
-                new ListViewItemSelector<Commit>(x => x.Author.Name, 15),
-                new ListViewItemSelector<Commit>(x => x.Committer.When.ToString("g"), 19)
+                new ColumnDefinition<Commit>(x => x.MessageShort, "*"),
+                new ColumnDefinition<Commit>(x => x.Author.Name, 15),
+                new ColumnDefinition<Commit>(x => x.Committer.When.ToString("g"), 19)
             };
 
         readonly IEnumerable<Commit> commits;
@@ -46,7 +46,7 @@ namespace Guit.Plugin.Sync
         {
             base.LayoutSubviews();
 
-            view.SetSource(commits.Select(x => new ListViewItem<Commit>(x, Frame.Width - 10, commitSelectors.ToArray())).ToList());
+            view.SetSource(commits.Select(x => new ListViewItem<Commit>(x, Frame.Width - 10, columnDefinitions.ToArray())).ToList());
         }
     }
 }

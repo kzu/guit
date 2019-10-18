@@ -12,11 +12,11 @@ namespace Guit.Plugin.Log
     [ContentView(nameof(Log), '3')]
     public class LogView : ContentView
     {
-        readonly ListViewItemSelector<Commit>[] commitSelectors = new ListViewItemSelector<Commit>[]
+        readonly ColumnDefinition<Commit>[] columnDefinitions = new ColumnDefinition<Commit>[]
             {
-                new ListViewItemSelector<Commit>(x => x.MessageShort, "*"),
-                new ListViewItemSelector<Commit>(x => x.Author.Name, 15),
-                new ListViewItemSelector<Commit>(x => x.Committer.When.ToString("g"), 19)
+                new ColumnDefinition<Commit>(x => x.MessageShort, "*"),
+                new ColumnDefinition<Commit>(x => x.Author.Name, 15),
+                new ColumnDefinition<Commit>(x => x.Committer.When.ToString("g"), 19)
             };
 
         List<Commit> commits = new List<Commit>();
@@ -70,6 +70,6 @@ namespace Guit.Plugin.Log
         }
 
         void RefreshCommits() =>
-            view.SetSource(commits.Select(x => new ListViewItem<Commit>(x, Frame.Width - 10, commitSelectors.ToArray())).ToList());
+            view.SetSource(commits.Select(x => new ListViewItem<Commit>(x, Frame.Width - 10, columnDefinitions.ToArray())).ToList());
     }
 }

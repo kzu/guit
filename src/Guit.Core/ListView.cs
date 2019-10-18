@@ -9,11 +9,11 @@ namespace Guit
     {
         string[]? filter;
 
-        readonly IEnumerable<ListViewItemSelector<T>> selectors;
+        readonly IEnumerable<ColumnDefinition<T>> columnDefinitions;
 
-        public ListView(params ListViewItemSelector<T>[] selectors) : base(new List<T>())
+        public ListView(params ColumnDefinition<T>[] columnDefinitions) : base(new List<T>())
         {
-            this.selectors = selectors ?? Enumerable.Empty<ListViewItemSelector<T>>();
+            this.columnDefinitions = columnDefinitions ?? new[] { new ColumnDefinition<T>(x => x?.ToString() ?? string.Empty, "*") };
         }
 
         public void SetValues(IEnumerable<T> values) => RenderValues(values);
@@ -38,16 +38,16 @@ namespace Guit
             var filteredValues = Values.ToList();
             if (filter?.Any() == true)
             {
-                filteredValues = filteredValues.Where(x => selectors.Any(selector =>
+                filteredValues = filteredValues.Where(x => columnDefinitions.Any(columnDefinition =>
                 {
-                    var value = selector.GetValue(x);
+                    var value = columnDefinition.GetValue(x);
 
                     return filter.Any(filter => value?.Contains(filter) == true);
                 })).ToList();
             }
 
             if (Frame.Width > 0)
-                SetSource(filteredValues.Select(x => new ListViewItem<T>(x, Frame.Width - 4, selectors.ToArray())).ToList());
+                SetSource(filteredValues.Select(x => new ListViewItem<T>(x, Frame.Width - 4, columnDefinitions.ToArray())).ToList());
 
             foreach (var value in filteredValues)
                 Source.SetMark(filteredValues.IndexOf(value), previousSelection.TryGetValue(value, out var marked) && marked);

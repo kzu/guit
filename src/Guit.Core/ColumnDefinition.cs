@@ -2,19 +2,19 @@
 
 namespace Guit
 {
-    public class ListViewItemSelector<T>
+    public class ColumnDefinition<T>
     {
         readonly Func<T, string> valueProvider;
 
-        public ListViewItemSelector(Func<T, string> valueProvider, int width)
+        public ColumnDefinition(Func<T, string> valueProvider, int width)
             : this(valueProvider, width, null)
         { }
 
-        public ListViewItemSelector(Func<T, string> valueProvider, string width)
+        public ColumnDefinition(Func<T, string> valueProvider, string width)
              : this(valueProvider, 0, width)
         { }
 
-        ListViewItemSelector(Func<T, string> valueProvider, int width, string? widthExpression)
+        ColumnDefinition(Func<T, string> valueProvider, int width, string? widthExpression)
         {
             this.valueProvider = valueProvider;
             

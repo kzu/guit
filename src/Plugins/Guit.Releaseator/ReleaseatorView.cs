@@ -26,11 +26,11 @@ namespace Guit.Plugin.Releaseator
             this.credentials = credentials;
 
             view = new ListView<CommitEntry>(
-                new ListViewItemSelector<CommitEntry>(x => x.Config.Repository.GetName(), 30),
-                new ListViewItemSelector<CommitEntry>(x => x.Commit.Sha.Substring(0, 7), 10),
-                new ListViewItemSelector<CommitEntry>(x => x.Commit.MessageShort, "*"),
-                new ListViewItemSelector<CommitEntry>(x => x.Commit.Author.Name, 15),
-                new ListViewItemSelector<CommitEntry>(x => x.Commit.Committer.When.ToString("g"), 20))
+                new ColumnDefinition<CommitEntry>(x => x.Config.Repository.GetName(), 30),
+                new ColumnDefinition<CommitEntry>(x => x.Commit.Sha.Substring(0, 7), 10),
+                new ColumnDefinition<CommitEntry>(x => x.Commit.MessageShort, "*"),
+                new ColumnDefinition<CommitEntry>(x => x.Commit.Author.Name, 15),
+                new ColumnDefinition<CommitEntry>(x => x.Commit.Committer.When.ToString("g"), 20))
             {
                 AllowsMarking = true
             };
