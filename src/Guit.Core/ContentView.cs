@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.ComponentModel;
 using Terminal.Gui;
 
 namespace Guit
 {
-    public abstract class ContentView : View, IRefreshPattern, ISupportInitializeNotification
+    public abstract class ContentView : View, IRefreshPattern, IFilterPattern, ISupportInitializeNotification
     {
+        string[]? filter;
+        string baseTitle;
         View? content;
 
         public event EventHandler? Initialized;
@@ -13,6 +16,7 @@ namespace Guit
         public ContentView(string title)
             : base()
         {
+            baseTitle = title;
             Title = title;
 
             Width = Dim.Fill();
@@ -21,9 +25,27 @@ namespace Guit
 
         public bool IsInitialized { get; private set; }
 
-        public string Title { get; }
+        public string Title { get; private set; }
 
         public virtual void Refresh() { }
+
+        string[]? IFilterPattern.Filter
+        {
+            get => filter;
+            set
+            {
+                filter = value;
+                Title = filter?.Any() == true ? string.Format("{0} (filtering by {1})", baseTitle, string.Join(", ", filter)) : baseTitle;
+
+                SetFilter(filter);
+            }
+        }
+
+        protected virtual void SetFilter(params string[]? filter) 
+        {
+            if (Content is IFilterPattern filterPattern)
+                filterPattern.Filter = filter;
+        }
 
         public virtual void SelectAll(bool invertSelection = true)
         {

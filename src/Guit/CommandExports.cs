@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Composition;
 using Terminal.Gui;
 
@@ -28,5 +29,25 @@ namespace Guit
 
         [MenuCommand("SelectAll", '*', Visible = false, ReportProgress = false)]
         IMenuCommand SelectAllCommand => new MenuCommand(() => mainThread.Invoke(() => app.Value.CurrentView?.SelectAll(invertSelection: true)));
+
+        [MenuCommand("Filter", Key.F6, Visible = false, ReportProgress = false)]
+        IMenuCommand FilterCommand => new MenuCommand(() => mainThread.Invoke(() =>
+        {
+            if (Application.Current is IFilterPattern filterPattern)
+            {
+                var dialog = new InputBox("Filter", "Enter values seperated by ',' or leave empty");
+                dialog.Text = filterPattern.Filter is null ? string.Empty : string.Join(", ", filterPattern.Filter);
+
+                if (dialog.ShowDialog() == true)
+                {
+                    filterPattern.Filter = string.IsNullOrEmpty(dialog.Text) ? default :
+                        dialog.Text
+                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                            .Select(x => x.Trim())
+                            .Where(x => !string.IsNullOrEmpty(x))
+                            .ToArray();
+                }
+            }
+        }));
     }
 }

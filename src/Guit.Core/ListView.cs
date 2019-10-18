@@ -5,8 +5,10 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    public class ListView<T> : ListView
+    public class ListView<T> : ListView, IFilterPattern
     {
+        string[]? filter;
+
         readonly IEnumerable<ListViewItemSelector<T>> selectors;
 
         public ListView(params ListViewItemSelector<T>[] selectors) : base(new List<T>())
@@ -32,13 +34,36 @@ namespace Guit
                 .ToDictionary(x => x, x => Source.IsMarked(previousValues.IndexOf(x)));
 
             Values = values;
+
+            var filteredValues = Values.ToList();
+            if (filter?.Any() == true)
+            {
+                filteredValues = filteredValues.Where(x => selectors.Any(selector =>
+                {
+                    var value = selector.GetValue(x);
+
+                    return filter.Any(filter => value?.Contains(filter) == true);
+                })).ToList();
+            }
+
             if (Frame.Width > 0)
-                SetSource(Values.Select(x => new ListViewItem<T>(x, Frame.Width - 4, selectors.ToArray())).ToList());
+                SetSource(filteredValues.Select(x => new ListViewItem<T>(x, Frame.Width - 4, selectors.ToArray())).ToList());
 
-            var currentValues = Values.ToList();
-            foreach (var value in currentValues)
-                Source.SetMark(currentValues.IndexOf(value), previousSelection.TryGetValue(value, out var marked) && marked);
-
+            foreach (var value in filteredValues)
+                Source.SetMark(filteredValues.IndexOf(value), previousSelection.TryGetValue(value, out var marked) && marked);
         }
+
+        string[]? IFilterPattern.Filter
+        {
+            get => filter;
+            set
+            {
+                filter = value;
+
+                SetFilter(filter);
+            }
+        }
+
+        protected virtual void SetFilter(params string[]? filter) => RenderValues(Values);
     }
 }

@@ -6,7 +6,7 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    class ShellWindow : Window, IRefreshPattern, ISupportInitializeNotification
+    class ShellWindow : Window, IRefreshPattern, IFilterPattern, ISupportInitializeNotification
     {
         readonly Tuple<int, int, int, int> margin;
         readonly IEnumerable<View> decorators;
@@ -30,6 +30,20 @@ namespace Guit
         }
 
         public ContentView Content { get; }
+
+        string[]? IFilterPattern.Filter
+        {
+            get => (Content as IFilterPattern)?.Filter;
+            set
+            {
+                if (Content is IFilterPattern filterPattern)
+                {
+                    filterPattern.Filter = value;
+
+                    Title = Content.Title;
+                }
+            }
+        }
 
         public void Refresh()
         {
