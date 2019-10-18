@@ -14,20 +14,9 @@ namespace Guit.Plugin.Releaseator
     [ContentView(nameof(Releaseator), '4')]
     class ReleaseatorView : ContentView
     {
-        readonly ListViewItemSelector<CommitEntry>[] commitSelectors = new ListViewItemSelector<CommitEntry>[]
-            {
-                new ListViewItemSelector<CommitEntry>(x => x.Config.Repository.GetName(), 30),
-                new ListViewItemSelector<CommitEntry>(x => x.Commit.Sha.Substring(0, 7), 10),
-                new ListViewItemSelector<CommitEntry>(x => x.Commit.MessageShort, "*"),
-                new ListViewItemSelector<CommitEntry>(x => x.Commit.Author.Name, 15),
-                new ListViewItemSelector<CommitEntry>(x => x.Commit.Committer.When.ToString("g"), 19)
-            };
-
-        List<CommitEntry> commits = new List<CommitEntry>();
-
         readonly IEnumerable<RepositoryConfig> repositories;
         readonly CredentialsHandler credentials;
-        readonly ListView view;
+        readonly ListView<CommitEntry> view;
 
         [ImportingConstructor]
         public ReleaseatorView(IEnumerable<RepositoryConfig> repositories, CredentialsHandler credentials)
@@ -36,7 +25,12 @@ namespace Guit.Plugin.Releaseator
             this.repositories = repositories;
             this.credentials = credentials;
 
-            view = new ListView(new List<ListViewItem<CommitEntry>>())
+            view = new ListView<CommitEntry>(
+                new ListViewItemSelector<CommitEntry>(x => x.Config.Repository.GetName(), 30),
+                new ListViewItemSelector<CommitEntry>(x => x.Commit.Sha.Substring(0, 7), 10),
+                new ListViewItemSelector<CommitEntry>(x => x.Commit.MessageShort, "*"),
+                new ListViewItemSelector<CommitEntry>(x => x.Commit.Author.Name, 15),
+                new ListViewItemSelector<CommitEntry>(x => x.Commit.Committer.When.ToString("g"), 20))
             {
                 AllowsMarking = true
             };
@@ -44,19 +38,19 @@ namespace Guit.Plugin.Releaseator
             Content = view;
         }
         public IEnumerable<CommitEntry> MarkedEntries =>
-            commits
+            view.Values
                 .Where((x, i) => view.Source.IsMarked(i))
                 .Select(x => x);
 
         public CommitEntry? SelectedEntry =>
-            view.SelectedItem >= 0 && view.SelectedItem < commits.Count ?
-                commits[view.SelectedItem] : null;
+            view.SelectedItem >= 0 && view.SelectedItem < view.Values.Count() ?
+                view.Values.ElementAt(view.SelectedItem) : null;
 
         public override void Refresh()
         {
             base.Refresh();
 
-            commits.Clear();
+            var commits = new List<CommitEntry>();
 
             foreach (var config in repositories)
             {
@@ -89,23 +83,7 @@ namespace Guit.Plugin.Releaseator
                 commits.AddRange(missingCommits.Select(x => new CommitEntry(config, x)));
             }
 
-            if (Frame.Width > 0)
-                RefreshCommits();
-        }
-
-        public override void LayoutSubviews()
-        {
-            base.LayoutSubviews();
-
-            RefreshCommits();
-        }
-
-        void RefreshCommits()
-        {
-            view.SetSource(
-                commits
-                    .Select(x => new ListViewItem<CommitEntry>(x, Frame.Width - 10, commitSelectors.ToArray()))
-                    .ToList());
+            view.SetValues(commits);
         }
 
         IEnumerable<Commit> GetCommits(IRepository repository, string branchName, string? sha, string[]? commitMessagesToBeIgnored, int count = 500) =>

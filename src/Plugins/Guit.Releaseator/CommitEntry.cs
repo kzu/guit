@@ -16,5 +16,9 @@ namespace Guit.Plugin.Releaseator
         public RepositoryConfig Config { get; }
 
         public Commit Commit { get; }
+
+        public override int GetHashCode() => Commit.GetHashCode();
+
+        public override bool Equals(object obj) => Commit.Equals((obj as CommitEntry)?.Commit);
     }
 }
