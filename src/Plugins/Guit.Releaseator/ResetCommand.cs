@@ -64,18 +64,15 @@ namespace Guit.Plugin.Releaseator
 
                     var mergeBranch = config.Repository.SwitchToMergeBranch(config);
 
-                    if (mergeBranch != null)
-                    {
-                        eventStream.Push(Status.Create(
-                            (repositoriesList.IndexOf(config) + 1f) / (repositoriesList.Count + 1f),
-                            "Reset {0}/{1}", config.Repository.GetName(), mergeBranch.GetName()));
+                    eventStream.Push(Status.Create(
+                        (repositoriesList.IndexOf(config) + 1f) / (repositoriesList.Count + 1f),
+                        "Reset {0}/{1}", config.Repository.GetName(), mergeBranch.GetName()));
 
-                        repository.Fetch(repository.Network.Remotes, credentials, prune: true);
+                    repository.Fetch(repository.Network.Remotes, credentials, prune: true);
 
-                        var releaseBranch = repository.Branches.Single(x => x.FriendlyName == "origin/" + config.ReleaseBranch);
+                    var releaseBranch = repository.Branches.Single(x => x.FriendlyName == "origin/" + config.ReleaseBranch);
 
-                        repository.Reset(ResetMode.Hard, releaseBranch.Tip);
-                    }
+                    repository.Reset(ResetMode.Hard, releaseBranch.Tip);
                 }
 
                 eventStream.Push(Status.Succeeded());

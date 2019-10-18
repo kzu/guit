@@ -72,7 +72,7 @@ namespace Guit.Plugin.Releaseator
                 var releaseCommits = GetCommits(repository, config.ReleaseBranch, config.ReleaseBranchSha, config.IgnoreCommits, 1000).ToList();
 
                 var mergeBranch = repository.SwitchToMergeBranch(config);
-                var mergeCommits = mergeBranch is null ? new List<Commit>() : GetCommits(mergeBranch, null, new string[0]).ToList();
+                var mergeCommits = GetCommits(mergeBranch, null, new string[0]).ToList();
 
                 var missingCommits = baseCommits
                     .Where(baseCommit =>

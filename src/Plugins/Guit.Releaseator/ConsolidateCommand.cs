@@ -53,7 +53,7 @@ namespace Guit.Plugin.Releaseator
                 if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
                 {
                     // Search the local merge branch
-                    if (repository.SwitchToMergeBranch(config, true) is Branch mergeBranch)
+                    if (repository.SwitchToMergeBranch(config) is Branch mergeBranch)
                     {
                         // Cherrypick commits
                         foreach (var entry in repositoryEntries.Reverse())

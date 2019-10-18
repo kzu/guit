@@ -22,13 +22,10 @@ namespace LibGit2Sharp
             return repoUrl;
         }
 
-        public static Branch? SwitchToMergeBranch(this IRepository repository, RepositoryConfig config, bool createMergeBranch = false)
+        public static Branch SwitchToMergeBranch(this IRepository repository, RepositoryConfig config)
         {
             // Search the local merge branch
             var mergeBranch = repository.Branches.FirstOrDefault(x => x.FriendlyName == config.MergeBranch);
-
-            if (mergeBranch is null && !createMergeBranch)
-                return default;
 
             var remoteMergeBranch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "origin/" + config.MergeBranch && x.IsRemote);
             var releaseBranch = repository.Branches.Single(x => x.FriendlyName == "origin/" + config.ReleaseBranch);
