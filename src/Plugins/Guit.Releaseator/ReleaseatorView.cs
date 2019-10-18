@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Composition;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using LibGit2Sharp;
@@ -74,8 +75,8 @@ namespace Guit.Plugin.Releaseator
 
                 var missingCommits = baseCommits
                     .Where(baseCommit =>
-                        !releaseCommits.Any(targetCommit => baseCommit.Message == targetCommit.Message) &&
-                        !mergeCommits.Any(mergeCommit => baseCommit.Message == mergeCommit.Message) &&
+                        !releaseCommits.Any(releaseCommit => string.Compare(baseCommit.Message, releaseCommit.Message, CultureInfo.CurrentCulture, System.Globalization.CompareOptions.IgnoreSymbols) == 0) &&
+                        !mergeCommits.Any(mergeCommit => string.Compare(baseCommit.Message, mergeCommit.Message, CultureInfo.CurrentCulture, System.Globalization.CompareOptions.IgnoreSymbols) == 0) &&
                         !ignoredCommits.Contains(baseCommit.Sha));
 
                 commits.AddRange(missingCommits.Select(x => new CommitEntry(config, x)));
