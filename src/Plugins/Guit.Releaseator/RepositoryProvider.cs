@@ -27,6 +27,8 @@ namespace Guit.Plugin.Releaseator
                 var config = LibGit2Sharp.Configuration.BuildFrom(configFile);
                 var defaultSource = config.GetValueOrDefault("repository.source", default(string));
                 var defaultTarget = config.GetValueOrDefault("repository.target", default(string));
+                var defaultMergeSuffix = config.GetValueOrDefault("repository.mergeSuffix", default(string));
+
                 var defaultIgnores = config
                     .OfType<ConfigurationEntry<string>>()
                     .Where(x => x.Key == "repository.ignore")
@@ -38,7 +40,7 @@ namespace Guit.Plugin.Releaseator
                     // TODO: fail if a submodule has no configuration?
                     var source = config.GetValueOrDefault("repository", submodule.Name, "source", defaultSource);
                     var target = config.GetValueOrDefault("repository", submodule.Name, "target", defaultTarget);
-                    var mergeSuffix = config.GetValueOrDefault("repository", submodule.Name, "mergeSuffix", defaultTarget);
+                    var mergeSuffix = config.GetValueOrDefault("repository", submodule.Name, "mergeSuffix", defaultMergeSuffix);
 
                     var ignores = config
                         .OfType<ConfigurationEntry<string>>()
