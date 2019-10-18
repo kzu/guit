@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Composition;
-using LibGit2Sharp;
-using Terminal.Gui;
-using LibGit2Sharp.Handlers;
 using System.IO;
+using System.Linq;
+using LibGit2Sharp;
+using LibGit2Sharp.Handlers;
 
 namespace Guit.Plugin.Releaseator
 {
@@ -14,12 +12,12 @@ namespace Guit.Plugin.Releaseator
     [ContentView(nameof(Releaseator), '4')]
     class ReleaseatorView : ContentView
     {
-        readonly IEnumerable<RepositoryConfig> repositories;
+        readonly IEnumerable<ReleaseConfig> repositories;
         readonly CredentialsHandler credentials;
         readonly ListView<CommitEntry> view;
 
         [ImportingConstructor]
-        public ReleaseatorView(IEnumerable<RepositoryConfig> repositories, CredentialsHandler credentials)
+        public ReleaseatorView(IEnumerable<ReleaseConfig> repositories, CredentialsHandler credentials)
             : base(nameof(Releaseator))
         {
             this.repositories = repositories;
@@ -87,10 +85,14 @@ namespace Guit.Plugin.Releaseator
         }
 
         IEnumerable<Commit> GetCommits(IRepository repository, string branchName, string? sha, string[]? commitMessagesToBeIgnored, int count = 500) =>
-            GetCommits(repository.Branches.Single(x => x.FriendlyName == "origin/" + branchName), sha, commitMessagesToBeIgnored ?? new string[0], count);
+            // TODO: maybe FirstOrDefault? Or better error/warnings?
+            GetCommits(repository.Branches.SingleOrDefault(x => x.FriendlyName == "origin/" + branchName), sha, commitMessagesToBeIgnored ?? new string[0], count);
 
         IEnumerable<Commit> GetCommits(Branch branch, string? sha, string[] commitMessagesToBeIgnored, int count = 500)
         {
+            if (branch == null)
+                yield break;
+
             foreach (var commit in branch.Commits)
             {
                 if (!commitMessagesToBeIgnored.Any(x => commit.MessageShort.StartsWith(x)))

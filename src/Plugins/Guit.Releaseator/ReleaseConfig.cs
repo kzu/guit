@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LibGit2Sharp;
+﻿using LibGit2Sharp;
 
 namespace Guit.Plugin.Releaseator
 {
-    class RepositoryConfig
+    class ReleaseConfig
     {
-        public RepositoryConfig(IRepository repository, string baseBranch, string targetBranch, string mergeBranchSuffix = "/merge")
+        public ReleaseConfig(IRepository repository, string baseBranch, string releaseBranch, string mergeBranchSuffix = "/merge")
         {
             Repository = repository;
             BaseBranch = baseBranch;
-            ReleaseBranch = targetBranch;
-            MergeBranch = targetBranch + mergeBranchSuffix;
+            ReleaseBranch = releaseBranch;
+            MergeBranch = releaseBranch + mergeBranchSuffix;
         }
 
         public IRepository Repository { get; set; }

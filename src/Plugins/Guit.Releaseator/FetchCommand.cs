@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
 using System.Threading;
@@ -16,7 +15,7 @@ namespace Guit.Plugin.Releaseator
     [MenuCommand("Releaseator.Fetch", 'f', nameof(Releaseator), typeof(Resources))]
     class FetchCommand : IMenuCommand, IAfterExecuteCallback
     {
-        readonly IEnumerable<RepositoryConfig> repositories;
+        readonly IEnumerable<ReleaseConfig> repositories;
         readonly IEventStream eventStream;
         readonly CredentialsHandler credentials;
         readonly ReleaseatorView view;
@@ -24,7 +23,7 @@ namespace Guit.Plugin.Releaseator
 
         [ImportingConstructor]
         public FetchCommand(
-            IEnumerable<RepositoryConfig> repositories,
+            IEnumerable<ReleaseConfig> repositories,
             IEventStream eventStream,
             CredentialsHandler credentials,
             ReleaseatorView view,

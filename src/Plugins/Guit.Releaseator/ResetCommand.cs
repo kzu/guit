@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
 using System.Threading;
@@ -16,7 +15,7 @@ namespace Guit.Plugin.Releaseator
     [MenuCommand("Releaseator.Reset", 'r', nameof(Releaseator), typeof(Resources))]
     class ResetCommand : IMenuCommand, IAfterExecuteCallback
     {
-        readonly IEnumerable<RepositoryConfig> repositories;
+        readonly IEnumerable<ReleaseConfig> repositories;
         readonly IEventStream eventStream;
         readonly CredentialsHandler credentials;
         readonly ReleaseatorView view;
@@ -25,7 +24,7 @@ namespace Guit.Plugin.Releaseator
 
         [ImportingConstructor]
         public ResetCommand(
-            IEnumerable<RepositoryConfig> repositories,
+            IEnumerable<ReleaseConfig> repositories,
             IEventStream eventStream,
             CredentialsHandler credentials,
             ReleaseatorView view,

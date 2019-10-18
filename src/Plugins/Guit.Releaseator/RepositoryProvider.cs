@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Composition;
+using System.IO;
+using System.Linq;
 using LibGit2Sharp;
 
 namespace Guit.Plugin.Releaseator
@@ -10,35 +11,52 @@ namespace Guit.Plugin.Releaseator
     class RepositoryProvider
     {
         readonly static string[] commitsToBeIgnored = new string[] { "LEGO:", "Merge pull request #" };
-        readonly Lazy<List<RepositoryConfig>> repositories;
+        readonly Lazy<Dictionary<string, ReleaseConfig>> repositories = new Lazy<Dictionary<string, ReleaseConfig>>();
 
         [ImportingConstructor]
         public RepositoryProvider(IRepository root)
         {
-            repositories = new Lazy<List<RepositoryConfig>>(() =>
-                root.Submodules.Select(x => GetConfig(x)).ToList());
+            repositories = new Lazy<Dictionary<string, ReleaseConfig>>(() => ReadConfig(root));
         }
 
-        RepositoryConfig GetConfig(Submodule submodule) => GetConfig(submodule, "-Preview3");
-
-        RepositoryConfig GetConfig(Submodule submodule, string mergeBranchSuffix) =>
-            submodule.Name switch
+        Dictionary<string, ReleaseConfig> ReadConfig(IRepository root)
+        {
+            var configs = new Dictionary<string, ReleaseConfig>();
+            var configFile = Path.Combine(root.Info.WorkingDirectory, ".releaseconfig");
+            if (File.Exists(configFile))
             {
-                "XamarinVS" => new RepositoryConfig(CreateRepository(submodule), "master", "d16-4", mergeBranchSuffix) { IgnoreCommits = commitsToBeIgnored },
-                "debugger-vs" => new RepositoryConfig(CreateRepository(submodule), "master", "d16-4", mergeBranchSuffix) { IgnoreCommits = commitsToBeIgnored },
-                "xamarin-templates" => new RepositoryConfig(CreateRepository(submodule), "master", "d16-4", mergeBranchSuffix) { IgnoreCommits = commitsToBeIgnored },
-                "device-manager" => new RepositoryConfig(CreateRepository(submodule), "master", "d16-4", mergeBranchSuffix) { IgnoreCommits = commitsToBeIgnored },
-                "android-sdk-installer" => new RepositoryConfig(CreateRepository(submodule), "master", "d16-4", mergeBranchSuffix) { IgnoreCommits = commitsToBeIgnored },
-                "Xamarin.Messaging" => new RepositoryConfig(CreateRepository(submodule), "master", "d16-4", mergeBranchSuffix) { IgnoreCommits = commitsToBeIgnored },
-                "vsmac-xamarin-extensions" => new RepositoryConfig(CreateRepository(submodule), "master", "release-8.4", "-Preview2") { IgnoreCommits = commitsToBeIgnored },
-                "clide" => new RepositoryConfig(CreateRepository(submodule), "master", "master", mergeBranchSuffix) { IgnoreCommits = commitsToBeIgnored },
-                "merq" => new RepositoryConfig(CreateRepository(submodule), "master", "master", mergeBranchSuffix) { IgnoreCommits = commitsToBeIgnored },
-                _ => throw new InvalidOperationException(string.Format("Could not find the config for '{0}' repository", submodule.Name))
-            };
+                var config = LibGit2Sharp.Configuration.BuildFrom(configFile);
+                var defaultSource = config.GetValueOrDefault("repository.source", default(string));
+                var defaultTarget = config.GetValueOrDefault("repository.target", default(string));
+                var defaultIgnores = config
+                    .OfType<ConfigurationEntry<string>>()
+                    .Where(x => x.Key == "repository.ignore")
+                    .Select(x => x.Value)
+                    .ToArray();
+
+                foreach (var submodule in root.Submodules)
+                {
+                    // TODO: fail if a submodule has no configuration?
+                    var source = config.GetValueOrDefault("repository", submodule.Name, "source", defaultSource);
+                    var target = config.GetValueOrDefault("repository", submodule.Name, "target", defaultTarget);
+                    var ignores = config
+                        .OfType<ConfigurationEntry<string>>()
+                        .Where(x => x.Key == "repository." + submodule.Name + ".ignore")
+                        .Select(x => x.Value)
+                        .Concat(defaultIgnores)
+                        .ToArray();
+
+                    if (source != null && target != null)
+                        configs.Add(submodule.Name, new ReleaseConfig(CreateRepository(submodule), source, target) { IgnoreCommits = ignores });
+                }
+            }
+
+            return configs;
+        }
 
         IRepository CreateRepository(Submodule submodule) => new Repository(submodule.Path);
 
         [Export]
-        public IEnumerable<RepositoryConfig> Repositories => repositories.Value;
+        public IEnumerable<ReleaseConfig> Repositories => repositories.Value.Values;
     }
 }

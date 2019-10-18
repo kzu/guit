@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LibGit2Sharp;
+﻿using LibGit2Sharp;
 
 namespace Guit.Plugin.Releaseator
 {
     class CommitEntry
     {
-        public CommitEntry(RepositoryConfig config, Commit commit)
+        public CommitEntry(ReleaseConfig config, Commit commit)
         {
             Config = config;
             Commit = commit;
         }
 
-        public RepositoryConfig Config { get; }
+        public ReleaseConfig Config { get; }
 
         public Commit Commit { get; }
 

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 using Guit.Plugin.Releaseator;
 
 namespace LibGit2Sharp
@@ -22,7 +20,7 @@ namespace LibGit2Sharp
             return repoUrl;
         }
 
-        public static Branch SwitchToMergeBranch(this IRepository repository, RepositoryConfig config)
+        public static Branch SwitchToMergeBranch(this IRepository repository, ReleaseConfig config)
         {
             // Search the local merge branch
             var mergeBranch = repository.Branches.FirstOrDefault(x => x.FriendlyName == config.MergeBranch);
