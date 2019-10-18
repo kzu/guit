@@ -13,7 +13,10 @@ namespace Guit
 
         public ListView(params ColumnDefinition<T>[] columnDefinitions) : base(new List<T>())
         {
-            this.columnDefinitions = columnDefinitions ?? new[] { new ColumnDefinition<T>(x => x?.ToString() ?? string.Empty, "*") };
+            this.columnDefinitions = columnDefinitions;
+
+            if (!this.columnDefinitions.Any())
+                this.columnDefinitions = new[] { new ColumnDefinition<T>(x => x?.ToString() ?? string.Empty, "*") };
         }
 
         public void SetValues(IEnumerable<T> values) => RenderValues(values);
@@ -40,9 +43,9 @@ namespace Guit
             {
                 filteredValues = filteredValues.Where(x => columnDefinitions.Any(columnDefinition =>
                 {
-                    var value = columnDefinition.GetValue(x);
+                    var value = columnDefinition.GetValue(x)?.ToLowerInvariant();
 
-                    return filter.Any(filter => value?.Contains(filter) == true);
+                    return filter.Any(filter => value?.Contains(filter.ToLowerInvariant()) == true);
                 })).ToList();
             }
 
