@@ -4,12 +4,14 @@ namespace Guit.Plugin.Releaseator
 {
     class ReleaseConfig
     {
-        public ReleaseConfig(IRepository repository, string baseBranch, string releaseBranch, string mergeBranchSuffix = "/merge")
+        const string DefaultMergeSuffix = "-merge";
+
+        public ReleaseConfig(IRepository repository, string baseBranch, string releaseBranch, string? mergeBranchSuffix = DefaultMergeSuffix)
         {
             Repository = repository;
             BaseBranch = baseBranch;
             ReleaseBranch = releaseBranch;
-            MergeBranch = releaseBranch + mergeBranchSuffix;
+            MergeBranch = releaseBranch + (string.IsNullOrEmpty(mergeBranchSuffix) ? DefaultMergeSuffix : mergeBranchSuffix);
         }
 
         public IRepository Repository { get; set; }

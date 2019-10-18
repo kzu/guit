@@ -10,7 +10,6 @@ namespace Guit.Plugin.Releaseator
     [Shared]
     class RepositoryProvider
     {
-        readonly static string[] commitsToBeIgnored = new string[] { "LEGO:", "Merge pull request #" };
         readonly Lazy<Dictionary<string, ReleaseConfig>> repositories = new Lazy<Dictionary<string, ReleaseConfig>>();
 
         [ImportingConstructor]
@@ -39,6 +38,8 @@ namespace Guit.Plugin.Releaseator
                     // TODO: fail if a submodule has no configuration?
                     var source = config.GetValueOrDefault("repository", submodule.Name, "source", defaultSource);
                     var target = config.GetValueOrDefault("repository", submodule.Name, "target", defaultTarget);
+                    var mergeSuffix = config.GetValueOrDefault("repository", submodule.Name, "mergeSuffix", defaultTarget);
+
                     var ignores = config
                         .OfType<ConfigurationEntry<string>>()
                         .Where(x => x.Key == "repository." + submodule.Name + ".ignore")
@@ -47,7 +48,7 @@ namespace Guit.Plugin.Releaseator
                         .ToArray();
 
                     if (source != null && target != null)
-                        configs.Add(submodule.Name, new ReleaseConfig(CreateRepository(submodule), source, target) { IgnoreCommits = ignores });
+                        configs.Add(submodule.Name, new ReleaseConfig(CreateRepository(submodule), source, target, mergeSuffix) { IgnoreCommits = ignores });
                 }
             }
 
