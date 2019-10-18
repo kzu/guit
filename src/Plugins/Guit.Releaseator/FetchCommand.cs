@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
+using Guit.Plugin.Releaseator.Properties;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
@@ -12,7 +13,7 @@ using Merq;
 namespace Guit.Plugin.Releaseator
 {
     [Shared]
-    [MenuCommand("Fetch", 'f', nameof(Releaseator))]
+    [MenuCommand("Releaseator.Fetch", 'f', nameof(Releaseator), typeof(Resources))]
     class FetchCommand : IMenuCommand, IAfterExecuteCallback
     {
         readonly IEnumerable<RepositoryConfig> repositories;
@@ -23,9 +24,9 @@ namespace Guit.Plugin.Releaseator
 
         [ImportingConstructor]
         public FetchCommand(
-            IEnumerable<RepositoryConfig> repositories, 
-            IEventStream eventStream, 
-            CredentialsHandler credentials, 
+            IEnumerable<RepositoryConfig> repositories,
+            IEventStream eventStream,
+            CredentialsHandler credentials,
             ReleaseatorView view,
             MainThread mainThread)
         {
@@ -49,11 +50,9 @@ namespace Guit.Plugin.Releaseator
 
             foreach (var config in repositoriesList)
             {
-                var remote = config.Repository.Network.Remotes.Single(x => x.Name == "origin");
+                eventStream.Push(Status.Create((repositoriesList.IndexOf(config) + 1f) / (repositoriesList.Count + 1f), "Fetching {0}...", config.Repository.GetName()));
 
-                eventStream.Push(Status.Create((repositoriesList.IndexOf(config) + 1f) / (repositoriesList.Count + 1f), "Fetching origin {0}...", config.Repository.GetName()));
-
-                config.Repository.Fetch(remote, credentials);
+                config.Repository.Fetch(config.Repository.Network.Remotes, credentials, prune: true);
             }
 
             eventStream.Push(Status.Succeeded());

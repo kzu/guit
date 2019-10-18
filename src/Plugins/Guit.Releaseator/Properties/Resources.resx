@@ -117,7 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ResolveConflicts" xml:space="preserve">
-    <value>Resolve</value>
+  <data name="Releaseator.Fetch" xml:space="preserve">
+    <value>Fetch</value>
+  </data>
+  <data name="Releaseator.Reset" xml:space="preserve">
+    <value>Reset</value>
   </data>
 </root>

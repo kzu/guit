@@ -61,11 +61,20 @@ namespace Guit.Plugin.Releaseator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resolve.
+        ///   Looks up a localized string similar to Fetch.
         /// </summary>
-        internal static string ResolveConflicts {
+        internal static string Releaseator_Fetch {
             get {
-                return ResourceManager.GetString("ResolveConflicts", resourceCulture);
+                return ResourceManager.GetString("Releaseator.Fetch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        internal static string Releaseator_Reset {
+            get {
+                return ResourceManager.GetString("Releaseator.Reset", resourceCulture);
             }
         }
     }
