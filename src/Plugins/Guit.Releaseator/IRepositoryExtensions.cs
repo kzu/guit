@@ -26,14 +26,13 @@ namespace LibGit2Sharp
         {
             // Search the local merge branch
             var mergeBranch = repository.Branches.FirstOrDefault(x => x.FriendlyName == config.MergeBranch);
-
             var remoteMergeBranch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "origin/" + config.MergeBranch && x.IsRemote);
             var releaseBranch = repository.Branches.Single(x => x.FriendlyName == "origin/" + config.ReleaseBranch);
 
             if (mergeBranch == null)
             {
-                // Checkout the remote merge branch or the release by default
-                repository.Checkout(repository.Branches.FirstOrDefault(x => x.FriendlyName == "origin/" + config.MergeBranch) ?? releaseBranch);
+                // Checkout the remote merge branch or the release to 
+                repository.Checkout(remoteMergeBranch ?? releaseBranch);
 
                 // Create the merge branch from the previously checked out branch (remote merge or release)
                 mergeBranch = repository.CreateBranch(config.MergeBranch);
