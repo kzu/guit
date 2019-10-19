@@ -4,7 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
     <RootNamespace>Guit.Plugin.CherryPicker</RootNamespace>
-    <IsCorePlugin>false</IsCorePlugin>
   </PropertyGroup>
 
   <ItemGroup>
