@@ -45,14 +45,12 @@ namespace Guit.Plugin.Releaseator
 
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
-            var repositoriesList = repositories.ToList();
-
-            foreach (var config in repositoriesList)
+            foreach (var (config, index) in repositories.Select((config, index) => (config, index)))
             {
-                eventStream.Push(Status.Create((repositoriesList.IndexOf(config) + 1f) / (repositoriesList.Count + 1f), "Fetching {0}...", config.Repository.GetName()));
+                eventStream.Push(Status.Create((index + 1) / repositories.Count(), "Fetching {0}...", config.Repository.GetName()));
 
-                config.Repository.Fetch(config.Repository.Network.Remotes, credentials, prune: true);
-            }
+                config.Repository.Fetch(credentials, prune: true);
+            };
 
             eventStream.Push(Status.Succeeded());
 

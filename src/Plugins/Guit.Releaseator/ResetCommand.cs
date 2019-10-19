@@ -20,7 +20,6 @@ namespace Guit.Plugin.Releaseator
         readonly CredentialsHandler credentials;
         readonly ReleaseatorView view;
         readonly MainThread mainThread;
-        private readonly ICommandService commandService;
 
         [ImportingConstructor]
         public ResetCommand(
@@ -28,15 +27,13 @@ namespace Guit.Plugin.Releaseator
             IEventStream eventStream,
             CredentialsHandler credentials,
             ReleaseatorView view,
-            MainThread mainThread,
-            ICommandService commandService)
+            MainThread mainThread)
         {
             this.repositories = repositories;
             this.eventStream = eventStream;
             this.credentials = credentials;
             this.view = view;
             this.mainThread = mainThread;
-            this.commandService = commandService;
         }
 
         public Task AfterExecuteAsync(CancellationToken cancellation)
@@ -49,29 +46,24 @@ namespace Guit.Plugin.Releaseator
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             var dialog = new MessageBox(
-                string.Format("Reset All Merge Branches"),
+                string.Format("Reset"),
                 DialogBoxButton.Ok | DialogBoxButton.Cancel,
-                "We will (hard) reset all merge branches to its corresponding remote or release branch tip");
+                "We will (hard) reset the current checked out branch to its corresponding remote tip");
 
             if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
             {
-                var repositoriesList = repositories.ToList();
-
-                foreach (var config in repositories)
+                foreach (var (config, repository, index) in repositories.Select((config, index) => (config, config.Repository, index)))
                 {
-                    var repository = config.Repository;
+                    repository.Fetch(credentials, prune: true);
 
-                    var mergeBranch = config.Repository.SwitchToMergeBranch(config);
+                    if (repository.GetBranch(config.TargetBranchRemote) is Branch targetBranchRemote)
+                    {
+                        repository.Reset(ResetMode.Hard, targetBranchRemote.Tip);
 
-                    eventStream.Push(Status.Create(
-                        (repositoriesList.IndexOf(config) + 1f) / (repositoriesList.Count + 1f),
-                        "Reset {0}/{1}", config.Repository.GetName(), mergeBranch.GetName()));
-
-                    repository.Fetch(repository.Network.Remotes, credentials, prune: true);
-
-                    var releaseBranch = repository.Branches.Single(x => x.FriendlyName == "origin/" + config.ReleaseBranch);
-
-                    repository.Reset(ResetMode.Hard, releaseBranch.Tip);
+                        eventStream.Push(Status.Create(
+                            index + 1 / (float)repositories.Count(),
+                            "Resetting {0} to {1}...", repository.GetName(), targetBranchRemote.FriendlyName));
+                    }
                 }
 
                 eventStream.Push(Status.Succeeded());

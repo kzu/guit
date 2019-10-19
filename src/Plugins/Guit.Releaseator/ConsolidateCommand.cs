@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Composition;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,43 +43,29 @@ namespace Guit.Plugin.Releaseator
                 var repository = config.Repository;
 
                 var dialog = new MessageBox(
-                    string.Format("{0} ({1} -> {2} -> {3})", config.Repository.GetName(), config.BaseBranch, config.MergeBranch, config.ReleaseBranch),
+                    string.Format("{0} ({1} -> {2})", config.Repository.GetName(), config.BaseBranch, config.TargetBranch),
                     DialogBoxButton.Ok | DialogBoxButton.Cancel,
-                    string.Format("We will cherry pick the selected {0} commit(s) into the following merge branch: {1}", repositoryEntries.Count(), config.MergeBranch));
+                    string.Format("We will cherry pick the selected {0} commit(s) into the following branch: {1}", repositoryEntries.Count(), config.TargetBranch));
 
                 if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
                 {
-                    // Search the local merge branch
-                    if (repository.SwitchToMergeBranch(config) is Branch mergeBranch)
+                    var targetBranch = repository.SwitchToTargetBranch(config);
+
+                    var count = 0;
+                    foreach (var entry in repositoryEntries.Reverse())
                     {
-                        // Cherrypick commits
-                        foreach (var entry in repositoryEntries.Reverse())
+                        var result = repository.CherryPick(entry.Commit, repository.Config.BuildSignature(DateTimeOffset.Now));
+
+                        if (result.Status == CherryPickStatus.Conflicts)
                         {
-                            var result = repository.CherryPick(entry.Commit, repository.Config.BuildSignature(DateTimeOffset.Now));
+                            repository.Reset(ResetMode.Hard);
 
-                            if (result.Status == CherryPickStatus.Conflicts)
-                            {
-                                repository.Reset(ResetMode.Hard);
-
-                                throw new InvalidOperationException(string.Format("Unable to cherry pick {0}", entry.Commit.MessageShort));
-
-                                //eventStream.Push(Status.Create("Failed cherry pick {0} {1}", entry.Commit.Sha, entry.Commit.MessageShort));
-                            }
-                            else
-                            {
-                                eventStream.Push(Status.Create("Cherry pick {0} {1}", entry.Commit.Sha, entry.Commit.MessageShort));
-                            }
+                            throw new InvalidOperationException(string.Format("Unable to cherry pick {0}", entry.Commit.MessageShort));
                         }
-
-                        // Push
-                        repository.Network.Push(
-                            repository.Network.Remotes.Single(x => x.Name == "origin"),
-                            $"refs/heads/{config.MergeBranch}:refs/heads/{config.MergeBranch}",
-                            new PushOptions { CredentialsProvider = credentials });
-
-                        eventStream.Push(Status.Create("Pushed changes to {0}", $"{repository.GetRepoUrl()}/tree/{config.MergeBranch}"));
-
-                        Process.Start("cmd", $"/c start {repository.GetRepoUrl()}/compare/{config.ReleaseBranch}...{config.MergeBranch}");
+                        else
+                        {
+                            eventStream.Push(Status.Create(++count / (float)repositoryEntries.Count(), "Cherry picking {0} {1}", entry.Commit.GetShortSha(), entry.Commit.MessageShort));
+                        }
                     }
                 }
             }

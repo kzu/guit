@@ -11,8 +11,6 @@ namespace Guit.Plugin.Releaseator
     [MenuCommand("Ignore", 'i', nameof(Releaseator))]
     class IgnoreCommand : IMenuCommand, IAfterExecuteCallback
     {
-
-
         readonly MainThread mainThread;
         readonly ReleaseatorView view;
 
@@ -30,7 +28,7 @@ namespace Guit.Plugin.Releaseator
             var dialog = new MessageBox(
                 string.Format("Ignore Commits"),
                 DialogBoxButton.Ok | DialogBoxButton.Cancel,
-                string.Format("We will ignore the selected {0} commit(s)", entries.Count()));
+                string.Format("We will ignore and add the selected {0} commit(s) into the {1} file", entries.Count(), Constants.NoReleaseFile));
 
             if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
             {
@@ -38,7 +36,7 @@ namespace Guit.Plugin.Releaseator
                     string.Format(
                         "{0}\t{1}\t{2}\t{3}",
                         string.Format("[{0}]({1})",
-                            x.Config.Repository.GetRepoUrl().Replace("https://github.com/", string.Empty) + "@" + x.Commit.Sha.Substring(0, 7),
+                            x.Config.Repository.GetRepoUrl().Replace("https://github.com/", string.Empty) + "@" + x.Commit.GetShortSha(),
                             x.Config.Repository.GetRepoUrl() + "/commit/" + x.Commit.Sha),
                         x.Commit.Author.Name,
                         x.Commit.MessageShort,

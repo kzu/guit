@@ -69,6 +69,9 @@ namespace LibGit2Sharp
             }
         }
 
+        public static void Fetch(this IRepository repository, CredentialsHandler credentials, IEventStream? eventStream = null, bool prune = false) =>
+            Fetch(repository, repository.Network.Remotes, credentials, eventStream, prune);
+
         public static void Fetch(this IRepository repository, string remoteName, CredentialsHandler credentials, IEventStream? eventStream = null, bool prune = false)
         {
             if (repository.Network.Remotes.FirstOrDefault(x => x.Name == remoteName) is Remote remote)

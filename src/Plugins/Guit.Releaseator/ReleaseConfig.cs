@@ -4,28 +4,39 @@ namespace Guit.Plugin.Releaseator
 {
     class ReleaseConfig
     {
-        const string DefaultMergeSuffix = "-merge";
-
-        public ReleaseConfig(IRepository repository, string baseBranch, string releaseBranch, string? mergeBranchSuffix = DefaultMergeSuffix)
+        public ReleaseConfig(IRepository repository, string baseBranch, string targetBranch)
         {
             Repository = repository;
+
             BaseBranch = baseBranch;
-            ReleaseBranch = releaseBranch;
-            MergeBranch = releaseBranch + (string.IsNullOrEmpty(mergeBranchSuffix) ? DefaultMergeSuffix : mergeBranchSuffix);
+            TargetBranch = targetBranch;
         }
 
         public IRepository Repository { get; set; }
 
         public string BaseBranch { get; }
 
-        public string? BaseBranchSha { get; set; }
+        public string BaseBranchRemote => "origin/" + BaseBranch;
 
-        public string ReleaseBranch { get; }
+        public string TargetBranch { get; }
 
-        public string? ReleaseBranchSha { get; set; }
+        public string TargetBranchRemote => "origin/" + TargetBranch;
 
-        public string MergeBranch { get; set; }
-
+        /// <summary>
+        /// Gets the list of commit strings to be ignored
+        /// Current supported values are: MessageShort (StartWith) and Sha
+        /// </summary>
         public string[]? IgnoreCommits { get; set; }
+
+        /// <summary>
+        /// Gets the commits count limit to be evaluated
+        /// </summary>
+        public int Limit { get; set; } = 500;
+
+        /// <summary>
+        /// Gets true of the local target branch should be automatically
+        /// merged (Pull FastFordward) with the remote 
+        /// </summary>
+        public bool SyncTargetBranch { get; } = true;
     }
 }

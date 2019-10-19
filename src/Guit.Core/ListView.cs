@@ -19,6 +19,12 @@ namespace Guit
                 this.columnDefinitions = new[] { new ColumnDefinition<T>(x => x?.ToString() ?? string.Empty, "*") };
         }
 
+        public IEnumerable<T> MarkedEntries => Values.Where((x, i) => Source.IsMarked(i));
+
+        public T SelectedEntry =>
+            SelectedItem >= 0 && SelectedItem < Values.Count() ?
+                Values.ElementAt(SelectedItem) : default;
+
         public void SetValues(IEnumerable<T> values) => RenderValues(values);
 
         public IEnumerable<T> Values { get; private set; } = Enumerable.Empty<T>();

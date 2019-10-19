@@ -20,39 +20,54 @@ namespace LibGit2Sharp
             return repoUrl;
         }
 
-        public static Branch SwitchToMergeBranch(this IRepository repository, ReleaseConfig config)
+        public static Branch GetBranch(this IRepository repository, string branchFriendlyName) =>
+            repository.Branches.FirstOrDefault(x => x.FriendlyName == branchFriendlyName);
+
+        static void GetLocalAndRemoteBranch(this IRepository repository, string localBranchName, string remoteBranchName, out Branch? localBranch, out Branch? remoteBranch)
         {
-            // Search the local merge branch
-            var mergeBranch = repository.Branches.FirstOrDefault(x => x.FriendlyName == config.MergeBranch);
-            var remoteMergeBranch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "origin/" + config.MergeBranch && x.IsRemote);
-            var releaseBranch = repository.Branches.Single(x => x.FriendlyName == "origin/" + config.ReleaseBranch);
+            localBranch = repository.GetBranch(localBranchName);
+            remoteBranch = repository.GetBranch(remoteBranchName);
+        }
 
-            if (mergeBranch == null)
-            {
-                // Checkout the remote merge branch or the release to 
-                repository.Checkout(remoteMergeBranch ?? releaseBranch);
+        public static Branch GetBaseBranch(this IRepository repository, ReleaseConfig config)
+        {
+            repository.GetLocalAndRemoteBranch(config.BaseBranch, config.BaseBranchRemote, out var localBranch, out var remoteBranch);
 
-                // Create the merge branch from the previously checked out branch (remote merge or release)
-                mergeBranch = repository.CreateBranch(config.MergeBranch);
-            }
+            if (localBranch is null && remoteBranch is null)
+                throw new InvalidOperationException(string.Format("Branch '{0}' not found", config.BaseBranch));
 
-            // Checkout merge branch
-            repository.Checkout(mergeBranch);
+#pragma warning disable CS8603 // Possible null reference return.
+            return localBranch ?? remoteBranch;
+#pragma warning restore CS8603 // Possible null reference return.
+        }
 
-            // And try pull with fast forward from remote
-            if (remoteMergeBranch != null)
+        public static Branch SwitchToTargetBranch(this IRepository repository, ReleaseConfig config)
+        {
+            GetLocalAndRemoteBranch(repository, config.TargetBranch, config.TargetBranchRemote, out var targetBranch, out var targetBranchRemote);
+
+            if (targetBranch == null && targetBranchRemote != null)
+                targetBranch = repository.CreateBranch(config.TargetBranch, targetBranchRemote.Tip);
+
+            if (targetBranch is null)
+                throw new InvalidOperationException(string.Format("Branch {0} not found", config.TargetBranch));
+
+            // Checkout target branch
+            repository.Checkout(targetBranch);
+
+            if (config.SyncTargetBranch && targetBranchRemote != null)
             {
                 try
                 {
+                    // And try pull with fast forward from remote
                     repository.Merge(
-                        remoteMergeBranch,
+                        targetBranchRemote,
                         repository.Config.BuildSignature(DateTimeOffset.Now),
                         new MergeOptions { FastForwardStrategy = FastForwardStrategy.FastForwardOnly });
                 }
                 catch (NonFastForwardException) { }
             }
 
-            return mergeBranch;
+            return targetBranch;
         }
     }
 }
