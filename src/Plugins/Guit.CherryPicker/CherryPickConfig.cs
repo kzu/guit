@@ -2,9 +2,9 @@
 
 namespace Guit.Plugin.CherryPicker
 {
-    class ReleaseConfig
+    class CherryPickConfig
     {
-        public ReleaseConfig(IRepository repository, string baseBranch, string targetBranch)
+        public CherryPickConfig(IRepository repository, string baseBranch, string targetBranch)
         {
             Repository = repository;
 

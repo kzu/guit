@@ -4,13 +4,13 @@ namespace Guit.Plugin.CherryPicker
 {
     class CommitEntry
     {
-        public CommitEntry(ReleaseConfig config, Commit commit)
+        public CommitEntry(CherryPickConfig config, Commit commit)
         {
             Config = config;
             Commit = commit;
         }
 
-        public ReleaseConfig Config { get; }
+        public CherryPickConfig Config { get; }
 
         public Commit Commit { get; }
 

@@ -13,12 +13,12 @@ namespace Guit.Plugin.CherryPicker
     [ContentView(nameof(CherryPicker), '4')]
     class ReleaseatorView : ContentView
     {
-        readonly IEnumerable<ReleaseConfig> repositories;
+        readonly IEnumerable<CherryPickConfig> repositories;
         readonly CredentialsHandler credentials;
         readonly ListView<CommitEntry> listView;
 
         [ImportingConstructor]
-        public ReleaseatorView(IEnumerable<ReleaseConfig> repositories, CredentialsHandler credentials)
+        public ReleaseatorView(IEnumerable<CherryPickConfig> repositories, CredentialsHandler credentials)
             : base(nameof(CherryPicker))
         {
             this.repositories = repositories;
@@ -62,7 +62,7 @@ namespace Guit.Plugin.CherryPicker
             }).ToList());
         }
 
-        IEnumerable<Commit> GetCommits(Branch? branch, ReleaseConfig config, int? limit = default) =>
+        IEnumerable<Commit> GetCommits(Branch? branch, CherryPickConfig config, int? limit = default) =>
             branch?
                 .Commits
                 .Where(commit => config?.IgnoreCommits.Any(ignore => commit.MessageShort.StartsWith(ignore) || commit.Sha == ignore) == false)

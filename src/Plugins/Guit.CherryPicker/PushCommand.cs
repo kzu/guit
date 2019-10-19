@@ -20,7 +20,7 @@ namespace Guit.Plugin.CherryPicker
         readonly MainThread mainThread;
         readonly ReleaseatorView view;
         readonly CredentialsHandler credentials;
-        readonly IEnumerable<ReleaseConfig> repositories;
+        readonly IEnumerable<CherryPickConfig> repositories;
 
         [ImportingConstructor]
         public PushCommand(
@@ -28,7 +28,7 @@ namespace Guit.Plugin.CherryPicker
             MainThread mainThread,
             ReleaseatorView view,
             CredentialsHandler credentials,
-            IEnumerable<ReleaseConfig> repositories)
+            IEnumerable<CherryPickConfig> repositories)
         {
             this.eventStream = eventStream;
             this.mainThread = mainThread;
@@ -60,7 +60,7 @@ namespace Guit.Plugin.CherryPicker
             {
                 foreach (var branch in dialog.Branches)
                 {
-                    if (branch.BranchName?.Contains('/') == true && repositories.FirstOrDefault(x => x.Repository.GetName() == branch.Repo) is ReleaseConfig config)
+                    if (branch.BranchName?.Contains('/') == true && repositories.FirstOrDefault(x => x.Repository.GetName() == branch.Repo) is CherryPickConfig config)
                     {
                         var repository = config.Repository;
                         var remoteName = branch.BranchName.Substring(0, branch.BranchName.IndexOf('/'));

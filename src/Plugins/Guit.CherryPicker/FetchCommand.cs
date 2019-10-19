@@ -15,7 +15,7 @@ namespace Guit.Plugin.CherryPicker
     [MenuCommand("Releaseator.Fetch", 'f', nameof(CherryPicker), typeof(Resources))]
     class FetchCommand : IMenuCommand, IAfterExecuteCallback
     {
-        readonly IEnumerable<ReleaseConfig> repositories;
+        readonly IEnumerable<CherryPickConfig> repositories;
         readonly IEventStream eventStream;
         readonly CredentialsHandler credentials;
         readonly ReleaseatorView view;
@@ -23,7 +23,7 @@ namespace Guit.Plugin.CherryPicker
 
         [ImportingConstructor]
         public FetchCommand(
-            IEnumerable<ReleaseConfig> repositories,
+            IEnumerable<CherryPickConfig> repositories,
             IEventStream eventStream,
             CredentialsHandler credentials,
             ReleaseatorView view,

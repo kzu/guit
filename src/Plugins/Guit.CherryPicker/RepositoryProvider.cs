@@ -10,17 +10,17 @@ namespace Guit.Plugin.CherryPicker
     [Shared]
     class RepositoryProvider
     {
-        readonly Lazy<Dictionary<string, ReleaseConfig>> repositories = new Lazy<Dictionary<string, ReleaseConfig>>();
+        readonly Lazy<Dictionary<string, CherryPickConfig>> repositories = new Lazy<Dictionary<string, CherryPickConfig>>();
 
         [ImportingConstructor]
         public RepositoryProvider(IRepository root)
         {
-            repositories = new Lazy<Dictionary<string, ReleaseConfig>>(() => ReadConfig(root));
+            repositories = new Lazy<Dictionary<string, CherryPickConfig>>(() => ReadConfig(root));
         }
 
-        Dictionary<string, ReleaseConfig> ReadConfig(IRepository root)
+        Dictionary<string, CherryPickConfig> ReadConfig(IRepository root)
         {
-            var configs = new Dictionary<string, ReleaseConfig>();
+            var configs = new Dictionary<string, CherryPickConfig>();
             var configFile = Path.Combine(root.Info.WorkingDirectory, ".releaseconfig");
 
             var ignoredCommits = Enumerable.Empty<string>();
@@ -62,7 +62,7 @@ namespace Guit.Plugin.CherryPicker
                         .ToArray();
 
                     if (source != null && target != null)
-                        configs.Add(submodule.Name, new ReleaseConfig(CreateRepository(submodule), source, target) { IgnoreCommits = ignores });
+                        configs.Add(submodule.Name, new CherryPickConfig(CreateRepository(submodule), source, target) { IgnoreCommits = ignores });
                 }
             }
 
@@ -72,6 +72,6 @@ namespace Guit.Plugin.CherryPicker
         IRepository CreateRepository(Submodule submodule) => new Repository(submodule.Path);
 
         [Export]
-        public IEnumerable<ReleaseConfig> Repositories => repositories.Value.Values;
+        public IEnumerable<CherryPickConfig> Repositories => repositories.Value.Values;
     }
 }

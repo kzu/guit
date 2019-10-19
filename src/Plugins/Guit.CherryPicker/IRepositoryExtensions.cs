@@ -29,7 +29,7 @@ namespace LibGit2Sharp
             remoteBranch = repository.GetBranch(remoteBranchName);
         }
 
-        public static Branch GetBaseBranch(this IRepository repository, ReleaseConfig config)
+        public static Branch GetBaseBranch(this IRepository repository, CherryPickConfig config)
         {
             repository.GetLocalAndRemoteBranch(config.BaseBranch, config.BaseBranchRemote, out var localBranch, out var remoteBranch);
 
@@ -41,7 +41,7 @@ namespace LibGit2Sharp
 #pragma warning restore CS8603 // Possible null reference return.
         }
 
-        public static Branch SwitchToTargetBranch(this IRepository repository, ReleaseConfig config)
+        public static Branch SwitchToTargetBranch(this IRepository repository, CherryPickConfig config)
         {
             GetLocalAndRemoteBranch(repository, config.TargetBranch, config.TargetBranchRemote, out var targetBranch, out var targetBranchRemote);
 
