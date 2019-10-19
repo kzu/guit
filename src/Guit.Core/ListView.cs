@@ -5,7 +5,7 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    public class ListView<T> : ListView, IFilterPattern
+    public class ListView<T> : ListView, IFilterPattern, ISelectPattern
     {
         string[]? filter;
 
@@ -74,5 +74,16 @@ namespace Guit
         }
 
         protected virtual void SetFilter(params string[]? filter) => RenderValues(Values);
+
+        void ISelectPattern.SelectAll(bool invertSelection) => SelectAll(invertSelection);
+
+        protected virtual void SelectAll(bool invertSelection)
+        {
+            if (AllowsMarking)
+            {
+                Source.MarkAll(!(invertSelection && Source.All(true)));
+                SetNeedsDisplay();
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    class ShellWindow : Window, IRefreshPattern, IFilterPattern, ISupportInitializeNotification
+    class ShellWindow : Window, IRefreshPattern, IFilterPattern, ISelectPattern, ISupportInitializeNotification
     {
         readonly Tuple<int, int, int, int> margin;
         readonly IEnumerable<View> decorators;
@@ -51,6 +51,14 @@ namespace Guit
 
             foreach (var decorator in decorators.OfType<IRefreshPattern>())
                 decorator.Refresh();
+        }
+
+        public void SelectAll(bool invertSelection = true)
+        {
+            (Content as ISelectPattern)?.SelectAll(invertSelection);
+
+            foreach (var decorator in decorators.OfType<ISelectPattern>())
+                decorator.SelectAll(invertSelection);
         }
 
         public override Rect Frame

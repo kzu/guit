@@ -28,7 +28,7 @@ namespace Guit
         IMenuCommand RefreshCommand => new MenuCommand(() => mainThread.Invoke(() => (Application.Current as IRefreshPattern)?.Refresh()));
 
         [MenuCommand("SelectAll", '*', Visible = false, ReportProgress = false)]
-        IMenuCommand SelectAllCommand => new MenuCommand(() => mainThread.Invoke(() => app.Value.CurrentView?.SelectAll(invertSelection: true)));
+        IMenuCommand SelectAllCommand => new MenuCommand(() => mainThread.Invoke(() => (Application.Current as ISelectPattern)?.SelectAll(invertSelection: true)));
 
         [MenuCommand("Filter", Key.F6, Visible = false, ReportProgress = false)]
         IMenuCommand FilterCommand => new MenuCommand(() => mainThread.Invoke(() =>
