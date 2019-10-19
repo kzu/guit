@@ -4,15 +4,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
-using Guit.Plugin.Releaseator.Properties;
+using Guit.Plugin.CherryPicker.Properties;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
 
-namespace Guit.Plugin.Releaseator
+namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Releaseator.Fetch", 'f', nameof(Releaseator), typeof(Resources))]
+    [MenuCommand("Releaseator.Fetch", 'f', nameof(CherryPicker), typeof(Resources))]
     class FetchCommand : IMenuCommand, IAfterExecuteCallback
     {
         readonly IEnumerable<ReleaseConfig> repositories;

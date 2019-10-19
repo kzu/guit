@@ -1,6 +1,6 @@
 ﻿using LibGit2Sharp;
 
-namespace Guit.Plugin.Releaseator
+namespace Guit.Plugin.CherryPicker
 {
     class CommitEntry
     {

@@ -4,15 +4,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
-using Guit.Plugin.Releaseator.Properties;
+using Guit.Plugin.CherryPicker.Properties;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
 
-namespace Guit.Plugin.Releaseator
+namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Releaseator.Reset", 'r', nameof(Releaseator), typeof(Resources))]
+    [MenuCommand("Releaseator.Reset", 'r', nameof(CherryPicker), typeof(Resources))]
     class ResetCommand : IMenuCommand, IAfterExecuteCallback
     {
         readonly IEnumerable<ReleaseConfig> repositories;

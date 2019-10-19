@@ -2,7 +2,7 @@
 using System.Linq;
 using Terminal.Gui;
 
-namespace Guit.Plugin.Releaseator
+namespace Guit.Plugin.CherryPicker
 {
     class PushDialog : DialogBox
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Guit.Plugin.Releaseator;
+using Guit.Plugin.CherryPicker;
 
 namespace LibGit2Sharp
 {

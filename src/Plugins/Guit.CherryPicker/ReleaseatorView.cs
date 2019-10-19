@@ -6,11 +6,11 @@ using System.Linq;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 
-namespace Guit.Plugin.Releaseator
+namespace Guit.Plugin.CherryPicker
 {
     [Shared]
     [Export]
-    [ContentView(nameof(Releaseator), '4')]
+    [ContentView(nameof(CherryPicker), '4')]
     class ReleaseatorView : ContentView
     {
         readonly IEnumerable<ReleaseConfig> repositories;
@@ -19,7 +19,7 @@ namespace Guit.Plugin.Releaseator
 
         [ImportingConstructor]
         public ReleaseatorView(IEnumerable<ReleaseConfig> repositories, CredentialsHandler credentials)
-            : base(nameof(Releaseator))
+            : base(nameof(CherryPicker))
         {
             this.repositories = repositories;
             this.credentials = credentials;

@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using LibGit2Sharp;
 
-namespace Guit.Plugin.Releaseator
+namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Ignore", 'i', nameof(Releaseator))]
+    [MenuCommand("Ignore", 'i', nameof(CherryPicker))]
     class IgnoreCommand : IMenuCommand, IAfterExecuteCallback
     {
         readonly MainThread mainThread;

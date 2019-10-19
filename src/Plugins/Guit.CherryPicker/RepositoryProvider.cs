@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using LibGit2Sharp;
 
-namespace Guit.Plugin.Releaseator
+namespace Guit.Plugin.CherryPicker
 {
     [Shared]
     class RepositoryProvider

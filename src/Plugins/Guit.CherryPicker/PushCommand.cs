@@ -10,10 +10,10 @@ using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
 
-namespace Guit.Plugin.Releaseator
+namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Push", 'p', nameof(Releaseator))]
+    [MenuCommand("Push", 'p', nameof(CherryPicker))]
     class PushCommand : IMenuCommand, IAfterExecuteCallback
     {
         readonly IEventStream eventStream;

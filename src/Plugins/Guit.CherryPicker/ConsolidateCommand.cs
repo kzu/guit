@@ -8,10 +8,10 @@ using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
 
-namespace Guit.Plugin.Releaseator
+namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Consolidate", 'c', nameof(Releaseator))]
+    [MenuCommand("Consolidate", 'c', nameof(CherryPicker))]
     class ConsolidateCommand : IMenuCommand, IAfterExecuteCallback
     {
         readonly IEventStream eventStream;

@@ -1,4 +1,4 @@
-﻿namespace Guit.Plugin.Releaseator
+﻿namespace Guit.Plugin.CherryPicker
 {
     class Constants
     {

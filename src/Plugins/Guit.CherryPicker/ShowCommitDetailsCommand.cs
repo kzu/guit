@@ -4,10 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using LibGit2Sharp;
 
-namespace Guit.Plugin.Releaseator
+namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Details", Terminal.Gui.Key.F3, nameof(Releaseator), Visible = false)]
+    [MenuCommand("Details", Terminal.Gui.Key.F3, nameof(CherryPicker), Visible = false)]
     class ShowCommitDetailsCommand : IMenuCommand
     {
         readonly ReleaseatorView view;
