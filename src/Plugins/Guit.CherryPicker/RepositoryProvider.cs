@@ -41,11 +41,7 @@ namespace Guit.Plugin.CherryPicker
                 var defaultSource = config.GetValueOrDefault("repository.source", default(string));
                 var defaultTarget = config.GetValueOrDefault("repository.target", default(string));
 
-                var defaultIgnores = config
-                    .OfType<ConfigurationEntry<string>>()
-                    .Where(x => x.Key == "repository.ignore")
-                    .Select(x => x.Value)
-                    .ToArray();
+                var defaultIgnores = GetIgnored(config).ToArray();
 
                 foreach (var submodule in root.Submodules)
                 {
@@ -67,11 +63,20 @@ namespace Guit.Plugin.CherryPicker
             }
             else
             {
-                configs.Add(root.GetName(), new CherryPickConfig(root) { IgnoreCommits = ignoredCommits });
+                var ignored = GetIgnored(root.Config).Concat(ignoredCommits).ToArray();
+
+                configs.Add(root.GetName(), new CherryPickConfig(root) { IgnoreCommits = ignored });
             }
 
             return configs;
         }
+
+        IEnumerable<string> GetIgnored(LibGit2Sharp.Configuration config) =>
+            config
+                .OfType<ConfigurationEntry<string>>()
+                .Where(x => x.Key == "repository.ignore")
+                .Select(x => x.Value);
+
 
         IRepository CreateRepository(Submodule submodule) => new Repository(submodule.Path);
 
