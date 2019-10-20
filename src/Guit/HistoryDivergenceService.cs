@@ -48,7 +48,7 @@ namespace Guit
 
             var historyDivergence = repository.ObjectDatabase.CalculateHistoryDivergence(source.Tip, target.Tip);
 
-            if (historyDivergence.AheadBy.HasValue && historyDivergence.AheadBy.Value > 0)
+            if (historyDivergence.AheadBy.HasValue)
                 aheadBy = historyDivergence.AheadBy.Value;
 
             return aheadBy > 0;
