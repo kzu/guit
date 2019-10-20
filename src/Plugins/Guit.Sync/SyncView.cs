@@ -2,6 +2,7 @@
 using System.Composition;
 using LibGit2Sharp;
 using Terminal.Gui;
+using System.Collections.Generic;
 
 namespace Guit.Plugin.Sync
 {
@@ -47,15 +48,10 @@ namespace Guit.Plugin.Sync
             base.Refresh();
 
             var sourceBranch = repository.Head;
+            var targetBranch = GetCandidateTargetBranches(sourceBranch)
+                .FirstOrDefault(target => HasDivergence(sourceBranch, target));
 
-            var targetBranch = sourceBranch.TrackedBranch;
-            if (targetBranch is null)
-                targetBranch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "origin/" + sourceBranch.FriendlyName);
-
-            if (!HasDivergence(sourceBranch, targetBranch))
-                targetBranch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "origin/master");
-
-            if (HasDivergence(sourceBranch, targetBranch))
+            if (targetBranch != null)
             {
                 aheadListView.SetValues(historyDivergenceService.GetDivergence(repository, sourceBranch, targetBranch).ToList());
                 behindListView.SetValues(historyDivergenceService.GetDivergence(repository, targetBranch, sourceBranch).ToList());
@@ -74,5 +70,12 @@ namespace Guit.Plugin.Sync
             target != null &&
             (historyDivergenceService.HasDivergence(repository, source, target) ||
              historyDivergenceService.HasDivergence(repository, target, source));
+
+        IEnumerable<Branch> GetCandidateTargetBranches(Branch branch)
+        {
+            yield return branch.TrackedBranch;
+            yield return repository.Branches.FirstOrDefault(x => x.FriendlyName == "origin/" + branch.FriendlyName);
+            yield return repository.Branches.FirstOrDefault(x => x.FriendlyName == "origin/master");
+        }
     }
 }
