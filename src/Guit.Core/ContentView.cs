@@ -5,7 +5,7 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    public abstract class ContentView : View, IRefreshPattern, IFilterPattern, ISelectPattern, ISupportInitializeNotification
+    public abstract class ContentView : View, IRefreshPattern, IFilterPattern, ISupportInitializeNotification
     {
         string baseTitle;
         string title;
@@ -59,16 +59,10 @@ namespace Guit
 
         protected virtual void SetFilter(params string[]? filter)
         {
+            foreach(var view in this.TraverseSubViews().OfType<IFilterPattern>())
+
             if (Content is IFilterPattern filterPattern)
                 filterPattern.Filter = filter;
-        }
-
-        void ISelectPattern.SelectAll(bool invertSelection) => SelectAll(invertSelection);
-
-        protected virtual void SelectAll(bool invertSelection = true)
-        {
-            if (Content is ISelectPattern listView)
-                listView.SelectAll();
         }
 
         void ISupportInitialize.BeginInit() => BeginInit();

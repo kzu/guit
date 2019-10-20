@@ -36,29 +36,23 @@ namespace Guit
             get => (Content as IFilterPattern)?.Filter;
             set
             {
-                if (Content is IFilterPattern filterPattern)
-                {
-                    filterPattern.Filter = value;
+                foreach (var view in this.TraverseSubViews().OfType<IFilterPattern>())
+                    view.Filter = value;
 
-                    Title = Content.Title;
-                }
+                Title = Content.Title;
             }
         }
 
         public void Refresh()
         {
-            Content.Refresh();
-
-            foreach (var decorator in decorators.OfType<IRefreshPattern>())
-                decorator.Refresh();
+            foreach (var view in this.TraverseSubViews().OfType<IRefreshPattern>())
+                view.Refresh();
         }
 
         public void SelectAll(bool invertSelection = true)
         {
-            (Content as ISelectPattern)?.SelectAll(invertSelection);
-
-            foreach (var decorator in decorators.OfType<ISelectPattern>())
-                decorator.SelectAll(invertSelection);
+            foreach (var view in this.TraverseSubViews().OfType<ISelectPattern>())
+                view.SelectAll(invertSelection);
         }
 
         public override Rect Frame
