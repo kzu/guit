@@ -20,23 +20,23 @@ namespace Guit
 
             content = new Lazy<string>(() =>
             {
-                var values = this.columnDefinitions
+                List<(int Width, string Value)> values = this.columnDefinitions
                     .Select(columnDefinition =>
                     {
                         if (columnDefinition.Width != 0)
-                            return Tuple.Create(columnDefinition.Width, columnDefinition.GetValue(Item));
+                            return (columnDefinition.Width, columnDefinition.GetValue(Item));
                         else if (columnDefinition.WidthExpression?.EndsWith("%") == true && int.TryParse(columnDefinition.WidthExpression.TrimEnd('%'), out var coldWidthPercentage))
-                            return Tuple.Create(contentWidth * coldWidthPercentage / 100, columnDefinition.GetValue(Item));
+                            return (contentWidth * coldWidthPercentage / 100, columnDefinition.GetValue(Item));
                         else if (columnDefinition.WidthExpression?.EndsWith("*") == true)
-                            return Tuple.Create(int.MaxValue, columnDefinition.GetValue(Item));
+                            return (int.MaxValue, columnDefinition.GetValue(Item));
                         else
-                            return Tuple.Create(0, string.Empty);
+                            return (0, string.Empty);
                     }).ToList();
 
-                var columnWidth = values.Select(x => x.Item1).Where(x => x != int.MaxValue).Sum();
+                var columnWidth = values.Where(x => x.Width != int.MaxValue).Sum(x => x.Width);
 
                 return string.Concat(values.Select(x =>
-                    GetNormalizedString(x.Item2, x.Item1 == int.MaxValue ? contentWidth - columnWidth : x.Item1)));
+                    GetNormalizedString(x.Value, x.Width == int.MaxValue ? contentWidth - columnWidth : x.Width)));
             });
 
         }
