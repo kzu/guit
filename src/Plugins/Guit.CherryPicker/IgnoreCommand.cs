@@ -12,10 +12,10 @@ namespace Guit.Plugin.CherryPicker
     class IgnoreCommand : IMenuCommand, IAfterExecuteCallback
     {
         readonly MainThread mainThread;
-        readonly ReleaseatorView view;
+        readonly CherryPickerView view;
 
         [ImportingConstructor]
-        public IgnoreCommand(MainThread mainThread, ReleaseatorView view)
+        public IgnoreCommand(MainThread mainThread, CherryPickerView view)
         {
             this.mainThread = mainThread;
             this.view = view;

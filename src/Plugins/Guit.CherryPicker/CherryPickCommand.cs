@@ -11,16 +11,16 @@ using Merq;
 namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Consolidate", 'c', nameof(CherryPicker))]
+    [MenuCommand("Cherry-Pick", 'c', nameof(CherryPicker))]
     class ConsolidateCommand : IMenuCommand, IAfterExecuteCallback
     {
         readonly IEventStream eventStream;
         readonly MainThread mainThread;
-        readonly ReleaseatorView view;
+        readonly CherryPickerView view;
         readonly CredentialsHandler credentials;
 
         [ImportingConstructor]
-        public ConsolidateCommand(IEventStream eventStream, MainThread mainThread, ReleaseatorView view, CredentialsHandler credentials)
+        public ConsolidateCommand(IEventStream eventStream, MainThread mainThread, CherryPickerView view, CredentialsHandler credentials)
         {
             this.eventStream = eventStream;
             this.mainThread = mainThread;

@@ -18,7 +18,7 @@ namespace Guit.Plugin.CherryPicker
         readonly IEnumerable<CherryPickConfig> repositories;
         readonly IEventStream eventStream;
         readonly CredentialsHandler credentials;
-        readonly ReleaseatorView view;
+        readonly CherryPickerView view;
         readonly MainThread mainThread;
 
         [ImportingConstructor]
@@ -26,7 +26,7 @@ namespace Guit.Plugin.CherryPicker
             IEnumerable<CherryPickConfig> repositories,
             IEventStream eventStream,
             CredentialsHandler credentials,
-            ReleaseatorView view,
+            CherryPickerView view,
             MainThread mainThread)
         {
             this.repositories = repositories;

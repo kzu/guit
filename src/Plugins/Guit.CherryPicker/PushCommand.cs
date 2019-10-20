@@ -18,7 +18,7 @@ namespace Guit.Plugin.CherryPicker
     {
         readonly IEventStream eventStream;
         readonly MainThread mainThread;
-        readonly ReleaseatorView view;
+        readonly CherryPickerView view;
         readonly CredentialsHandler credentials;
         readonly IEnumerable<CherryPickConfig> repositories;
 
@@ -26,7 +26,7 @@ namespace Guit.Plugin.CherryPicker
         public PushCommand(
             IEventStream eventStream,
             MainThread mainThread,
-            ReleaseatorView view,
+            CherryPickerView view,
             CredentialsHandler credentials,
             IEnumerable<CherryPickConfig> repositories)
         {

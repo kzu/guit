@@ -7,8 +7,10 @@ namespace Guit
 {
     public abstract class ContentView : View, IRefreshPattern, IFilterPattern, ISelectPattern, ISupportInitializeNotification
     {
-        string[]? filter;
         string baseTitle;
+        string title;
+
+        string[]? filter;
         View? content;
 
         public event EventHandler? Initialized;
@@ -16,8 +18,7 @@ namespace Guit
         public ContentView(string title)
             : base()
         {
-            baseTitle = title;
-            Title = title;
+            baseTitle = this.title = title;
 
             Width = Dim.Fill();
             Height = Dim.Fill();
@@ -25,7 +26,17 @@ namespace Guit
 
         public bool IsInitialized { get; private set; }
 
-        public string Title { get; private set; }
+        public string Title
+        {
+            get => title;
+            protected set
+            {
+                baseTitle = title = value;
+
+                RefreshTitle();
+                SetNeedsDisplay();
+            }
+        }
 
         public virtual void Refresh() { }
 
@@ -35,11 +46,16 @@ namespace Guit
             set
             {
                 filter = value;
-                Title = filter?.Any() == true ? string.Format("{0} (filtering by {1})", baseTitle, string.Join(", ", filter)) : baseTitle;
 
                 SetFilter(filter);
+
+                RefreshTitle();
+                SetNeedsDisplay();
             }
         }
+
+        void RefreshTitle() =>
+            title = filter?.Any() == true ? string.Format("{0} - filtering by {1}", baseTitle, string.Join(", ", filter)) : baseTitle;
 
         protected virtual void SetFilter(params string[]? filter)
         {

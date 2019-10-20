@@ -7,13 +7,13 @@ using LibGit2Sharp;
 namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Details", Terminal.Gui.Key.F3, nameof(CherryPicker), Visible = false)]
+    [MenuCommand("Details", Terminal.Gui.Key.F3, nameof(CherryPicker), DefaultVisible = false)]
     class ShowCommitDetailsCommand : IMenuCommand
     {
-        readonly ReleaseatorView view;
+        readonly CherryPickerView view;
 
         [ImportingConstructor]
-        public ShowCommitDetailsCommand(ReleaseatorView view) => this.view = view;
+        public ShowCommitDetailsCommand(CherryPickerView view) => this.view = view;
 
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {

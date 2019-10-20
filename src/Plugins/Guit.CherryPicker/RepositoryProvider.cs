@@ -62,8 +62,12 @@ namespace Guit.Plugin.CherryPicker
                         .ToArray();
 
                     if (source != null && target != null)
-                        configs.Add(submodule.Name, new CherryPickConfig(CreateRepository(submodule), source, target) { IgnoreCommits = ignores });
+                        configs.Add(submodule.Name, new CherryPickConfig(CreateRepository(submodule), source, target) { IgnoreCommits = ignores, SyncTargetBranch = true });
                 }
+            }
+            else
+            {
+                configs.Add(root.GetName(), new CherryPickConfig(root) { IgnoreCommits = ignoredCommits });
             }
 
             return configs;

@@ -23,22 +23,17 @@ namespace LibGit2Sharp
         public static Branch GetBranch(this IRepository repository, string branchFriendlyName) =>
             repository.Branches.FirstOrDefault(x => x.FriendlyName == branchFriendlyName);
 
-        static void GetLocalAndRemoteBranch(this IRepository repository, string localBranchName, string remoteBranchName, out Branch? localBranch, out Branch? remoteBranch)
+        static void GetLocalAndRemoteBranch(this IRepository repository, string? localBranchName, string? remoteBranchName, out Branch? localBranch, out Branch? remoteBranch)
         {
-            localBranch = repository.GetBranch(localBranchName);
-            remoteBranch = repository.GetBranch(remoteBranchName);
+            localBranch = localBranchName is null ? default : repository.GetBranch(localBranchName);
+            remoteBranch = remoteBranchName is null ? default : repository.GetBranch(remoteBranchName);
         }
 
-        public static Branch GetBaseBranch(this IRepository repository, CherryPickConfig config)
+        public static Branch? GetBaseBranch(this IRepository repository, CherryPickConfig config)
         {
             repository.GetLocalAndRemoteBranch(config.BaseBranch, config.BaseBranchRemote, out var localBranch, out var remoteBranch);
 
-            if (localBranch is null && remoteBranch is null)
-                throw new InvalidOperationException(string.Format("Branch '{0}' not found", config.BaseBranch));
-
-#pragma warning disable CS8603 // Possible null reference return.
             return localBranch ?? remoteBranch;
-#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public static Branch SwitchToTargetBranch(this IRepository repository, CherryPickConfig config)

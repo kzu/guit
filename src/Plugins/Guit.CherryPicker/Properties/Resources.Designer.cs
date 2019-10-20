@@ -61,6 +61,15 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select Branch.
+        /// </summary>
+        internal static string CherryPicker_SelectBaseBranch {
+            get {
+                return ResourceManager.GetString("CherryPicker.SelectBaseBranch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fetch.
         /// </summary>
         internal static string Releaseator_Fetch {
