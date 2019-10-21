@@ -11,18 +11,20 @@ using Merq;
 namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Cherry-Pick", 'c', nameof(CherryPicker))]
-    class ConsolidateCommand : IMenuCommand, IAfterExecuteCallback
+    [MenuCommand("CherryPick", 'c', nameof(CherryPicker))]
+    class CherryPickCommand : IMenuCommand, IAfterExecuteCallback
     {
         readonly IEventStream eventStream;
+        readonly ICommandService commandService;
         readonly MainThread mainThread;
         readonly CherryPickerView view;
         readonly CredentialsHandler credentials;
 
         [ImportingConstructor]
-        public ConsolidateCommand(IEventStream eventStream, MainThread mainThread, CherryPickerView view, CredentialsHandler credentials)
+        public CherryPickCommand(IEventStream eventStream, ICommandService commandService, MainThread mainThread, CherryPickerView view, CredentialsHandler credentials)
         {
             this.eventStream = eventStream;
+            this.commandService = commandService;
             this.mainThread = mainThread;
             this.view = view;
             this.credentials = credentials;
@@ -35,7 +37,7 @@ namespace Guit.Plugin.CherryPicker
             return Task.CompletedTask;
         }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public async Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             foreach (var repositoryEntries in view.MarkedEntries.GroupBy(x => x.Config).Where(x => x.Any()))
             {
@@ -58,9 +60,18 @@ namespace Guit.Plugin.CherryPicker
 
                         if (result.Status == CherryPickStatus.Conflicts)
                         {
-                            repository.Reset(ResetMode.Hard);
-
-                            throw new InvalidOperationException(string.Format("Unable to cherry pick {0}", entry.Commit.MessageShort));
+                            await commandService.RunAsync(WellKnownCommands.ResolveConflicts, cancellation: cancellation);
+                            if (repository.Index.Conflicts.Any())
+                            {
+                                repository.Reset(ResetMode.Hard);
+                                throw new InvalidOperationException(string.Format("Unable to cherry pick {0}", entry.Commit.MessageShort));
+                            }
+                            else
+                            {
+                                // TODO: auto-commit, keep moving
+                            }
+                            
+                            eventStream.Push(Status.Create(++count / (float)repositoryEntries.Count(), "Cherry picking {0} {1}", entry.Commit.GetShortSha(), entry.Commit.MessageShort));
                         }
                         else
                         {
@@ -69,8 +80,6 @@ namespace Guit.Plugin.CherryPicker
                     }
                 }
             }
-
-            return Task.CompletedTask;
         }
     }
 }
