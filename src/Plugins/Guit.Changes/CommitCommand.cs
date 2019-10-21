@@ -12,8 +12,8 @@ using Merq;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand("Commit", 'c', WellKnownViews.Changes)]
-    public class CommitCommand : IMenuCommand
+    [MenuCommand("Commit", 'c', WellKnownViews.Changes, IsDynamic = true)]
+    public class CommitCommand : IDynamicMenuCommand
     {
         readonly IEventStream eventStream;
         readonly MainThread mainThread;
@@ -28,6 +28,10 @@ namespace Guit.Plugin.Changes
             this.repository = repository;
             this.changes = changes;
         }
+
+        public bool IsVisible => !repository.Index.Conflicts.Any();
+
+        public bool IsEnabled => !repository.Index.Conflicts.Any();
 
         protected bool Amend { get; set; }
 

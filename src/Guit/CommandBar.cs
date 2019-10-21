@@ -5,22 +5,92 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    class CommandBar : View
+    class CommandBar : View //, IRefreshPattern
     {
         Window? window;
+
+        readonly CommandService commandService;
+        readonly string? context;
 
         View globalCommands;
         View localCommands;
 
         public CommandBar(CommandService commandService, string? context)
         {
-            InitializeCommands(commandService, context);
+            this.commandService = commandService;
+            this.context = context;
 
-            Add(globalCommands, localCommands);
+            Refresh();
         }
 
-        void InitializeCommands(CommandService commandService, string? context)
+        IEnumerable<View> RenderCommand(Lazy<IMenuCommand, MenuCommandMetadata> command)
         {
+            yield return Separator;
+            yield return new Label(GetKeyDisplayText(command.Metadata.Key))
+            {
+                TextColor = Application.Driver.MakeAttribute(Color.BrightYellow, Color.Black),
+            };
+            yield return Space;
+            yield return new Label(command.Metadata.DisplayName);
+        }
+
+        View Space => new Label(" ");
+
+        View Separator => new Label(" | ");
+
+        bool IsVisible(Lazy<IMenuCommand, MenuCommandMetadata> command)
+        {
+            if (command.Metadata.IsDynamic && command.Value is IDynamicMenuCommand dynamicCommand)
+                return dynamicCommand.IsVisible;
+
+            return command.Metadata.DefaultVisible;
+        }
+
+        Window? Window => window != null ? window : window = this.GetWindow();
+
+        public override void Redraw(Rect region)
+        {
+            base.Redraw(region);
+
+            // TODO: if we don't do this, nothing gets rendered.
+            globalCommands.Redraw(region);
+            localCommands.Redraw(region);
+        }
+
+        public override void LayoutSubviews()
+        {
+            if (Window != null)
+            {
+                // Clear previous rendering of the command bar
+                for (var col = 0; col < Window.Frame.Width; col++)
+                {
+                    Application.Driver.Move(col, Window.Frame.Height);
+                    Application.Driver.AddRune(' ');
+                }
+
+                globalCommands.Y = localCommands.Y = Window.Frame.Height;
+                localCommands.X = Window.Frame.Width - localCommands.Subviews.Select(x => x.Frame.Width).Sum() - 2;
+            }
+
+            base.LayoutSubviews();
+        }
+
+        public void Refresh()
+        {
+            InitializeCommands();
+            // None of the following causes the actual menu to be refreshed properly
+            LayoutSubviews();
+            SetNeedsDisplay();
+            //Redraw(Frame);
+            //Application.Driver.Refresh();
+        }
+
+        string GetKeyDisplayText(int key) => Enum.GetName(typeof(Key), (Key)key) ?? ((char)key).ToString();
+
+        void InitializeCommands()
+        {
+            RemoveAll();
+
             globalCommands = new StackPanel(
                 StackPanelOrientation.Horizontal,
                 commandService
@@ -44,66 +114,12 @@ namespace Guit
                     .SelectMany(RenderCommand)
                     // Skip first separator
                     .Skip(1)
-                    .ToArray());
-        }
-
-        IEnumerable<View> RenderCommand(Lazy<IMenuCommand, MenuCommandMetadata> command)
-        {
-            yield return Separator;
-            yield return new Label(GetKeyDisplayText(command.Metadata.Key))
+                    .ToArray())
             {
-                TextColor = Application.Driver.MakeAttribute(Color.BrightYellow, Color.Black),
+                ColorScheme = Colors.Base,
             };
-            yield return Space;
-            yield return new Label(command.Metadata.DisplayName);
+
+            Add(globalCommands, localCommands);
         }
-
-        View Space => new Label(" ");
-        View Separator => new Label(" | ");
-
-        bool IsVisible(Lazy<IMenuCommand, MenuCommandMetadata> command)
-        {
-            if (command.Metadata.IsDynamic && command.Value is IDynamicMenuCommand dynamicCommand)
-                return dynamicCommand.IsVisible;
-
-            return command.Metadata.DefaultVisible;
-        }
-
-        Window? Window => window != null ? window : window = this.GetWindow();
-
-        public override void Redraw(Rect region)
-        {
-            base.Redraw(region);
-
-            globalCommands.Redraw(region);
-            localCommands.Redraw(region);
-        }
-
-        public override void LayoutSubviews()
-        {
-            ClearCommands();
-
-            if (Window != null)
-            {
-                globalCommands.Y = localCommands.Y = Window.Frame.Height;
-                localCommands.X = Window.Frame.Width - localCommands.Subviews.Select(x => x.Frame.Width).Sum() - 2;
-            }
-
-            base.LayoutSubviews();
-        }
-
-        void ClearCommands()
-        {
-            if (Window != null)
-            {
-                for (var col = 0; col < Window.Frame.Width; col++)
-                {
-                    Application.Driver.Move(col, Window.Frame.Height);
-                    Application.Driver.AddRune(' ');
-                }
-            }
-        }
-
-        string GetKeyDisplayText(int key) => Enum.GetName(typeof(Key), (Key)key) ?? ((char)key).ToString();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Guit
     [Export(typeof(ICommandService))]
     class CommandService : ICommandService
     {
-        readonly Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>> commands = new Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>>();
+        readonly Dictionary<Tuple<int, string?>, List<Lazy<IMenuCommand, MenuCommandMetadata>>> commands = new Dictionary<Tuple<int, string?>, List<Lazy<IMenuCommand, MenuCommandMetadata>>>();
         readonly MainThread mainThread;
         readonly IEventStream eventStream;
         readonly Selection selection;
@@ -46,13 +47,9 @@ namespace Guit
                             ReportProgress = false
                         })));
 
-            foreach (var command in allCommands)
+            foreach (var group in allCommands.GroupBy(c => Tuple.Create(c.Metadata.Key, c.Metadata.Context)))
             {
-                var key = Tuple.Create(command.Metadata.Key, command.Metadata.Context);
-
-                if (!this.commands.TryGetValue(key, out var existingCommand) ||
-                    existingCommand.Metadata.Order > command.Metadata.Order)
-                    this.commands[key] = command;
+                this.commands.Add(group.Key, group.OrderByDescending(c => c.Metadata.Order).ToList());
             }
 
             this.mainThread = mainThread;
@@ -60,12 +57,21 @@ namespace Guit
             this.selection = selection;
         }
 
-        public IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> Commands => commands.Values;
+        public IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> Commands => commands.SelectMany(c => c.Value);
 
         public Task RunAsync(int hotKey, string? context, object? parameter = null, CancellationToken cancellation = default)
         {
-            if (!commands.TryGetValue(Tuple.Create(hotKey, context), out var command) &&
-                !commands.TryGetValue(Tuple.Create(hotKey, default(string)), out command))
+            var candidates = Enumerable.Empty<Lazy<IMenuCommand, MenuCommandMetadata>>();
+
+            if (commands.TryGetValue(Tuple.Create(hotKey, context), out var localCommands) && localCommands != null)
+                candidates = localCommands;
+
+            if (commands.TryGetValue(Tuple.Create(hotKey, default(string)), out var globalCommands) && globalCommands != null)
+                candidates = candidates.Concat(globalCommands);
+
+            var command = candidates.FirstOrDefault(x => !x.Metadata.IsDynamic || (x.Value is IDynamicMenuCommand dyn && dyn.IsEnabled));
+
+            if (command == null)
                 return Task.CompletedTask;
 
             return ExecuteAsync(command, parameter ?? selection.Current, cancellation);
@@ -73,7 +79,9 @@ namespace Guit
 
         public Task RunAsync(string commandId, object? parameter = null, CancellationToken cancellation = default)
         {
-            var command = commands.Values.FirstOrDefault(x => x.Metadata.Id == commandId);
+            var command = commands
+                .SelectMany(x => x.Value)
+                .FirstOrDefault(x => x.Metadata.Id == commandId && (!x.Metadata.IsDynamic || (x.Value is IDynamicMenuCommand dyn && dyn.IsEnabled)));
 
             if (command != null)
                 return ExecuteAsync(command, parameter ?? selection.Current, cancellation);
@@ -84,34 +92,26 @@ namespace Guit
         Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, object? parameter = null, CancellationToken cancellation = default) =>
             Task.Run(async () =>
             {
-                var commandEnabled = true;
-
-                if (command.Value is IDynamicMenuCommand dynamicCommand)
-                    commandEnabled = dynamicCommand.IsEnabled;
-
-                if (commandEnabled)
+                using (var progress = command.Metadata.ReportProgress ?
+                    (IDisposable)new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default, mainThread) : new NullProgressStatus())
                 {
-                    using (var progress = command.Metadata.ReportProgress ?
-                        (IDisposable)new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default, mainThread) : new NullProgressStatus())
+                    try
                     {
-                        try
-                        {
-                            await command.Value.ExecuteAsync(parameter, cancellation);
-                        }
-                        catch (Exception ex)
-                        {
-                            mainThread.Invoke(() =>
-                            {
-                                eventStream.Push(Status.Failed());
-
-                                Application.Run(new MessageBox("Error", ex.Message));
-                            });
-                        }
+                        await command.Value.ExecuteAsync(parameter, cancellation);
                     }
+                    catch (Exception ex)
+                    {
+                        mainThread.Invoke(() =>
+                        {
+                            eventStream.Push(Status.Failed());
 
-                    if (command.Value is IAfterExecuteCallback afterCallback)
-                        await afterCallback.AfterExecuteAsync(cancellation);
+                            Application.Run(new MessageBox("Error", ex.Message));
+                        });
+                    }
                 }
+
+                if (command.Value is IAfterExecuteCallback afterCallback)
+                    await afterCallback.AfterExecuteAsync(cancellation);
             });
     }
 }

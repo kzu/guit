@@ -155,6 +155,8 @@ namespace Guit
             await RunAsync(viewList[targetIndex].Value);
         }
 
+        public void Refresh() => mainThread.Invoke(() => (Application.Current as ShellWindow)?.Refresh());
+
         public void Shutdown()
         {
             Application.MainLoop.AddTimeout(TimeSpan.Zero, _ =>

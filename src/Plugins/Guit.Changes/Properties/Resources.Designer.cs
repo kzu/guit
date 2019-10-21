@@ -61,7 +61,7 @@ namespace Guit.Plugin.Changes.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resolve.
+        ///   Looks up a localized string similar to Conflicts.
         /// </summary>
         internal static string ResolveConflicts {
             get {

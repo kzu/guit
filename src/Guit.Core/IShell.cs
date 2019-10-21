@@ -37,5 +37,10 @@ namespace Guit
         /// Runs the previous registered content view
         /// </summary>
         Task RunPrevious();
+
+        /// <summary>
+        /// Refreshes the shell.
+        /// </summary>
+        void Refresh();
     }
 }
