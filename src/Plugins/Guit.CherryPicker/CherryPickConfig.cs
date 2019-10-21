@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using LibGit2Sharp;
 
 namespace Guit.Plugin.CherryPicker
@@ -29,7 +30,7 @@ namespace Guit.Plugin.CherryPicker
         /// Gets the list of commit strings to be ignored
         /// Current supported values are: MessageShort (StartWith) and Sha
         /// </summary>
-        public IEnumerable<string> IgnoreCommits { get; set; }
+        public IEnumerable<string> IgnoreCommits { get; set; } = Enumerable.Empty<string>();
 
         /// <summary>
         /// Gets true of the local target branch should be automatically

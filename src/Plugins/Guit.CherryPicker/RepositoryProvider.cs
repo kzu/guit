@@ -10,77 +10,63 @@ namespace Guit.Plugin.CherryPicker
     [Shared]
     class RepositoryProvider
     {
-        readonly Lazy<Dictionary<string, CherryPickConfig>> repositories = new Lazy<Dictionary<string, CherryPickConfig>>();
+        readonly Lazy<List<CherryPickConfig>> repositories = new Lazy<List<CherryPickConfig>>();
 
         [ImportingConstructor]
         public RepositoryProvider(IRepository root)
         {
-            repositories = new Lazy<Dictionary<string, CherryPickConfig>>(() => ReadConfig(root));
+            repositories = new Lazy<List<CherryPickConfig>>(() => ReadConfig(root));
         }
 
-        Dictionary<string, CherryPickConfig> ReadConfig(IRepository root)
+        List<CherryPickConfig> ReadConfig(IRepository root)
         {
-            var configs = new Dictionary<string, CherryPickConfig>();
-            var configFile = Path.Combine(root.Info.WorkingDirectory, ".releaseconfig");
+            var configs = new List<CherryPickConfig>();
 
-            var ignoredCommits = Enumerable.Empty<string>();
-            if (File.Exists(Constants.NoReleaseFile))
+            var releaseConfigFile = Path.Combine(root.Info.WorkingDirectory, ".releaseconfig");
+
+            if (File.Exists(releaseConfigFile))
             {
-                ignoredCommits = File
-                    .ReadAllLines(Constants.NoReleaseFile)
-                    .Where(x => !string.IsNullOrEmpty(x))
-                    .Select(x => x.Split('\t').LastOrDefault())
-                    .Where(x => !string.IsNullOrEmpty(x))
-                    .Distinct()
-                    .ToList();
-            }
-
-            if (File.Exists(configFile))
-            {
-                var config = LibGit2Sharp.Configuration.BuildFrom(configFile);
-                var defaultSource = config.GetValueOrDefault("repository.source", default(string));
-                var defaultTarget = config.GetValueOrDefault("repository.target", default(string));
-
-                var defaultIgnores = GetIgnored(config).ToArray();
+                var releaseConfig = LibGit2Sharp.Configuration.BuildFrom(releaseConfigFile);
+                var defaultSource = releaseConfig.GetValueOrDefault("repository.source", default(string));
+                var defaultTarget = releaseConfig.GetValueOrDefault("repository.target", default(string));
 
                 foreach (var submodule in root.Submodules)
                 {
-                    // TODO: fail if a submodule has no configuration?
-                    var source = config.GetValueOrDefault("repository", submodule.Name, "source", defaultSource);
-                    var target = config.GetValueOrDefault("repository", submodule.Name, "target", defaultTarget);
+                    var repository = CreateRepository(submodule);
 
-                    var ignores = config
-                        .OfType<ConfigurationEntry<string>>()
-                        .Where(x => x.Key == "repository." + submodule.Name + ".ignore")
-                        .Select(x => x.Value)
-                        .Concat(defaultIgnores)
-                        .Concat(ignoredCommits)
-                        .ToArray();
+                    // TODO: fail if a submodule has no configuration?
+                    var source = releaseConfig.GetValueOrDefault("repository", repository.GetName(), "source", defaultSource);
+                    var target = releaseConfig.GetValueOrDefault("repository", repository.GetName(), "target", defaultTarget);
 
                     if (source != null && target != null)
-                        configs.Add(submodule.Name, new CherryPickConfig(CreateRepository(submodule), source, target) { IgnoreCommits = ignores, SyncTargetBranch = true });
+                        configs.Add(new CherryPickConfig(repository, source, target) { SyncTargetBranch = true });
                 }
             }
             else
             {
-                var ignored = GetIgnored(root.Config).Concat(ignoredCommits).ToArray();
+                configs.Add(new CherryPickConfig(root));
+            }
 
-                configs.Add(root.GetName(), new CherryPickConfig(root) { IgnoreCommits = ignored });
+            if (File.Exists(Constants.NoCherryPick))
+            {
+                var noCherryPickConfig = LibGit2Sharp.Configuration.BuildFrom(Constants.NoCherryPick);
+
+                foreach (var config in configs)
+                {
+                    config.IgnoreCommits = noCherryPickConfig
+                        .OfType<ConfigurationEntry<string>>()
+                        .Where(x => x.Key == "repository.ignore" || x.Key == $"repository.{config.Repository.GetName()}.ignore")
+                        .Select(x => x.Value)
+                        .ToList();
+                }
             }
 
             return configs;
         }
 
-        IEnumerable<string> GetIgnored(LibGit2Sharp.Configuration config) =>
-            config
-                .OfType<ConfigurationEntry<string>>()
-                .Where(x => x.Key == "repository.ignore")
-                .Select(x => x.Value);
-
-
         IRepository CreateRepository(Submodule submodule) => new Repository(submodule.Path);
 
         [Export]
-        public IEnumerable<CherryPickConfig> Repositories => repositories.Value.Values;
+        public IEnumerable<CherryPickConfig> Repositories => repositories.Value;
     }
 }

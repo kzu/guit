@@ -2,6 +2,6 @@
 {
     class Constants
     {
-        public const string NoReleaseFile = ".norelease.md";
+        public const string NoCherryPick = ".nocherrypick";
     }
 }

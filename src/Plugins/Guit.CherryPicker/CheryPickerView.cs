@@ -57,7 +57,8 @@ namespace Guit.Plugin.CherryPicker
                     if (historyDivergenceService.TryGetDivergence(config.Repository, baseBranch, targetBranch, out var missingCommits, true))
                     {
                         // Filter ignores
-                        missingCommits = missingCommits.Where(x => !config.IgnoreCommits.Any(ignore => x.MessageShort.StartsWith(ignore) || x.Sha.StartsWith(ignore)));
+                        missingCommits = missingCommits.Where(x =>
+                            !config.IgnoreCommits.Any(ignore => x.MessageShort.StartsWith(ignore) || ignore.Contains(x.Sha)));
 
                         return missingCommits.Select(x => new CommitEntry(config, x));
                     }
