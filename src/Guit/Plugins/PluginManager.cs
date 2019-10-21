@@ -52,6 +52,7 @@ namespace Guit
                 .Select(x => x.Value)
                 .Concat(corePlugins)
                 .Select(ReadPlugin)
+                .Where(x => x.IsAvailable)
                 .Distinct();
         }
 
@@ -63,6 +64,7 @@ namespace Guit
                     .Where(x => x.Key == "guit.plugin")
                     .Select(x => x.Value)
                     .Select(ReadPlugin)
+                    .Where(x => x.IsAvailable)
                     .Distinct();
             set
             {
