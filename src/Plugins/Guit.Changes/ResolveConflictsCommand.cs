@@ -8,8 +8,8 @@ using Merq;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand(WellKnownCommands.ResolveConflicts, 'v', WellKnownViews.Changes, typeof(ResolveConflictsCommand))]
-    public class ResolveConflictsCommand : IMenuCommand
+    [MenuCommand(WellKnownCommands.ResolveConflicts, 'v', WellKnownViews.Changes, typeof(ResolveConflictsCommand), DefaultVisible = false, IsDynamic = true)]
+    public class ResolveConflictsCommand : IDynamicMenuCommand
     {
         readonly IRepository repository;
         readonly ICommandService commands;
@@ -23,18 +23,13 @@ namespace Guit.Plugin.Changes
             this.mainThread = mainThread;
         }
 
+        public bool IsVisible => repository.Index.Conflicts.Any();
+
+        public bool IsEnabled => repository.Index.Conflicts.Any();
+
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
-            var dialog = new ResolveConflictsDialog(repository, commands);
-            if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
-            {
-                //foreach (var resolved in dialog.GetResolvedConflicts().ToArray())
-                //{
-                //    repository.Index.Add(resolved.Ours.Path);
-                //    repository.Index.Write();
-                //}
-            }
-
+            mainThread.Invoke(() => new ResolveConflictsDialog(repository, commands).ShowDialog());
             return Task.CompletedTask;
         }
    }
