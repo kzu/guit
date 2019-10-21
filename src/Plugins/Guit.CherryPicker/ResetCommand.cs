@@ -61,7 +61,7 @@ namespace Guit.Plugin.CherryPicker
                         repository.Reset(ResetMode.Hard, targetBranchRemote.Tip);
 
                         eventStream.Push(Status.Create(
-                            index + 1 / (float)repositories.Count(),
+                            (index + 1) / (float)repositories.Count(),
                             "Resetting {0} to {1}...", repository.GetName(), targetBranchRemote.FriendlyName));
                     }
                 }

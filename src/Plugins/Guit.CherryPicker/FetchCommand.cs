@@ -47,7 +47,7 @@ namespace Guit.Plugin.CherryPicker
         {
             foreach (var (config, index) in repositories.Select((config, index) => (config, index)))
             {
-                eventStream.Push(Status.Create((index + 1) / repositories.Count(), "Fetching {0}...", config.Repository.GetName()));
+                eventStream.Push(Status.Create((index + 1) / (float)repositories.Count(), "Fetching {0}...", config.Repository.GetName()));
 
                 config.Repository.Fetch(credentials, prune: true);
             };
