@@ -53,8 +53,11 @@ namespace Guit.Plugin.Sync
 
             if (targetBranch != null)
             {
-                aheadListView.SetValues(historyDivergenceService.GetDivergence(repository, sourceBranch, targetBranch).ToList());
-                behindListView.SetValues(historyDivergenceService.GetDivergence(repository, targetBranch, sourceBranch).ToList());
+                if (historyDivergenceService.TryGetDivergence(repository, sourceBranch, targetBranch, out var aheadCommits))
+                    aheadListView.SetValues(aheadCommits.ToList());
+
+                if (historyDivergenceService.TryGetDivergence(repository, targetBranch, sourceBranch, out var behindCommits))
+                    behindListView.SetValues(behindCommits.ToList());
 
                 aheadFrameView.Title = string.Format("{0} commits ahead {1}", aheadListView.Values.Count(), targetBranch.FriendlyName);
                 behindFrameView.Title = string.Format("{0} commits behind {1}", behindListView.Values.Count(), targetBranch.FriendlyName);

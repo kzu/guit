@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Composition;
 using LibGit2Sharp;
+using System.Globalization;
 
 namespace Guit
 {
@@ -11,12 +12,12 @@ namespace Guit
     [Export(typeof(IHistoryDivergenceService))]
     class HistoryDivergenceService : IHistoryDivergenceService
     {
-        const int MaxCachedItems = 10;
+        const int MaxCachedItems = 20;
 
         readonly ConcurrentDictionary<string, (DateTime LastAccessTime, Dictionary<string, Commit> CommitsBySha)> cache =
             new ConcurrentDictionary<string, (DateTime LastAccessTime, Dictionary<string, Commit> CommitsBySha)>();
 
-        public IEnumerable<Commit> GetDivergence(IRepository repository, Branch source, Branch target)
+        public bool TryGetDivergence(IRepository repository, Branch source, Branch target, out IEnumerable<Commit> commits, bool filterSimilarCommits = false)
         {
             try
             {
@@ -25,13 +26,20 @@ namespace Guit
                     var sourceCommits = GetCachedCommitsBySha(source);
                     var targetCommits = GetCachedCommitsBySha(target);
 
-                    return sourceCommits
+                    commits = sourceCommits
                         .Where(x => !targetCommits.ContainsKey(x.Value.Sha))
+                        .Where(x => !filterSimilarCommits ||
+                                    !targetCommits.Any(targetCommit =>
+                                        string.Compare(x.Value.Message, targetCommit.Value.Message, CultureInfo.CurrentCulture, System.Globalization.CompareOptions.IgnoreSymbols) == 0))
                         .Select(x => x.Value)
                         .Take(aheadBy);
+
+                    return true;
                 }
 
-                return Enumerable.Empty<Commit>();
+                commits = Enumerable.Empty<Commit>();
+
+                return false;
             }
             finally
             {

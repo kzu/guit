@@ -32,11 +32,6 @@ namespace Guit.Plugin.CherryPicker
         public IEnumerable<string> IgnoreCommits { get; set; }
 
         /// <summary>
-        /// Gets the commits count limit to be evaluated
-        /// </summary>
-        public int Limit { get; set; } = 500;
-
-        /// <summary>
         /// Gets true of the local target branch should be automatically
         /// merged (Pull FastFordward) with the remote 
         /// </summary>

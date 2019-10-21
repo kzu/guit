@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Composition;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 
@@ -17,23 +15,17 @@ namespace Guit.Plugin.CherryPicker
         const string DefaultTitle = "Cherry-Picker";
 
         readonly IEnumerable<CherryPickConfig> repositories;
-        readonly CredentialsHandler credentials;
-        readonly MainThread mainThread;
         readonly ICommandService commandService;
+        readonly IHistoryDivergenceService historyDivergenceService;
         readonly ListView<CommitEntry> listView;
 
         [ImportingConstructor]
-        public CherryPickerView(
-            IEnumerable<CherryPickConfig> repositories,
-            CredentialsHandler credentials,
-            MainThread mainThread,
-            ICommandService commandService)
+        public CherryPickerView(IEnumerable<CherryPickConfig> repositories, ICommandService commandService, IHistoryDivergenceService historyDivergenceService)
             : base(DefaultTitle)
         {
             this.repositories = repositories;
-            this.credentials = credentials;
-            this.mainThread = mainThread;
             this.commandService = commandService;
+            this.historyDivergenceService = historyDivergenceService;
 
             // TODO: avoid showing the repository.Name column when cherry picking in "root" mode
             listView = new ListView<CommitEntry>(
@@ -58,36 +50,27 @@ namespace Guit.Plugin.CherryPicker
 
             listView.SetValues(repositories.SelectMany(config =>
             {
-                var repository = config.Repository;
-
-                var baseBranch = repository.GetBaseBranch(config);
-                if (baseBranch is null)
+                if (config.Repository.GetBaseBranch(config) is Branch baseBranch)
                 {
-                    commandService.RunAsync("CherryPicker.SelectBaseBranch");
+                    var targetBranch = config.Repository.SwitchToTargetBranch(config);
+
+                    if (historyDivergenceService.TryGetDivergence(config.Repository, baseBranch, targetBranch, out var missingCommits, true))
+                    {
+                        // Filter ignores
+                        missingCommits = missingCommits.Where(x => !config.IgnoreCommits.Any(ignore => x.MessageShort.StartsWith(ignore) || x.Sha.StartsWith(ignore)));
+
+                        return missingCommits.Select(x => new CommitEntry(config, x));
+                    }
+
+                    return Enumerable.Empty<CommitEntry>();
                 }
                 else
                 {
-                    var targetBranch = repository.SwitchToTargetBranch(config);
+                    commandService.RunAsync("CherryPicker.SelectBaseBranch");
 
-                    var baseCommits = GetCommits(baseBranch, config).ToList();
-                    var targetCommits = GetCommits(targetBranch, config, config.Limit * 2).ToList();
-
-                    var missingCommits = baseCommits
-                        .Where(baseCommit => !targetCommits.Any(releaseCommit =>
-                            string.Compare(baseCommit.Message, releaseCommit.Message, CultureInfo.CurrentCulture, System.Globalization.CompareOptions.IgnoreSymbols) == 0));
-
-                    return missingCommits.Select(x => new CommitEntry(config, x));
+                    return Enumerable.Empty<CommitEntry>();
                 }
-
-
-                return Enumerable.Empty<CommitEntry>();
             }).ToList());
         }
-
-        IEnumerable<Commit> GetCommits(Branch? branch, CherryPickConfig config, int? limit = default) =>
-            branch?
-                .Commits
-                .Where(commit => config?.IgnoreCommits.Any(ignore => commit.MessageShort.StartsWith(ignore) || commit.Sha == ignore) == false)
-                .Take(limit ?? config.Limit) ?? Enumerable.Empty<Commit>();
     }
 }

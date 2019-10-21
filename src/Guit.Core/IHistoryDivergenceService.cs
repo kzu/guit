@@ -7,7 +7,8 @@ namespace Guit
 {
     public interface IHistoryDivergenceService
     {
-        IEnumerable<Commit> GetDivergence(IRepository repository, Branch source, Branch target);
+        bool TryGetDivergence(IRepository repository, Branch source, Branch target, out IEnumerable<Commit> commits, bool filterSimilarCommits = false);
+
         bool HasDivergence(IRepository repository, Branch source, Branch target);
     }
 }
