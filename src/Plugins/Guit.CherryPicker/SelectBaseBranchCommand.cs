@@ -21,6 +21,7 @@ namespace Guit.Plugin.CherryPicker
         {
             this.mainThread = mainThread;
             this.view = view;
+
             IsVisible = IsEnabled = repositories.Count() == 1 && repositories.ElementAt(0).Repository == root;
 
             if (IsEnabled)

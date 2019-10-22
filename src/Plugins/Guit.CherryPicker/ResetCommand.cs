@@ -12,8 +12,8 @@ using Merq;
 namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Releaseator.Reset", 'r', nameof(CherryPicker), typeof(Resources))]
-    class ResetCommand : IMenuCommand
+    [MenuCommand("Releaseator.Reset", 'r', nameof(CherryPicker), typeof(Resources), IsDynamic = true)]
+    class ResetCommand : IDynamicMenuCommand
     {
         readonly IEnumerable<CherryPickConfig> repositories;
         readonly IEventStream eventStream;
@@ -34,7 +34,13 @@ namespace Guit.Plugin.CherryPicker
             this.credentials = credentials;
             this.view = view;
             this.mainThread = mainThread;
+
+            IsVisible = IsEnabled = repositories.Count() > 1;
         }
+
+        public bool IsVisible { get; }
+
+        public bool IsEnabled { get; }
 
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
