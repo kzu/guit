@@ -13,7 +13,7 @@ using Merq;
 namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Push", 'p', nameof(CherryPicker), IsDynamic = true)]
+    [CherryPickerCommand(WellKnownCommands.CherryPicker.Push, 'i', IsDynamic = true)]
     class PushCommand : IDynamicMenuCommand
     {
         readonly IEventStream eventStream;

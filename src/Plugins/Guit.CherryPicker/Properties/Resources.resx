@@ -117,13 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CherryPicker.SelectBaseBranch" xml:space="preserve">
-    <value>Select Branch</value>
+  <data name="CherryPick" xml:space="preserve">
+    <value>Cherry Pick</value>
   </data>
-  <data name="Releaseator.Fetch" xml:space="preserve">
+  <data name="Fetch" xml:space="preserve">
     <value>Fetch</value>
   </data>
-  <data name="Releaseator.Reset" xml:space="preserve">
+  <data name="Ignore" xml:space="preserve">
+    <value>Ignore</value>
+  </data>
+  <data name="Push" xml:space="preserve">
+    <value>Push</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
     <value>Reset</value>
+  </data>
+  <data name="SelectBaseBranch" xml:space="preserve">
+    <value>Select Branch</value>
   </data>
 </root>

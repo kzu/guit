@@ -61,29 +61,56 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Branch.
+        ///   Looks up a localized string similar to Cherry Pick.
         /// </summary>
-        internal static string CherryPicker_SelectBaseBranch {
+        internal static string CherryPick {
             get {
-                return ResourceManager.GetString("CherryPicker.SelectBaseBranch", resourceCulture);
+                return ResourceManager.GetString("CherryPick", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Fetch.
         /// </summary>
-        internal static string Releaseator_Fetch {
+        internal static string Fetch {
             get {
-                return ResourceManager.GetString("Releaseator.Fetch", resourceCulture);
+                return ResourceManager.GetString("Fetch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore.
+        /// </summary>
+        internal static string Ignore {
+            get {
+                return ResourceManager.GetString("Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Push.
+        /// </summary>
+        internal static string Push {
+            get {
+                return ResourceManager.GetString("Push", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Reset.
         /// </summary>
-        internal static string Releaseator_Reset {
+        internal static string Reset {
             get {
-                return ResourceManager.GetString("Releaseator.Reset", resourceCulture);
+                return ResourceManager.GetString("Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Branch.
+        /// </summary>
+        internal static string SelectBaseBranch {
+            get {
+                return ResourceManager.GetString("SelectBaseBranch", resourceCulture);
             }
         }
     }

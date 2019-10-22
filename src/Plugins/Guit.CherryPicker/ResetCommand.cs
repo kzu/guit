@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
-using Guit.Plugin.CherryPicker.Properties;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
@@ -12,7 +11,7 @@ using Merq;
 namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Releaseator.Reset", 'r', nameof(CherryPicker), typeof(Resources), IsDynamic = true)]
+    [CherryPickerCommand(WellKnownCommands.CherryPicker.Reset, 'r', IsDynamic = true)]
     class ResetCommand : IDynamicMenuCommand
     {
         readonly IEnumerable<CherryPickConfig> repositories;

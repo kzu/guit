@@ -11,7 +11,7 @@ using Merq;
 namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("CherryPick", 'c', nameof(CherryPicker))]
+    [CherryPickerCommand(WellKnownCommands.CherryPicker.CherryPick, 'c')]
     class CherryPickCommand : IMenuCommand
     {
         readonly IEventStream eventStream;
@@ -63,7 +63,7 @@ namespace Guit.Plugin.CherryPicker
                             {
                                 // TODO: auto-commit, keep moving
                             }
-                            
+
                             eventStream.Push(Status.Create(++count / (float)repositoryEntries.Count(), "Cherry picking {0} {1}", entry.Commit.GetShortSha(), entry.Commit.MessageShort));
                         }
                         else

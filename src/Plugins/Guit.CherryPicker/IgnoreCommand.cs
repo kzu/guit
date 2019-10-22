@@ -10,7 +10,7 @@ using LibGit2Sharp;
 namespace Guit.Plugin.CherryPicker
 {
     [Shared]
-    [MenuCommand("Ignore", 'i', nameof(CherryPicker))]
+    [CherryPickerCommand(WellKnownCommands.CherryPicker.Ignore, 'i')]
     class IgnoreCommand : IMenuCommand
     {
         readonly MainThread mainThread;
