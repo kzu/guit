@@ -22,6 +22,7 @@ namespace Guit.Plugin.Sync
         readonly CredentialsHandler credentials;
         readonly ICommandService commandService;
         readonly IShell shell;
+        readonly SyncView view;
 
         [ImportingConstructor]
         public PullCommand(
@@ -30,7 +31,8 @@ namespace Guit.Plugin.Sync
             IEventStream eventStream,
             CredentialsHandler credentials,
             ICommandService commandService,
-            IShell shell)
+            IShell shell,
+            SyncView view)
         {
             this.mainThread = mainThread;
             this.repository = repository;
@@ -38,6 +40,7 @@ namespace Guit.Plugin.Sync
             this.credentials = credentials;
             this.commandService = commandService;
             this.shell = shell;
+            this.view = view;
         }
 
         public async Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
@@ -105,6 +108,8 @@ namespace Guit.Plugin.Sync
                 }
 
                 eventStream.Push(Status.Finish(mergeResult.Status.ToString()));
+
+                mainThread.Invoke(() => view.Refresh());
             }
         }
 

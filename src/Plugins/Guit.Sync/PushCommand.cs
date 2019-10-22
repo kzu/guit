@@ -18,14 +18,16 @@ namespace Guit.Plugin.Sync
         readonly MainThread mainThread;
         readonly Repository repository;
         readonly CredentialsHandler credentialsProvider;
+        readonly SyncView view;
 
         [ImportingConstructor]
-        public PushCommand(IEventStream eventStream, MainThread mainThread, Repository repository, CredentialsHandler credentialsProvider)
+        public PushCommand(IEventStream eventStream, MainThread mainThread, Repository repository, CredentialsHandler credentialsProvider, SyncView view)
         {
             this.eventStream = eventStream;
             this.mainThread = mainThread;
             this.repository = repository;
             this.credentialsProvider = credentialsProvider;
+            this.view = view;
         }
 
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
@@ -79,6 +81,8 @@ namespace Guit.Plugin.Sync
                     }
 
                     eventStream.Push(Status.Succeeded());
+
+                    mainThread.Invoke(() => view.Refresh());
                 }
             }
 

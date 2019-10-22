@@ -51,20 +51,25 @@ namespace Guit.Plugin.Sync
             var targetBranch = GetCandidateTargetBranches(sourceBranch)
                 .FirstOrDefault(target => HasDivergence(sourceBranch, target));
 
-            if (targetBranch != null)
+            if (targetBranch != null && historyDivergenceService.TryGetDivergence(repository, sourceBranch, targetBranch, out var aheadCommits))
             {
-                if (historyDivergenceService.TryGetDivergence(repository, sourceBranch, targetBranch, out var aheadCommits))
-                    aheadListView.SetValues(aheadCommits.ToList());
-
-                if (historyDivergenceService.TryGetDivergence(repository, targetBranch, sourceBranch, out var behindCommits))
-                    behindListView.SetValues(behindCommits.ToList());
-
+                aheadListView.SetValues(aheadCommits.ToList());
                 aheadFrameView.Title = string.Format("{0} commits ahead {1}", aheadListView.Values.Count(), targetBranch.FriendlyName);
+            }
+            else
+            {
+                aheadListView.SetValues(Enumerable.Empty<Commit>());
+                aheadFrameView.Title = "Up to date!";
+            }
+
+            if (targetBranch != null && historyDivergenceService.TryGetDivergence(repository, targetBranch, sourceBranch, out var behindCommits))
+            {
+                behindListView.SetValues(behindCommits.ToList());
                 behindFrameView.Title = string.Format("{0} commits behind {1}", behindListView.Values.Count(), targetBranch.FriendlyName);
             }
             else
             {
-                aheadFrameView.Title = "Up to date!";
+                behindListView.SetValues(Enumerable.Empty<Commit>());
                 behindFrameView.Title = "Up to date!";
             }
         }
