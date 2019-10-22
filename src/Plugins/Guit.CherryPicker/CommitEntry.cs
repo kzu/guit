@@ -1,8 +1,9 @@
-﻿using LibGit2Sharp;
+﻿using System.Diagnostics;
+using LibGit2Sharp;
 
 namespace Guit.Plugin.CherryPicker
 {
-    class CommitEntry
+    class CommitEntry : IViewPattern
     {
         public CommitEntry(CherryPickConfig config, Commit commit)
         {
@@ -17,5 +18,9 @@ namespace Guit.Plugin.CherryPicker
         public override int GetHashCode() => Commit.GetHashCode();
 
         public override bool Equals(object obj) => Commit.Equals((obj as CommitEntry)?.Commit);
+
+        public void View() =>
+            Process.Start("cmd", $"/c start {Config.Repository.GetRepoUrl()}/commit/{Commit.Sha}");
+
     }
 }

@@ -4,6 +4,7 @@
     {
         public const string Open = nameof(Open);
         public const string ResolveConflicts = nameof(ResolveConflicts);
+        public const string View = nameof(View);
 
         public class CherryPicker
         {

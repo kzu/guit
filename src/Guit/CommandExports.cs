@@ -30,6 +30,9 @@ namespace Guit
         [MenuCommand("SelectAll", '*', DefaultVisible = false, ReportProgress = false)]
         IMenuCommand SelectAllCommand => new MenuCommand(() => mainThread.Invoke(() => (Application.Current as ISelectPattern)?.SelectAll(invertSelection: true)));
 
+        [MenuCommand(WellKnownCommands.View, Key.F3, DefaultVisible = false, ReportProgress = false)]
+        IMenuCommand ViewCommand => new MenuCommand(() => mainThread.Invoke(() => (Application.Current as IViewPattern)?.View()));
+
         [MenuCommand("Filter", Key.F6, DefaultVisible = false, ReportProgress = false)]
         IMenuCommand FilterCommand => new MenuCommand(() => mainThread.Invoke(() =>
         {

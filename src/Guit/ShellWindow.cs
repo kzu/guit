@@ -6,7 +6,7 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    class ShellWindow : Window, IRefreshPattern, IFilterPattern, ISelectPattern, ISupportInitializeNotification
+    class ShellWindow : Window, IRefreshPattern, IFilterPattern, ISelectPattern, IViewPattern, ISupportInitializeNotification
     {
         string[]? filter;
 
@@ -112,6 +112,12 @@ namespace Guit
 
             IsInitialized = true;
             Initialized?.Invoke(this, new EventArgs());
+        }
+
+        void IViewPattern.View()
+        {
+            foreach (var view in this.TraverseSubViews().OfType<IViewPattern>())
+                view.View();
         }
     }
 }

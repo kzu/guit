@@ -5,7 +5,7 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    public class ListView<T> : ListView, IFilterPattern, ISelectPattern
+    public class ListView<T> : ListView, IFilterPattern, IViewPattern, ISelectPattern
     {
         string[]? filter;
 
@@ -85,5 +85,7 @@ namespace Guit
                 SetNeedsDisplay();
             }
         }
+
+        public void View() => (SelectedEntry as IViewPattern)?.View();
     }
 }
