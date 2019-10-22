@@ -5,20 +5,18 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    public abstract class ContentView : View, IRefreshPattern, IFilterPattern, ISupportInitializeNotification
+    public abstract class ContentView : View, IRefreshPattern, ISupportInitializeNotification
     {
-        string baseTitle;
         string title;
-
-        string[]? filter;
         View? content;
 
+        public event EventHandler<string>? TitleChanged;
         public event EventHandler? Initialized;
 
         public ContentView(string title)
             : base()
         {
-            baseTitle = this.title = title;
+            this.title = title;
 
             Width = Dim.Fill();
             Height = Dim.Fill();
@@ -26,43 +24,18 @@ namespace Guit
 
         public bool IsInitialized { get; private set; }
 
+        public virtual void Refresh() { }
+
         public string Title
         {
             get => title;
             protected set
             {
-                baseTitle = title = value;
+                title = value;
 
-                RefreshTitle();
                 SetNeedsDisplay();
+                TitleChanged?.Invoke(this, title);
             }
-        }
-
-        public virtual void Refresh() { }
-
-        string[]? IFilterPattern.Filter
-        {
-            get => filter;
-            set
-            {
-                filter = value;
-
-                SetFilter(filter);
-
-                RefreshTitle();
-                SetNeedsDisplay();
-            }
-        }
-
-        void RefreshTitle() =>
-            title = filter?.Any() == true ? string.Format("{0} - filtering by {1}", baseTitle, string.Join(", ", filter)) : baseTitle;
-
-        protected virtual void SetFilter(params string[]? filter)
-        {
-            foreach(var view in this.TraverseSubViews().OfType<IFilterPattern>())
-
-            if (Content is IFilterPattern filterPattern)
-                filterPattern.Filter = filter;
         }
 
         void ISupportInitialize.BeginInit() => BeginInit();

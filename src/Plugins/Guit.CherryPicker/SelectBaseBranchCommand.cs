@@ -10,7 +10,7 @@ namespace Guit.Plugin.CherryPicker
 {
     [Shared]
     [MenuCommand("CherryPicker.SelectBaseBranch", 's', nameof(CherryPicker), typeof(Resources), DefaultVisible = false, IsDynamic = true)]
-    class SelectBaseBranchCommand : IDynamicMenuCommand, IAfterExecuteCallback
+    class SelectBaseBranchCommand : IDynamicMenuCommand
     {
         readonly CherryPickConfig? config;
         readonly MainThread mainThread;
@@ -31,13 +31,6 @@ namespace Guit.Plugin.CherryPicker
 
         public bool IsEnabled { get; }
 
-        public Task AfterExecuteAsync(CancellationToken cancellation)
-        {
-            mainThread.Invoke(() => view.Refresh());
-
-            return Task.CompletedTask;
-        }
-
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             if (config != null)
@@ -51,9 +44,11 @@ namespace Guit.Plugin.CherryPicker
                 };
 
                 if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
+                {
                     config.BaseBranch = dialog.Text;
+                    view.Refresh(false);
+                }
             }
-
 
             return Task.CompletedTask;
         }

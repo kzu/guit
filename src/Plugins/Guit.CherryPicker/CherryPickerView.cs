@@ -44,9 +44,16 @@ namespace Guit.Plugin.CherryPicker
 
         public CommitEntry? SelectedEntry => listView.SelectedEntry;
 
-        public override void Refresh()
+        public override void Refresh() => Refresh(true);
+
+        public void Refresh(bool selectBaseBranch = true)
         {
             base.Refresh();
+
+            if (repositories.Count() == 1 && repositories.First() is CherryPickConfig config && config.Repository.GetBaseBranch(config) is Branch baseBranch)
+                Title = string.Format("{0} (from {1})", DefaultTitle, config.BaseBranch);
+            else
+                Title = DefaultTitle;
 
             listView.SetValues(repositories.SelectMany(config =>
             {
@@ -67,7 +74,8 @@ namespace Guit.Plugin.CherryPicker
                 }
                 else
                 {
-                    commandService.RunAsync("CherryPicker.SelectBaseBranch");
+                    if (selectBaseBranch)
+                        commandService.RunAsync("CherryPicker.SelectBaseBranch");
 
                     return Enumerable.Empty<CommitEntry>();
                 }

@@ -8,6 +8,8 @@ namespace Guit
 {
     class ShellWindow : Window, IRefreshPattern, IFilterPattern, ISelectPattern, ISupportInitializeNotification
     {
+        string[]? filter;
+
         readonly Tuple<int, int, int, int> margin;
         readonly IEnumerable<View> decorators;
 
@@ -21,6 +23,7 @@ namespace Guit
             : base(title)
         {
             Content = content;
+            Content.TitleChanged += (sender, title) => RefreshTitle();
 
             this.margin = margin;
             this.decorators = decorators ?? Enumerable.Empty<View>();
@@ -33,20 +36,27 @@ namespace Guit
 
         string[]? IFilterPattern.Filter
         {
-            get => (Content as IFilterPattern)?.Filter;
+            get => filter;
             set
             {
+                this.filter = value;
+
                 foreach (var view in this.TraverseSubViews().OfType<IFilterPattern>())
                     view.Filter = value;
 
-                Title = Content.Title;
+                RefreshTitle();
             }
         }
+
+        void RefreshTitle() =>
+            Title = filter?.Any() == true ? string.Format("{0} - filtering by {1}", Content.Title, string.Join(", ", filter)) : Content.Title;
 
         public void Refresh()
         {
             foreach (var view in this.TraverseSubViews().OfType<IRefreshPattern>())
                 view.Refresh();
+
+            RefreshTitle();
         }
 
         public void SelectAll(bool invertSelection = true)
