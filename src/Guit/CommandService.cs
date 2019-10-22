@@ -108,9 +108,6 @@ namespace Guit
                             });
                         }
                     }
-
-                    if (command.Value is IAfterExecuteCallback afterCallback)
-                        await afterCallback.AfterExecuteAsync(cancellation);
                 }
             });
     }

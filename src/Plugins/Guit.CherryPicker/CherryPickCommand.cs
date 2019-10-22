@@ -12,7 +12,7 @@ namespace Guit.Plugin.CherryPicker
 {
     [Shared]
     [MenuCommand("CherryPick", 'c', nameof(CherryPicker))]
-    class CherryPickCommand : IMenuCommand, IAfterExecuteCallback
+    class CherryPickCommand : IMenuCommand
     {
         readonly IEventStream eventStream;
         readonly ICommandService commandService;
@@ -28,13 +28,6 @@ namespace Guit.Plugin.CherryPicker
             this.mainThread = mainThread;
             this.view = view;
             this.credentials = credentials;
-        }
-
-        public Task AfterExecuteAsync(CancellationToken cancellation)
-        {
-            mainThread.Invoke(() => view.Refresh());
-
-            return Task.CompletedTask;
         }
 
         public async Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
@@ -78,6 +71,8 @@ namespace Guit.Plugin.CherryPicker
                             eventStream.Push(Status.Create(++count / (float)repositoryEntries.Count(), "Cherry picking {0} {1}", entry.Commit.GetShortSha(), entry.Commit.MessageShort));
                         }
                     }
+
+                    mainThread.Invoke(() => view.Refresh());
                 }
             }
         }

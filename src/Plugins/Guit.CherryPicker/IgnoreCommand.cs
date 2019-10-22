@@ -11,7 +11,7 @@ namespace Guit.Plugin.CherryPicker
 {
     [Shared]
     [MenuCommand("Ignore", 'i', nameof(CherryPicker))]
-    class IgnoreCommand : IMenuCommand, IAfterExecuteCallback
+    class IgnoreCommand : IMenuCommand
     {
         readonly MainThread mainThread;
         readonly CherryPickerView view;
@@ -70,15 +70,10 @@ namespace Guit.Plugin.CherryPicker
 
                     // And write the ignored commits
                     File.WriteAllLines(Constants.NoCherryPick, ignoreCommitsLines);
+
+                    mainThread.Invoke(() => view.Refresh());
                 }
             }
-
-            return Task.CompletedTask;
-        }
-
-        public Task AfterExecuteAsync(CancellationToken cancellation)
-        {
-            mainThread.Invoke(() => view.Refresh());
 
             return Task.CompletedTask;
         }

@@ -14,7 +14,7 @@ namespace Guit.Plugin.Sync
 {
     [Shared]
     [MenuCommand("Sync.Pull", 'p', nameof(Sync), typeof(Resources))]
-    public class PullCommand : IMenuCommand, IAfterExecuteCallback
+    public class PullCommand : IMenuCommand
     {
         readonly MainThread mainThread;
         readonly IRepository repository;
@@ -135,13 +135,5 @@ namespace Guit.Plugin.Sync
                     FastForwardStrategy = fastForward ?
                         FastForwardStrategy.FastForwardOnly : FastForwardStrategy.NoFastForward
                 });
-
-        public Task AfterExecuteAsync(CancellationToken cancellation)
-        {
-            if (repository.RetrieveStatus().IsDirty)
-                return shell.RunAsync(WellKnownViews.Changes);
-
-            return Task.CompletedTask;
-        }
     }
 }

@@ -13,7 +13,7 @@ namespace Guit.Plugin.CherryPicker
 {
     [Shared]
     [MenuCommand("Releaseator.Reset", 'r', nameof(CherryPicker), typeof(Resources))]
-    class ResetCommand : IMenuCommand, IAfterExecuteCallback
+    class ResetCommand : IMenuCommand
     {
         readonly IEnumerable<CherryPickConfig> repositories;
         readonly IEventStream eventStream;
@@ -34,13 +34,6 @@ namespace Guit.Plugin.CherryPicker
             this.credentials = credentials;
             this.view = view;
             this.mainThread = mainThread;
-        }
-
-        public Task AfterExecuteAsync(CancellationToken cancellation)
-        {
-            mainThread.Invoke(() => view.Refresh());
-
-            return Task.CompletedTask;
         }
 
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
@@ -67,6 +60,8 @@ namespace Guit.Plugin.CherryPicker
                 }
 
                 eventStream.Push(Status.Succeeded());
+
+                mainThread.Invoke(() => view.Refresh());
             }
 
             return Task.CompletedTask;
