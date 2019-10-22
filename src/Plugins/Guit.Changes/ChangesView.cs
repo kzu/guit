@@ -16,8 +16,7 @@ namespace Guit.Plugin.Changes
         readonly IRepository repository;
         readonly IEventStream eventStream;
 
-        List<FileStatus> files = new List<FileStatus>();
-        ListView view;
+        ListView<FileStatus> view;
 
         [ImportingConstructor]
         public ChangesView(IRepository repository, IEventStream eventStream)
@@ -28,7 +27,7 @@ namespace Guit.Plugin.Changes
 
             var status = repository.RetrieveStatus(new StatusOptions());
 
-            view = new ListView(files)
+            view = new ListView<FileStatus>()
             {
                 AllowsMarking = true
             };
@@ -39,8 +38,10 @@ namespace Guit.Plugin.Changes
 
         public override void Refresh()
         {
+            base.Refresh();
+
             var status = repository.RetrieveStatus(new StatusOptions());
-            files = status
+            var files = status
                 .Where(x => x.State != LibGit2Sharp.FileStatus.Ignored)
                 .Select(x => new FileStatus(x))
                 .OrderByDescending(x => IsSubmodule(x.Entry.FilePath))
@@ -48,7 +49,7 @@ namespace Guit.Plugin.Changes
                 .ThenBy(x => x.Entry.FilePath)
                 .ToList();
 
-            view.SetSource(files);
+            view.SetValues(files);
 
             // Mark modified files by default
             foreach (var file in files.Where(x => x.Status == Status.Modified || status.Staged.Contains(x.Entry)))
@@ -62,9 +63,9 @@ namespace Guit.Plugin.Changes
             repository.Submodules.Any(x => x.Path == filepath);
 
         void OnSelectedChanged() => 
-            eventStream.Push<SelectionChanged>(files[view.SelectedItem].Entry.FilePath);
+            eventStream.Push<SelectionChanged>(view.Values.ElementAt(view.SelectedItem).Entry.FilePath);
 
-        public IEnumerable<StatusEntry> GetMarkedEntries(bool? submoduleEntriesOnly = null) => files
+        public IEnumerable<StatusEntry> GetMarkedEntries(bool? submoduleEntriesOnly = null) => view.Values
             .Where((x, i) => view.Source.IsMarked(i) &&
                 (submoduleEntriesOnly == null || IsSubmodule(x.Entry.FilePath) == submoduleEntriesOnly))
             .Select(x => x.Entry);

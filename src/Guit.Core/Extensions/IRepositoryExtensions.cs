@@ -69,30 +69,42 @@ namespace LibGit2Sharp
             }
         }
 
-        public static void Fetch(this IRepository repository, string remoteName, CredentialsHandler credentials, IEventStream? eventStream = null)
+        public static void Fetch(this IRepository repository, CredentialsHandler credentials, IEventStream? eventStream = null, bool prune = false) =>
+            Fetch(repository, repository.Network.Remotes, credentials, eventStream, prune);
+
+        public static void Fetch(this IRepository repository, string remoteName, CredentialsHandler credentials, IEventStream? eventStream = null, bool prune = false)
         {
             if (repository.Network.Remotes.FirstOrDefault(x => x.Name == remoteName) is Remote remote)
-                repository.Fetch(remote, credentials, eventStream);
+                repository.Fetch(remote, credentials, eventStream, prune);
         }
 
-        public static void Fetch(this IRepository repository, Remote remote, CredentialsHandler credentials, IEventStream? eventStream = null) =>
-            Git.Fetch(
-                (Repository)repository,
-                remote.Name,
-                remote.FetchRefSpecs.Select(x => x.Specification), new FetchOptions
-                {
-                    CredentialsProvider = credentials,
-                    OnProgress = serverProgressOutput =>
+        public static void Fetch(this IRepository repository, Remote remote, CredentialsHandler credentials, IEventStream? eventStream = null, bool prune = false) =>
+            Fetch(repository, new Remote[] { remote }, credentials, eventStream, prune);
+
+        public static void Fetch(this IRepository repository, IEnumerable<Remote> remotes, CredentialsHandler credentials, IEventStream? eventStream = null, bool prune = false)
+        {
+            foreach (var remote in remotes)
+            {
+                Git.Fetch(
+                    (Repository)repository,
+                    remote.Name,
+                    remote.FetchRefSpecs.Select(x => x.Specification), new FetchOptions
                     {
-                        eventStream?.Push(new Status(serverProgressOutput));
-                        return true;
-                    },
-                    OnTransferProgress = progress =>
-                    {
-                        eventStream?.Push(new Status($"Received {progress.ReceivedObjects} of {progress.TotalObjects}", progress.ReceivedObjects / (float)progress.TotalObjects));
-                        return true;
-                    }
-                }, string.Empty);
+                        Prune = prune,
+                        CredentialsProvider = credentials,
+                        OnProgress = serverProgressOutput =>
+                        {
+                            eventStream?.Push(new Status(serverProgressOutput));
+                            return true;
+                        },
+                        OnTransferProgress = progress =>
+                        {
+                            eventStream?.Push(new Status($"Received {progress.ReceivedObjects} of {progress.TotalObjects}", progress.ReceivedObjects / (float)progress.TotalObjects));
+                            return true;
+                        }
+                    }, string.Empty);
+            }
+        }
 
         public static void Checkout(this IRepository repository, Branch branch) =>
             Git.Checkout(repository, branch);

@@ -58,8 +58,10 @@ namespace Guit
 
         public string? Context { get; }
 
-        public bool Visible { get; set; } = true;
+        public bool DefaultVisible { get; set; } = true;
 
         public bool ReportProgress { get; set; } = true;
+        
+        public bool IsDynamic { get; set; }
     }
 }

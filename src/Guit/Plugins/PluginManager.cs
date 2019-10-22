@@ -17,11 +17,11 @@ namespace Guit
     class PluginManager : IPluginManager
     {
         static readonly Regex pluginVersionExpr = new Regex("<PluginVersion>(.*)</PluginVersion>", RegexOptions.Compiled);
-        static readonly string[] corePlugins = Assembly
+        static readonly HashSet<string> corePlugins = Assembly
             .GetExecutingAssembly()
             .GetCustomAttributes<CorePluginAttribute>()
             .Select(x => x.AssemblyFileName)
-            .ToArray();
+            .ToHashSet();
 
         readonly IRepository repository;
 
@@ -34,49 +34,71 @@ namespace Guit
         public bool UseCorePlugins
         {
             get => repository.Config.Get<bool>("guit.coreplugins")?.Value ?? true;
-            set => repository.Config.Set("guit.coreplugins", value);
-        }
-
-        public IEnumerable<PluginInfo> Plugins
-        {
-            get => UseCorePlugins ?
-                repository.Config.GetValueOrDefault("guit.plugins", "")
-                    .Split(';', StringSplitOptions.RemoveEmptyEntries)
-                    .Concat(corePlugins)
-                    .Select(ReadPlugin)
-                    .Distinct() :
-                repository.Config.GetValueOrDefault("guit.plugins", "")
-                    .Split(';', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(ReadPlugin)
-                    .Distinct();
-            //get => UseCorePlugins ?
-            //    repository.Config
-            //        .OfType<ConfigurationEntry<string>>()
-            //        .Where(x => x.Key == "guit.plugin")
-            //        .Select(x => x.Value)
-            //        .Concat(corePlugins)
-            //        .Distinct() :
-            //    repository.Config
-            //        .OfType<ConfigurationEntry<string>>()
-            //        .Where(x => x.Key == "guit.plugin")
-            //        .Select(x => x.Value)
-            //        .Distinct();
             set
             {
-                //repository.Config
-                //    .Set()
-                //    .OfType<ConfigurationEntry<string>>()
-                //    .Where(x => x.Key == "guit.plugin")
-                //    .ToList().ForEach(x => x.)
-                //    .Select(x => x.Value)
-                //    .Concat(corePlugins)
-                //    .Distinct() :
+                if (value)
+                    // Since this is the default value, simply unset the config.
+                    repository.Config.Unset("guit.coreplugins");
+                else
+                    repository.Config.Set("guit.coreplugins", false);
+            }
+        }
 
+        public IEnumerable<PluginInfo> AvailablePlugins
+        {
+            get => repository.Config
+                .OfType<ConfigurationEntry<string>>()
+                .Where(x => x.Key == "guit.plugin")
+                .Select(x => x.Value)
+                .Concat(corePlugins)
+                .Select(ReadPlugin)
+                .Where(x => x.IsAvailable)
+                .Distinct();
+        }
+
+        public IEnumerable<PluginInfo> EnabledPlugins
+        {
+            get => UseCorePlugins ? AvailablePlugins : 
+                repository.Config
+                    .OfType<ConfigurationEntry<string>>()
+                    .Where(x => x.Key == "guit.plugin")
+                    .Select(x => x.Value)
+                    .Select(ReadPlugin)
+                    .Where(x => x.IsAvailable)
+                    .Distinct();
+            set
+            {
+                if (corePlugins.All(id => value.Any(p => p.Id == id)))
+                {
+                    // If *all* plugins are included in the list, it basically means 
+                    // opt-in to all core plugins. Set the appropriate config then.
+                    UseCorePlugins = true;
+                    // Also, in this case, we don't want/need to list each 
+                    // individual plugin in the configuration, so keep it clean
+                    value = value.Where(x => !corePlugins.Contains(x.Id));
+                }
+                else
+                {
+                    // If at least one plugin was missing (or all of them), 
+                    // it's an opt-out of the implicit list of *all* plugins, 
+                    // because we'll receive the specific list 
+                    // of plugins (including potentially some core ones).
+                    UseCorePlugins = false;
+                }
+
+                // Clear and persist new values.
+                repository.Config.UnsetAll("guit.plugin");
+                foreach (var plugin in value)
+                {
+                    repository.Config.Add("guit.plugin", plugin.Id);
+                }
             }
         }
 
         public void Disable(string assemblyFile)
         {
+            // Warn and disable the plugin for the next Load round.
+            Console.WriteLine($"Disabling plugin {Path.GetFileName(assemblyFile)}...");
         }
 
         public void Disable(Assembly assembly)
@@ -95,7 +117,7 @@ namespace Guit
 
             var contexts = new List<PluginLoadContext>();
             var template = Path.Combine(guitDir, "Guit.Plugin.csproj");
-            var plugins = Plugins.ToList();
+            var plugins = EnabledPlugins.ToList();
 
             foreach (var plugin in plugins.Where(x => !x.Id.EndsWith(".dll")))
             {
@@ -189,10 +211,9 @@ namespace Guit
                     if (File.Exists(filePath))
                     {
                         var assembly = Assembly.Load(AssemblyName.GetAssemblyName(filePath));
-                        result = new PluginInfo
+                        result = new PluginInfo(identity)
                         {
                             IsAvailable = true,
-                            Id = identity,
                             Title = assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title,
                             Description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description,
                             Version = assembly.GetName().Version?.ToString(),
@@ -203,11 +224,10 @@ namespace Guit
             else
             {
                 var parts = identity.Split(',');
-                result = new PluginInfo
+                result = new PluginInfo(identity)
                 {
                     // TODO: check if plugin is currently enabled.
                     IsAvailable = true,
-                    Id = parts[0],
                     Title = parts[0],
                     Version = parts[1],
                 };
@@ -215,41 +235,15 @@ namespace Guit
 
             if (result is null)
             {
-                result = new PluginInfo
+                result = new PluginInfo(identity)
                 {
                     IsAvailable = false,
-                    Id = identity,
                     Title = identity,
                     Version = "unknown",
                 };
             }
 
             return result;
-        }
-
-        public IEnumerable<string> GetPlugins()
-        {
-            var plugins = (repository.Config.GetValueOrDefault("guit.plugins", ""))
-                .Split(';');
-
-            // Once the 
-            //var plugins = repository.Config
-            //    .OfType<ConfigurationEntry<string>>()
-            //    .Where(x => x.Key == "guit.plugin")
-            //    .Select(x => x.Value);
-
-            var coreplugins = repository.Config.Get<bool>("guit.coreplugins")?.Value ?? true;
-            if (coreplugins)
-            {
-                plugins = Assembly
-                    .GetExecutingAssembly()
-                    .GetCustomAttributes<CorePluginAttribute>()
-                    .Select(x => x.AssemblyFileName)
-                    .Concat(plugins)
-                    .ToArray();
-            }
-
-            return plugins;
         }
 
         class PluginContext : IPluginContext

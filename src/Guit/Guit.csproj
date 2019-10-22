@@ -39,18 +39,19 @@
 
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.0.20" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Composition" Version="16.3.7" />
-    <PackageReference Include="LibGit2Sharp" Version="0.26.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Composition" Version="16.4.11" />
+    <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0029" />
     <PackageReference Include="Microsoft.Alm.Authentication" Version="4.3.0" />
     <PackageReference Include="Merq.Core" Version="1.2.0" />
-    <PackageReference Include="System.Composition" Version="1.2.0" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.5.1" />
+    <PackageReference Include="System.Composition" Version="1.3.0" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\gui.cs\Terminal.Gui\Terminal.Gui.csproj" />
     <ProjectReference Include="..\Guit.Core\Guit.Core.csproj" />
     <ProjectReference Include="..\Plugins\Guit.Changes\Guit.Changes.csproj" />
+    <ProjectReference Include="..\Plugins\Guit.CherryPicker\Guit.CherryPicker.csproj" />
     <ProjectReference Include="..\Plugins\Guit.Log\Guit.Log.csproj" />
     <ProjectReference Include="..\Plugins\Guit.Open\Guit.Open.csproj" />
     <ProjectReference Include="..\Plugins\Guit.Sync\Guit.Sync.csproj" />

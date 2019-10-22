@@ -86,7 +86,7 @@ namespace Guit.Plugin.Changes
             var old = repository.Lookup<Blob>(changes.OldOid);
 
             // We can't show diff in this case
-            if (!changes.Exists || old.IsBinary)
+            if (changes.Mode != Mode.NonExecutableFile || !changes.Exists || old == null || old.IsBinary)
                 return Task.CompletedTask;
 
             // Write the old content to a temp file for comparison.

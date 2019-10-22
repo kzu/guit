@@ -41,7 +41,7 @@ namespace Guit.Plugin.Changes
         }
 
         private void RefreshConflicts() => view.SetSource(repository.Index.Conflicts.Select(x =>
-            new ListViewItem<Conflict>(x, Frame.Width - 4, new ListViewItemSelector<Conflict>(c => c.Ours.Path, "*"))).ToList());
+            new ListViewItem<Conflict>(x, Frame.Width - 4, new ColumnDefinition<Conflict>(c => c.Ours.Path, "*"))).ToList());
 
 
         public override void WillPresent()

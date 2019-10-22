@@ -6,8 +6,10 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    class ShellWindow : Window, IRefreshPattern, ISupportInitializeNotification
+    class ShellWindow : Window, IRefreshPattern, IFilterPattern, ISelectPattern, ISupportInitializeNotification
     {
+        string[]? filter;
+
         readonly Tuple<int, int, int, int> margin;
         readonly IEnumerable<View> decorators;
 
@@ -21,6 +23,7 @@ namespace Guit
             : base(title)
         {
             Content = content;
+            Content.TitleChanged += (sender, title) => RefreshTitle();
 
             this.margin = margin;
             this.decorators = decorators ?? Enumerable.Empty<View>();
@@ -31,12 +34,35 @@ namespace Guit
 
         public ContentView Content { get; }
 
+        string[]? IFilterPattern.Filter
+        {
+            get => filter;
+            set
+            {
+                this.filter = value;
+
+                foreach (var view in this.TraverseSubViews().OfType<IFilterPattern>())
+                    view.Filter = value;
+
+                RefreshTitle();
+            }
+        }
+
+        void RefreshTitle() =>
+            Title = filter?.Any() == true ? string.Format("{0} - filtering by {1}", Content.Title, string.Join(", ", filter)) : Content.Title;
+
         public void Refresh()
         {
-            Content.Refresh();
+            foreach (var view in this.TraverseSubViews().OfType<IRefreshPattern>())
+                view.Refresh();
 
-            foreach (var decorator in decorators.OfType<IRefreshPattern>())
-                decorator.Refresh();
+            RefreshTitle();
+        }
+
+        public void SelectAll(bool invertSelection = true)
+        {
+            foreach (var view in this.TraverseSubViews().OfType<ISelectPattern>())
+                view.SelectAll(invertSelection);
         }
 
         public override Rect Frame

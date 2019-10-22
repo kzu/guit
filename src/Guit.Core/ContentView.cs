@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.ComponentModel;
 using Terminal.Gui;
 
@@ -6,14 +7,16 @@ namespace Guit
 {
     public abstract class ContentView : View, IRefreshPattern, ISupportInitializeNotification
     {
+        string title;
         View? content;
 
+        public event EventHandler<string>? TitleChanged;
         public event EventHandler? Initialized;
 
         public ContentView(string title)
             : base()
         {
-            Title = title;
+            this.title = title;
 
             Width = Dim.Fill();
             Height = Dim.Fill();
@@ -21,16 +24,17 @@ namespace Guit
 
         public bool IsInitialized { get; private set; }
 
-        public string Title { get; }
-
         public virtual void Refresh() { }
 
-        public virtual void SelectAll(bool invertSelection = true)
+        public string Title
         {
-            if (Content is ListView listView && listView?.AllowsMarking == true)
+            get => title;
+            protected set
             {
-                listView.Source.MarkAll(!(invertSelection && listView.Source.All(true)));
-                listView.SetNeedsDisplay();
+                title = value;
+
+                SetNeedsDisplay();
+                TitleChanged?.Invoke(this, title);
             }
         }
 

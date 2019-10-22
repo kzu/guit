@@ -42,7 +42,7 @@ namespace Guit
                             DisplayName = x.Metadata.DisplayName,
                             Key = x.Metadata.Key,
                             Order = x.Metadata.Order,
-                            Visible = true,
+                            DefaultVisible = true,
                             ReportProgress = false
                         })));
 
@@ -84,27 +84,34 @@ namespace Guit
         Task ExecuteAsync(Lazy<IMenuCommand, MenuCommandMetadata> command, object? parameter = null, CancellationToken cancellation = default) =>
             Task.Run(async () =>
             {
-                using (var progress = command.Metadata.ReportProgress ?
-                    (IDisposable)new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default, mainThread) : new NullProgressStatus())
+                var commandEnabled = true;
+
+                if (command.Value is IDynamicMenuCommand dynamicCommand)
+                    commandEnabled = dynamicCommand.IsEnabled;
+
+                if (commandEnabled)
                 {
-                    try
+                    using (var progress = command.Metadata.ReportProgress ?
+                        (IDisposable)new ReportStatusProgress(command.Metadata.DisplayName, EventStream.Default, mainThread) : new NullProgressStatus())
                     {
-                        await command.Value.ExecuteAsync(parameter, cancellation);
-                    }
-                    catch (Exception ex)
-                    {
-                        mainThread.Invoke(() =>
+                        try
                         {
-                            eventStream.Push(Status.Failed());
+                            await command.Value.ExecuteAsync(parameter, cancellation);
+                        }
+                        catch (Exception ex)
+                        {
+                            mainThread.Invoke(() =>
+                            {
+                                eventStream.Push(Status.Failed());
 
-                            Application.Run(new MessageBox("Error", ex.Message));
-                        });
+                                Application.Run(new MessageBox("Error", ex.Message));
+                            });
+                        }
                     }
+
+                    if (command.Value is IAfterExecuteCallback afterCallback)
+                        await afterCallback.AfterExecuteAsync(cancellation);
                 }
-
-
-                if (command.Value is IAfterExecuteCallback afterCallback)
-                    await afterCallback.AfterExecuteAsync(cancellation);
             });
     }
 }
