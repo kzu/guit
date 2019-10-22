@@ -86,7 +86,7 @@ namespace Guit
             {
                 var commandEnabled = true;
 
-                if (command.Value is IDynamicMenuCommand dynamicCommand)
+                if (command.Metadata.IsDynamic && command.Value is IDynamicMenuCommand dynamicCommand)
                     commandEnabled = dynamicCommand.IsEnabled;
 
                 if (commandEnabled)
