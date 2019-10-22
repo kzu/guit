@@ -82,7 +82,7 @@ namespace Guit.Plugin.CherryPicker
                 else
                 {
                     if (selectBaseBranch)
-                        commandService.RunAsync("CherryPicker.SelectBaseBranch");
+                        commandService.RunAsync(WellKnownCommands.CherryPicker.SelectBaseBranch);
 
                     return Enumerable.Empty<CommitEntry>();
                 }
