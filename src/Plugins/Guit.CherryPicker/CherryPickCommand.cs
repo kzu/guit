@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Guit.Events;
 using LibGit2Sharp;
-using LibGit2Sharp.Handlers;
 using Merq;
 
 namespace Guit.Plugin.CherryPicker
@@ -18,16 +17,14 @@ namespace Guit.Plugin.CherryPicker
         readonly ICommandService commandService;
         readonly MainThread mainThread;
         readonly CherryPickerView view;
-        readonly CredentialsHandler credentials;
 
         [ImportingConstructor]
-        public CherryPickCommand(IEventStream eventStream, ICommandService commandService, MainThread mainThread, CherryPickerView view, CredentialsHandler credentials)
+        public CherryPickCommand(IEventStream eventStream, ICommandService commandService, MainThread mainThread, CherryPickerView view)
         {
             this.eventStream = eventStream;
             this.commandService = commandService;
             this.mainThread = mainThread;
             this.view = view;
-            this.credentials = credentials;
         }
 
         public async Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)

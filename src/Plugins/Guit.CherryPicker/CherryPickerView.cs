@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
 using LibGit2Sharp;
-using LibGit2Sharp.Handlers;
 
 namespace Guit.Plugin.CherryPicker
 {
