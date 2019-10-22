@@ -23,7 +23,7 @@ namespace Guit.Plugin.CherryPicker
         public CherryPickerView(
             IRepository root,
             IEnumerable<CherryPickConfig> repositories,
-            ICommandService commandService, 
+            ICommandService commandService,
             IHistoryDivergenceService historyDivergenceService)
             : base(DefaultTitle)
         {
@@ -33,9 +33,8 @@ namespace Guit.Plugin.CherryPicker
 
             IsRootMode = repositories.Count() == 1 && repositories.ElementAt(0).Repository == root;
 
-            // TODO: avoid showing the repository.Name column when cherry picking in "root" mode
             listView = new ListView<CommitEntry>(
-                new ColumnDefinition<CommitEntry>(x => x.Config.Repository.GetName(), 30),
+                IsRootMode ? new NullColumnDefinition<CommitEntry>() : new ColumnDefinition<CommitEntry>(x => x.Config.Repository.GetName(), 30),
                 new ColumnDefinition<CommitEntry>(x => x.Commit.GetShortSha(), 10),
                 new ColumnDefinition<CommitEntry>(x => x.Commit.MessageShort, "*"),
                 new ColumnDefinition<CommitEntry>(x => x.Commit.Author.Name, 15),
