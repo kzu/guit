@@ -7,18 +7,7 @@ namespace LibGit2Sharp
 {
     static class IRepositoryExtensions
     {
-        const string GitSuffix = ".git";
-
         public static string GetName(this IRepository repository) => new DirectoryInfo(repository.Info.WorkingDirectory).Name;
-
-        public static string GetRepoUrl(this IRepository repository)
-        {
-            var repoUrl = repository.Config.GetValueOrDefault<string>("remote.origin.url");
-            if (repoUrl.EndsWith(GitSuffix))
-                repoUrl = repoUrl.Remove(repoUrl.Length - GitSuffix.Length);
-
-            return repoUrl;
-        }
 
         public static Branch GetBranch(this IRepository repository, string branchFriendlyName) =>
             repository.Branches.FirstOrDefault(x => x.FriendlyName == branchFriendlyName);

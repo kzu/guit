@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
 using LibGit2Sharp;
-using Terminal.Gui;
 
 namespace Guit.Plugin.Log
 {
     [Shared]
     [Export]
-    [ContentView(nameof(Log), '3')]
-    public class LogView : ContentView
+    [ContentView(WellKnownViews.Log, '3')]
+    class LogView : ContentView
     {
         readonly IRepository repository;
-        readonly ListView<Commit> view;
+        readonly ListView<CommitEntry> view;
 
         [ImportingConstructor]
         public LogView(IRepository repository)
@@ -21,10 +20,10 @@ namespace Guit.Plugin.Log
         {
             this.repository = repository;
 
-            view = new ListView<Commit>(
-                    new ColumnDefinition<Commit>(x => x.MessageShort, "*"),
-                    new ColumnDefinition<Commit>(x => x.Author.Name, 15),
-                    new ColumnDefinition<Commit>(x => x.Committer.When.ToString("g"), 19))
+            view = new ListView<CommitEntry>(
+                    new ColumnDefinition<CommitEntry>(x => x.Commit.MessageShort, "*"),
+                    new ColumnDefinition<CommitEntry>(x => x.Commit.Author.Name, 15),
+                    new ColumnDefinition<CommitEntry>(x => x.Commit.Committer.When.ToString("g"), 19))
             {
                 AllowsMarking = true
             };
@@ -32,17 +31,17 @@ namespace Guit.Plugin.Log
             Content = view;
         }
 
-        public Commit? SelectedCommit =>
-            view.SelectedItem >= 0 && view.SelectedItem < view.Values.Count() ?
-                view.Values.ElementAt(view.SelectedItem) : null;
+        public CommitEntry SelectedEntry => view.SelectedEntry;
 
         public override void Refresh()
         {
             base.Refresh();
 
+            // TODO: implement virtual list view and provide more commits once the
+            // vertical scroll bar is moved down
             var commits = repository.Commits
-                .QueryBy(new CommitFilter())
                 .Take(100)
+                .Select(x => new CommitEntry(repository, x))
                 .ToList();
 
             view.SetValues(commits);

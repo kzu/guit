@@ -6,6 +6,7 @@ using Guit.Events;
 using System.IO;
 using Git = LibGit2Sharp.Commands;
 using LibGit2Sharp.Handlers;
+using System.Diagnostics;
 
 namespace LibGit2Sharp
 {
@@ -15,6 +16,8 @@ namespace LibGit2Sharp
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class IRepositoryExtensions
     {
+        const string GitSuffix = ".git";
+
         public static string GetFullPath(this IRepository repository, string filePath) =>
             Path.IsPathRooted(filePath) ? Path.GetFullPath(filePath) :
             Path.GetFullPath(Path.Combine(repository.Info.WorkingDirectory, filePath));
@@ -125,5 +128,17 @@ namespace LibGit2Sharp
                     break;
             }
         }
+
+        public static string GetRepoUrl(this IRepository repository)
+        {
+            var repoUrl = repository.Config.GetValueOrDefault<string>("remote.origin.url");
+            if (repoUrl.EndsWith(GitSuffix))
+                repoUrl = repoUrl.Remove(repoUrl.Length - GitSuffix.Length);
+
+            return repoUrl;
+        }
+
+        public static void OpenUrl(this IRepository repository, Commit commit) =>
+            Process.Start("cmd", $"/c start {repository.GetRepoUrl()}/commit/{commit.Sha}");
     }
 }

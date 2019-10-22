@@ -19,8 +19,6 @@ namespace Guit.Plugin.CherryPicker
 
         public override bool Equals(object obj) => Commit.Equals((obj as CommitEntry)?.Commit);
 
-        public void View() =>
-            Process.Start("cmd", $"/c start {Config.Repository.GetRepoUrl()}/commit/{Commit.Sha}");
-
+        public void View() => Config.Repository.OpenUrl(Commit);
     }
 }

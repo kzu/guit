@@ -6,36 +6,31 @@ using LibGit2Sharp;
 namespace Guit.Plugin.Log
 {
     [Shared]
-    [MenuCommand("Reset", 'r', nameof(Log))]
-    public class ResetCommand : IMenuCommand
+    [MenuCommand("Reset", 'r', WellKnownViews.Log)]
+    class ResetCommand : IMenuCommand
     {
         readonly MainThread mainThread;
         readonly IRepository repository;
-        readonly LogView log;
+        readonly LogView view;
 
         [ImportingConstructor]
-        public ResetCommand(MainThread mainThread, IRepository repository, LogView log)
+        public ResetCommand(MainThread mainThread, IRepository repository, LogView view)
         {
             this.mainThread = mainThread;
             this.repository = repository;
-            this.log = log;
+            this.view = view;
         }
 
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
-            var selectedCommit = log.SelectedCommit;
-
-            if (selectedCommit != null)
+            if (view.SelectedEntry is CommitEntry selectedEntry)
             {
                 var dialog = new ResetDialog();
-
-                var result = mainThread.Invoke(() => dialog.ShowDialog());
-
-                if (result == true)
+                if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
                 {
-                    repository.Reset(dialog.ResetMode, log.SelectedCommit);
+                    repository.Reset(dialog.ResetMode, view.SelectedEntry.Commit);
 
-                    log.Refresh();
+                    view.Refresh();
                 }
             }
 
