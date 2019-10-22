@@ -33,7 +33,7 @@ namespace Guit.Plugin.Changes
 
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
-            if (changes.GetMarkedEntries().Any())
+            if (changes.GetMarkedEntries().Any() || Amend)
             {
                 foreach (var submoduleEntry in changes.GetMarkedEntries(true))
                 {
@@ -64,7 +64,7 @@ namespace Guit.Plugin.Changes
 
         void Commit(IRepository repository, IEnumerable<StatusEntry> entries, string title = "Commit", bool reportProgress = false)
         {
-            if (entries.Any())
+            if (entries.Any() || Amend)
             {
                 var dialog = new CommitDialog(title);
 
