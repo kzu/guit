@@ -17,12 +17,12 @@ namespace Guit.Plugin.CherryPicker
         readonly CherryPickerView view;
 
         [ImportingConstructor]
-        public SelectBaseBranchCommand(IEnumerable<CherryPickConfig> repositories, IRepository root, MainThread mainThread, CherryPickerView view)
+        public SelectBaseBranchCommand(IEnumerable<CherryPickConfig> repositories, MainThread mainThread, CherryPickerView view)
         {
             this.mainThread = mainThread;
             this.view = view;
 
-            IsVisible = IsEnabled = repositories.Count() == 1 && repositories.ElementAt(0).Repository == root;
+            IsVisible = IsEnabled = view.IsRootMode;
 
             if (IsEnabled)
                 config = repositories.FirstOrDefault();

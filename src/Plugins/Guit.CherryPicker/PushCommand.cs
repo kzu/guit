@@ -36,7 +36,7 @@ namespace Guit.Plugin.CherryPicker
             this.credentials = credentials;
             this.repositories = repositories;
 
-            IsVisible = IsEnabled = repositories.Count() > 1;
+            IsVisible = IsEnabled = !view.IsRootMode;
         }
 
         public bool IsVisible { get; }

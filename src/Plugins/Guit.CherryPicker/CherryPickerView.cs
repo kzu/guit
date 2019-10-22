@@ -20,12 +20,18 @@ namespace Guit.Plugin.CherryPicker
         readonly ListView<CommitEntry> listView;
 
         [ImportingConstructor]
-        public CherryPickerView(IEnumerable<CherryPickConfig> repositories, ICommandService commandService, IHistoryDivergenceService historyDivergenceService)
+        public CherryPickerView(
+            IRepository root,
+            IEnumerable<CherryPickConfig> repositories,
+            ICommandService commandService, 
+            IHistoryDivergenceService historyDivergenceService)
             : base(DefaultTitle)
         {
             this.repositories = repositories;
             this.commandService = commandService;
             this.historyDivergenceService = historyDivergenceService;
+
+            IsRootMode = repositories.Count() == 1 && repositories.ElementAt(0).Repository == root;
 
             // TODO: avoid showing the repository.Name column when cherry picking in "root" mode
             listView = new ListView<CommitEntry>(
@@ -40,6 +46,9 @@ namespace Guit.Plugin.CherryPicker
 
             Content = listView;
         }
+
+        public bool IsRootMode { get; }
+
         public IEnumerable<CommitEntry> MarkedEntries => listView.MarkedEntries;
 
         public CommitEntry? SelectedEntry => listView.SelectedEntry;
