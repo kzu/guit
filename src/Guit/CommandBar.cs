@@ -15,7 +15,7 @@ namespace Guit
         public CommandBar(CommandService commandService, string? context)
         {
             InitializeCommands(commandService, context);
-
+            ColorScheme = Colors.Base;
             Add(globalCommands, localCommands);
         }
 
@@ -44,7 +44,10 @@ namespace Guit
                     .SelectMany(RenderCommand)
                     // Skip first separator
                     .Skip(1)
-                    .ToArray());
+                    .ToArray())
+            {
+                ColorScheme = Colors.Base,
+            };
         }
 
         IEnumerable<View> RenderCommand(Lazy<IMenuCommand, MenuCommandMetadata> command)
