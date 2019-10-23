@@ -11,14 +11,18 @@ A dotnet global tool providing a text-based UI for Git leveraging [gui.cs](https
 To install a CI build run:
 
 ```
-dotnet tool install -g --no-cache --add-source https://kzu.io/index.json dotnet-guit
+dotnet tool install -g --no-cache --add-source https://kzu.io/index.json guit
 ```
+
+(or run `install.cmd` from this repository)
 
 To update to a CI build, run:
 
 ```
-dotnet tool update -g --no-cache --add-source https://kzu.io/index.json dotnet-guit
+dotnet tool update -g --no-cache --add-source https://kzu.io/index.json guit
 ```
+(or run `update.cmd` from this repository)
+
 
 To run the tool, open a command prompt on the git repo root directory and run `guit` (or `dotnet guit`). 
 
