@@ -25,7 +25,7 @@ namespace Guit.Plugin.Log
         {
             if (view.SelectedEntry is CommitEntry selectedEntry)
             {
-                var dialog = new ResetDialog();
+                var dialog = new ResetDialog(string.Format("Reset current branch {0} to {1}?", selectedEntry.Repository.Head.GetName(), selectedEntry.Commit.GetShortSha()));
                 if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
                 {
                     repository.Reset(dialog.ResetMode, view.SelectedEntry.Commit);

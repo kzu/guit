@@ -21,11 +21,12 @@ namespace Guit.Plugin.Log
             this.repository = repository;
 
             view = new ListView<CommitEntry>(
+                    new ColumnDefinition<CommitEntry>(x => x.Commit.GetShortSha(), 10),
                     new ColumnDefinition<CommitEntry>(x => x.Commit.MessageShort, "*"),
                     new ColumnDefinition<CommitEntry>(x => x.Commit.Author.Name, 15),
                     new ColumnDefinition<CommitEntry>(x => x.Commit.Committer.When.ToString("g"), 19))
             {
-                AllowsMarking = true
+                X = 1
             };
 
             Content = view;
