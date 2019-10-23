@@ -61,7 +61,9 @@ namespace Guit
         public bool DefaultVisible { get; set; } = true;
 
         public bool ReportProgress { get; set; } = true;
-        
+
         public bool IsDynamic { get; set; }
+
+        public string Description { get; set; }
     }
 }

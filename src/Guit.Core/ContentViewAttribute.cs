@@ -47,5 +47,7 @@ namespace Guit
         public string Context { get; }
 
         public bool Visible { get; set; } = true;
+
+        public string Description { get; set; }
     }
 }
