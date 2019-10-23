@@ -45,6 +45,8 @@
     <PackageReference Include="Merq.Core" Version="1.2.0" />
     <PackageReference Include="System.Composition" Version="1.3.0" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.6.0" />
+    <PackageReference Include="NuGet.Client" Version="4.2.0" />
+    <PackageReference Include="NuGet.Protocol.Core.v3" Version="4.2.0" />
   </ItemGroup>
 
   <ItemGroup>

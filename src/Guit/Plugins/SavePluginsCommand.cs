@@ -7,16 +7,16 @@ namespace Guit
 {
     [Shared]
     [MenuCommand("Save", 's', "Plugins", ReportProgress = false)]
-    public class SavePluginsCommand : IMenuCommand
+    class SavePluginsCommand : IMenuCommand
     {
-        readonly IShell app;
+        readonly IShell shell;
         readonly IPluginManager manager;
         readonly PluginsView view;
 
         [ImportingConstructor]
-        public SavePluginsCommand(IShell app, IPluginManager manager, PluginsView view)
+        public SavePluginsCommand(IShell shell, IPluginManager manager, PluginsView view)
         {
-            this.app = app;
+            this.shell = shell;
             this.manager = manager;
             this.view = view;
         }
@@ -24,7 +24,7 @@ namespace Guit
         public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
         {
             manager.EnabledPlugins = view.EnabledPlugins;
-            app.Shutdown();
+            shell.Shutdown();
             return Task.CompletedTask;
         }
     }

@@ -9,5 +9,9 @@ namespace Guit
         IEnumerable<PluginInfo> AvailablePlugins { get; }
 
         IEnumerable<PluginInfo> EnabledPlugins { get; set; }
+
+        void Install(string id, string version);
+
+        void Disable(string id);
     }
 }

@@ -53,6 +53,7 @@ namespace Guit
                 .Concat(corePlugins)
                 .Select(ReadPlugin)
                 .Where(x => x.IsAvailable)
+                .OrderBy(x => x.Id)
                 .Distinct();
         }
 
@@ -65,6 +66,7 @@ namespace Guit
                     .Select(x => x.Value)
                     .Select(ReadPlugin)
                     .Where(x => x.IsAvailable)
+                    .OrderBy(x => x.Id)
                     .Distinct();
             set
             {
@@ -75,7 +77,7 @@ namespace Guit
                     UseCorePlugins = true;
                     // Also, in this case, we don't want/need to list each 
                     // individual plugin in the configuration, so keep it clean
-                    value = value.Where(x => !corePlugins.Contains(x.Id));
+                    value = value.Where(x => !corePlugins.Contains(x.Id)).ToList();
                 }
                 else
                 {
@@ -88,18 +90,14 @@ namespace Guit
 
                 // Clear and persist new values.
                 repository.Config.UnsetAll("guit.plugin");
-                foreach (var plugin in value)
+                foreach (var plugin in value.OrderBy(x => x.Id))
                 {
-                    repository.Config.Add("guit.plugin", plugin.Id);
+                    repository.Config.Add("guit.plugin", plugin.Spec);
                 }
             }
         }
 
-        public void Disable(string assemblyFile)
-        {
-            // Warn and disable the plugin for the next Load round.
-            Console.WriteLine($"Disabling plugin {Path.GetFileName(assemblyFile)}...");
-        }
+        public void Disable(string id) => EnabledPlugins = EnabledPlugins.Where(x => x.Id != id);
 
         public void Disable(Assembly assembly)
         {
@@ -109,6 +107,8 @@ namespace Guit
                 Console.WriteLine($"Disabling plugin {context.Name}...");
             }
         }
+
+        public void Install(string id, string version) => repository.Config.Add("guit.plugin", id + "," + version);
 
         public IPluginContext Load()
         {
@@ -146,6 +146,8 @@ namespace Guit
                         File.Delete(pluginReferences);
                 }
 
+                var shouldLoadPlugin = true;
+
                 // If reference paths file exists and any of its referenced assemblies are 
                 // not found, we need to perform a restore.
                 if (!File.Exists(pluginReferences) || 
@@ -176,20 +178,27 @@ namespace Guit
                         ev.Wait();
 
                     if (dotnet.ExitCode != 0)
-                        throw new ArgumentException("Failed to refresh configured plugins.");
+                    {
+                        shouldLoadPlugin = false;
+                        Console.WriteLine($"Failed to restore plugin {plugin.Id}. Disabling it...");
+                        Disable(plugin.Id);
+                    }
                 }
                 else
                 {
                     // We don't need to do anything!
-                    Console.WriteLine($"Plugin {plugin.Id},{plugin.Version} is up-to-date");
+                    Console.WriteLine($"Plugin {plugin.Id} is up-to-date");
                 }
 
-                contexts.Add(new NuGetPluginLoadContext(
-                    plugin.Id,
-                    plugin.Version,
-                    Path.Combine(pluginDir, "bin", "Debug", pluginLib + ".dll"),
-                    File.ReadAllLines(Path.Combine(pluginDir, "obj", "ReferencePaths.txt")),
-                    AssemblyLoadContext.Default));
+                if (shouldLoadPlugin)
+                {
+                    contexts.Add(new NuGetPluginLoadContext(
+                        plugin.Id,
+                        plugin.Version,
+                        Path.Combine(pluginDir, "bin", "Debug", pluginLib + ".dll"),
+                        File.ReadAllLines(Path.Combine(pluginDir, "obj", "ReferencePaths.txt")),
+                        AssemblyLoadContext.Default));
+                }
             }
 
             contexts.Add(new CorePluginLoadContext(plugins.Where(x => x.Id.EndsWith(".dll")).Select(x => x.Id)));
@@ -197,7 +206,7 @@ namespace Guit
             return new PluginContext(contexts);
         }
 
-        private PluginInfo ReadPlugin(string identity)
+        PluginInfo ReadPlugin(string identity)
         {
             var result = default(PluginInfo);
 
@@ -214,9 +223,10 @@ namespace Guit
                         result = new PluginInfo(identity)
                         {
                             IsAvailable = true,
+                            Id = identity,
                             Title = assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title,
                             Description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description,
-                            Version = assembly.GetName().Version?.ToString(),
+                            // Version = assembly.GetName().Version?.ToString(),
                         };
                     }
                 }
@@ -228,6 +238,7 @@ namespace Guit
                 {
                     // TODO: check if plugin is currently enabled.
                     IsAvailable = true,
+                    Id = parts[0],
                     Title = parts[0],
                     Version = parts[1],
                 };
