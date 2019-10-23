@@ -120,6 +120,9 @@
   <data name="CherryPick" xml:space="preserve">
     <value>Cherry Pick</value>
   </data>
+  <data name="CherryPicker" xml:space="preserve">
+    <value>Cherry-Picker</value>
+  </data>
   <data name="Fetch" xml:space="preserve">
     <value>Fetch</value>
   </data>

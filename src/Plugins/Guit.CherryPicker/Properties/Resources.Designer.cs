@@ -70,6 +70,15 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cherry-Picker.
+        /// </summary>
+        internal static string CherryPicker {
+            get {
+                return ResourceManager.GetString("CherryPicker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fetch.
         /// </summary>
         internal static string Fetch {

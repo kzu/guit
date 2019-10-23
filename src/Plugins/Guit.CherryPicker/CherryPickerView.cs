@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
+using Guit.Plugin.CherryPicker.Properties;
 using LibGit2Sharp;
 
 namespace Guit.Plugin.CherryPicker
 {
     [Shared]
     [Export]
-    [ContentView(nameof(CherryPicker), '4')]
+    [ContentView(nameof(CherryPicker), '4', resources: typeof(Resources))]
     class CherryPickerView : ContentView
     {
-        const string DefaultTitle = "Cherry-Picker";
+        static readonly string DefaultTitle = Resources.CherryPicker;
 
         readonly IEnumerable<CherryPickConfig> repositories;
         readonly ICommandService commandService;
