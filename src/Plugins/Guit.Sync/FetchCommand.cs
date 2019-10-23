@@ -8,11 +8,11 @@ using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Merq;
 
-namespace Guit.Commands
+namespace Guit.Plugin.Sync
 {
     [Shared]
-    [MenuCommand("Fetch", 'f', nameof(Plugin.Sync))]
-    public class FetchCommand : IMenuCommand
+    [SyncCommand(WellKnownCommands.Sync.Fetch, 'f')]
+    class FetchCommand : IMenuCommand
     {
         readonly IRepository repository;
         readonly IEventStream eventStream;

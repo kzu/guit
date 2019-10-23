@@ -61,11 +61,119 @@ namespace Guit.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        internal static string Filter {
+            get {
+                return ResourceManager.GetString("Filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Filter_Description {
+            get {
+                return ResourceManager.GetString("Filter.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        internal static string Refresh {
+            get {
+                return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Refresh_Description {
+            get {
+                return ResourceManager.GetString("Refresh.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select All.
+        /// </summary>
+        internal static string SelectAll {
+            get {
+                return ResourceManager.GetString("SelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string SelectAll_Description {
+            get {
+                return ResourceManager.GetString("SelectAll.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next View.
+        /// </summary>
+        internal static string ShowNextView {
+            get {
+                return ResourceManager.GetString("ShowNextView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string ShowNextView_Description {
+            get {
+                return ResourceManager.GetString("ShowNextView.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous View.
+        /// </summary>
+        internal static string ShowPreviousView {
+            get {
+                return ResourceManager.GetString("ShowPreviousView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string ShowPreviousView_Description {
+            get {
+                return ResourceManager.GetString("ShowPreviousView.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pull.
         /// </summary>
         internal static string Sync_Pull {
             get {
                 return ResourceManager.GetString("Sync.Pull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View.
+        /// </summary>
+        internal static string View {
+            get {
+                return ResourceManager.GetString("View", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string View_Description {
+            get {
+                return ResourceManager.GetString("View.Description", resourceCulture);
             }
         }
     }

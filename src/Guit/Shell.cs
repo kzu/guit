@@ -136,6 +136,11 @@ namespace Guit
             var currentViewWithMetadata = viewList.FirstOrDefault(x => x.Metadata.Context == GetContext(CurrentView));
 
             var targetIndex = viewList.IndexOf(currentViewWithMetadata) + 1;
+
+            // Skip the Help view
+            if (targetIndex < viewList.Count && viewList[targetIndex].Metadata.Id == WellKnownViews.Help)
+                targetIndex++;
+
             if (targetIndex >= viewList.Count)
                 targetIndex = 0;
 
@@ -149,6 +154,11 @@ namespace Guit
             var currentViewWithMetadata = viewList.FirstOrDefault(x => x.Metadata.Context == GetContext(CurrentView));
 
             var targetIndex = viewList.IndexOf(currentViewWithMetadata) - 1;
+
+            // Skip the Help view
+            if (targetIndex >= 0 && viewList[targetIndex].Metadata.Id == WellKnownViews.Help)
+                targetIndex--;
+
             if (targetIndex < 0)
                 targetIndex = viewList.Count - 1;
 

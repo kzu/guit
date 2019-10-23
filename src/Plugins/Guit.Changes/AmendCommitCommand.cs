@@ -5,7 +5,7 @@ using Merq;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand("Amend", 'a', WellKnownViews.Changes)]
+    [ChangesCommand(WellKnownCommands.Changes.Amend, 'a')]
     public class AmendCommitCommand : CommitCommand
     {
         [ImportingConstructor]

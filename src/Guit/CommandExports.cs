@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Composition;
 using Terminal.Gui;
+using Guit.Properties;
 
 namespace Guit
 {
@@ -18,22 +19,22 @@ namespace Guit
             this.mainThread = mainThread;
         }
 
-        [MenuCommand("RunNext", Key.CursorRight, DefaultVisible = false, ReportProgress = false)]
+        [MenuCommand(WellKnownCommands.ShowNextView, Key.CursorRight, resources: typeof(Resources), DefaultVisible = false, ReportProgress = false)]
         IMenuCommand RunNextCommand => new MenuCommand(async () => await app.Value.RunNext());
 
-        [MenuCommand("RunPrevious", Key.CursorLeft, DefaultVisible = false, ReportProgress = false)]
+        [MenuCommand(WellKnownCommands.ShowPreviousView, Key.CursorLeft, resources: typeof(Resources), DefaultVisible = false, ReportProgress = false)]
         IMenuCommand RunPreviousCommand => new MenuCommand(async () => await app.Value.RunPrevious());
 
-        [MenuCommand("Refresh", Key.F5, DefaultVisible = false, ReportProgress = false)]
+        [MenuCommand(WellKnownCommands.Refresh, Key.F5, resources: typeof(Resources), DefaultVisible = false, ReportProgress = false)]
         IMenuCommand RefreshCommand => new MenuCommand(() => mainThread.Invoke(() => (Application.Current as IRefreshPattern)?.Refresh()));
 
-        [MenuCommand("SelectAll", '*', DefaultVisible = false, ReportProgress = false)]
+        [MenuCommand(WellKnownCommands.SelectAll, '*', resources: typeof(Resources), DefaultVisible = false, ReportProgress = false)]
         IMenuCommand SelectAllCommand => new MenuCommand(() => mainThread.Invoke(() => (Application.Current as ISelectPattern)?.SelectAll(invertSelection: true)));
 
-        [MenuCommand(WellKnownCommands.View, Key.F3, DefaultVisible = false, ReportProgress = false)]
+        [MenuCommand(WellKnownCommands.View, Key.F3, resources: typeof(Resources), DefaultVisible = false, ReportProgress = false)]
         IMenuCommand ViewCommand => new MenuCommand(() => mainThread.Invoke(() => (Application.Current as IViewPattern)?.View()));
 
-        [MenuCommand("Filter", Key.F6, DefaultVisible = false, ReportProgress = false)]
+        [MenuCommand(WellKnownCommands.Filter, Key.F6, resources: typeof(Resources), DefaultVisible = false, ReportProgress = false)]
         IMenuCommand FilterCommand => new MenuCommand(() => mainThread.Invoke(() =>
         {
             if (Application.Current is IFilterPattern filterPattern)

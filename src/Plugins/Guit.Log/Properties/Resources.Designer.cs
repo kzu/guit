@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Guit.Plugin.Changes.Properties {
+namespace Guit.Plugin.Log.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Guit.Plugin.Changes.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Guit.Plugin.Changes.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Guit.Plugin.Log.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,29 +61,38 @@ namespace Guit.Plugin.Changes.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open.
+        ///   Looks up a localized string similar to Log.
         /// </summary>
-        internal static string Open {
+        internal static string Log {
             get {
-                return ResourceManager.GetString("Open", resourceCulture);
+                return ResourceManager.GetString("Log", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to TODO.
         /// </summary>
-        internal static string Open_Description {
+        internal static string Log_Description {
             get {
-                return ResourceManager.GetString("Open.Description", resourceCulture);
+                return ResourceManager.GetString("Log.Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resolve.
+        ///   Looks up a localized string similar to Reset.
         /// </summary>
-        internal static string ResolveConflicts {
+        internal static string Reset {
             get {
-                return ResourceManager.GetString("ResolveConflicts", resourceCulture);
+                return ResourceManager.GetString("Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Reset_Description {
+            get {
+                return ResourceManager.GetString("Reset.Description", resourceCulture);
             }
         }
     }

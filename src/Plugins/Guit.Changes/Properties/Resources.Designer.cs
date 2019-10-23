@@ -61,11 +61,83 @@ namespace Guit.Plugin.Changes.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Amend.
+        /// </summary>
+        internal static string Amend {
+            get {
+                return ResourceManager.GetString("Amend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Amend_Description {
+            get {
+                return ResourceManager.GetString("Amend.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Changes_Description {
+            get {
+                return ResourceManager.GetString("Changes.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commit.
+        /// </summary>
+        internal static string Commit {
+            get {
+                return ResourceManager.GetString("Commit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Commit_Description {
+            get {
+                return ResourceManager.GetString("Commit.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resolve.
         /// </summary>
         internal static string ResolveConflicts {
             get {
                 return ResourceManager.GetString("ResolveConflicts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string ResolveConflicts_Description {
+            get {
+                return ResourceManager.GetString("ResolveConflicts.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revert.
+        /// </summary>
+        internal static string Revert {
+            get {
+                return ResourceManager.GetString("Revert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Revert_Description {
+            get {
+                return ResourceManager.GetString("Revert.Description", resourceCulture);
             }
         }
     }

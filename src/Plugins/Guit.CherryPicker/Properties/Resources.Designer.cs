@@ -70,11 +70,29 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string CherryPick_Description {
+            get {
+                return ResourceManager.GetString("CherryPick.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cherry-Picker.
         /// </summary>
         internal static string CherryPicker {
             get {
                 return ResourceManager.GetString("CherryPicker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string CherryPicker_Description {
+            get {
+                return ResourceManager.GetString("CherryPicker.Description", resourceCulture);
             }
         }
         
@@ -88,11 +106,29 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Fetch_Description {
+            get {
+                return ResourceManager.GetString("Fetch.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignore.
         /// </summary>
         internal static string Ignore {
             get {
                 return ResourceManager.GetString("Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Ignore_Description {
+            get {
+                return ResourceManager.GetString("Ignore.Description", resourceCulture);
             }
         }
         
@@ -106,6 +142,15 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Push_Description {
+            get {
+                return ResourceManager.GetString("Push.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset.
         /// </summary>
         internal static string Reset {
@@ -115,11 +160,29 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Reset_Description {
+            get {
+                return ResourceManager.GetString("Reset.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Branch.
         /// </summary>
         internal static string SelectBaseBranch {
             get {
                 return ResourceManager.GetString("SelectBaseBranch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string SelectBaseBranch_Description {
+            get {
+                return ResourceManager.GetString("SelectBaseBranch.Description", resourceCulture);
             }
         }
     }

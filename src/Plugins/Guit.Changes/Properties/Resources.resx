@@ -117,7 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Amend" xml:space="preserve">
+    <value>Amend</value>
+  </data>
+  <data name="Amend.Description" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Changes.Description" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Commit" xml:space="preserve">
+    <value>Commit</value>
+  </data>
+  <data name="Commit.Description" xml:space="preserve">
+    <value>TODO</value>
+  </data>
   <data name="ResolveConflicts" xml:space="preserve">
     <value>Resolve</value>
+  </data>
+  <data name="ResolveConflicts.Description" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>Revert</value>
+  </data>
+  <data name="Revert.Description" xml:space="preserve">
+    <value>TODO</value>
   </data>
 </root>

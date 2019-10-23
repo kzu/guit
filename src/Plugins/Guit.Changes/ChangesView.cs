@@ -2,6 +2,7 @@
 using System.Composition;
 using System.Linq;
 using Guit.Events;
+using Guit.Plugin.Changes.Properties;
 using LibGit2Sharp;
 using Merq;
 using Terminal.Gui;
@@ -10,7 +11,7 @@ namespace Guit.Plugin.Changes
 {
     [Shared]
     [Export]
-    [ContentView(WellKnownViews.Changes, '1')]
+    [ContentView(WellKnownViews.Changes, '1', resources: typeof(Resources))]
     public class ChangesView : ContentView
     {
         readonly IRepository repository;
@@ -62,7 +63,7 @@ namespace Guit.Plugin.Changes
         bool IsSubmodule(string filepath) =>
             repository.Submodules.Any(x => x.Path == filepath);
 
-        void OnSelectedChanged() => 
+        void OnSelectedChanged() =>
             eventStream.Push<SelectionChanged>(view.Values.ElementAt(view.SelectedItem).Entry.FilePath);
 
         public IEnumerable<StatusEntry> GetMarkedEntries(bool? submoduleEntriesOnly = null) => view.Values

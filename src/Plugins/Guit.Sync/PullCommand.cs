@@ -13,7 +13,7 @@ using Merq;
 namespace Guit.Plugin.Sync
 {
     [Shared]
-    [MenuCommand("Sync.Pull", 'p', nameof(Sync), typeof(Resources))]
+    [SyncCommand(WellKnownCommands.Sync.Pull, 'p')]
     public class PullCommand : IMenuCommand
     {
         readonly MainThread mainThread;

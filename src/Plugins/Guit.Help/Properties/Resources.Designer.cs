@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Guit.Plugin.Changes.Properties {
+namespace Guit.Plugin.Help.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Guit.Plugin.Changes.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Guit.Plugin.Changes.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Guit.Plugin.Help.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,29 +61,20 @@ namespace Guit.Plugin.Changes.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open.
+        ///   Looks up a localized string similar to Help.
         /// </summary>
-        internal static string Open {
+        internal static string Help {
             get {
-                return ResourceManager.GetString("Open", resourceCulture);
+                return ResourceManager.GetString("Help", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to TODO.
         /// </summary>
-        internal static string Open_Description {
+        internal static string Help_Description {
             get {
-                return ResourceManager.GetString("Open.Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Resolve.
-        /// </summary>
-        internal static string ResolveConflicts {
-            get {
-                return ResourceManager.GetString("ResolveConflicts", resourceCulture);
+                return ResourceManager.GetString("Help.Description", resourceCulture);
             }
         }
     }

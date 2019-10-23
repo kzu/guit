@@ -61,20 +61,92 @@ namespace Guit.Plugin.Sync.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fetch.
+        /// </summary>
+        internal static string Fetch {
+            get {
+                return ResourceManager.GetString("Fetch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Fetch_Description {
+            get {
+                return ResourceManager.GetString("Fetch.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pull.
         /// </summary>
-        internal static string Sync_Pull {
+        internal static string Pull {
             get {
-                return ResourceManager.GetString("Sync.Pull", resourceCulture);
+                return ResourceManager.GetString("Pull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Pull_Description {
+            get {
+                return ResourceManager.GetString("Pull.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Push.
         /// </summary>
-        internal static string Sync_Push {
+        internal static string Push {
             get {
-                return ResourceManager.GetString("Sync.Push", resourceCulture);
+                return ResourceManager.GetString("Push", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Push_Description {
+            get {
+                return ResourceManager.GetString("Push.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch/Checkout.
+        /// </summary>
+        internal static string SwitchCheckout {
+            get {
+                return ResourceManager.GetString("SwitchCheckout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string SwitchCheckout_Description {
+            get {
+                return ResourceManager.GetString("SwitchCheckout.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sync.
+        /// </summary>
+        internal static string Sync {
+            get {
+                return ResourceManager.GetString("Sync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Sync_Description {
+            get {
+                return ResourceManager.GetString("Sync.Description", resourceCulture);
             }
         }
     }

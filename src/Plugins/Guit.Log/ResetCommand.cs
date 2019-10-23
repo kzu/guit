@@ -1,12 +1,13 @@
 ﻿using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
+using Guit.Plugin.Log.Properties;
 using LibGit2Sharp;
 
 namespace Guit.Plugin.Log
 {
     [Shared]
-    [MenuCommand("Reset", 'r', WellKnownViews.Log)]
+    [MenuCommand(WellKnownCommands.Log.Reset, 'r', WellKnownViews.Log, typeof(Resources))]
     class ResetCommand : IMenuCommand
     {
         readonly MainThread mainThread;

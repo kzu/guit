@@ -19,6 +19,7 @@ namespace Guit
                 try
                 {
                     DisplayName = resourceManager.GetString(id, CultureInfo.CurrentUICulture) ?? id;
+                    Description = resourceManager.GetString($"{id}.Description", CultureInfo.CurrentUICulture);
                 }
                 catch (MissingManifestResourceException)
                 {
@@ -48,6 +49,6 @@ namespace Guit
 
         public bool Visible { get; set; } = true;
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }

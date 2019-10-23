@@ -117,10 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Sync.Pull" xml:space="preserve">
+  <data name="Fetch" xml:space="preserve">
+    <value>Fetch</value>
+  </data>
+  <data name="Fetch.Description" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Pull" xml:space="preserve">
     <value>Pull</value>
   </data>
-  <data name="Sync.Push" xml:space="preserve">
+  <data name="Pull.Description" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Push" xml:space="preserve">
     <value>Push</value>
+  </data>
+  <data name="Push.Description" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="SwitchCheckout" xml:space="preserve">
+    <value>Switch/Checkout</value>
+  </data>
+  <data name="SwitchCheckout.Description" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Sync" xml:space="preserve">
+    <value>Sync</value>
+  </data>
+  <data name="Sync.Description" xml:space="preserve">
+    <value>TODO</value>
   </data>
 </root>

@@ -31,6 +31,7 @@ namespace Guit
                 try
                 {
                     DisplayName = resourceManager.GetString(id, CultureInfo.CurrentUICulture) ?? id;
+                    Description = resourceManager.GetString($"{id}.Description", CultureInfo.CurrentUICulture);
                 }
                 catch (MissingManifestResourceException)
                 {

@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
+using Guit.Plugin.Log.Properties;
 using LibGit2Sharp;
 
 namespace Guit.Plugin.Log
 {
     [Shared]
     [Export]
-    [ContentView(WellKnownViews.Log, '3')]
+    [ContentView(WellKnownViews.Log, '3', resources: typeof(Resources))]
     class LogView : ContentView
     {
         readonly IRepository repository;
@@ -16,7 +17,7 @@ namespace Guit.Plugin.Log
 
         [ImportingConstructor]
         public LogView(IRepository repository)
-            : base("Log")
+            : base(Resources.Log)
         {
             this.repository = repository;
 

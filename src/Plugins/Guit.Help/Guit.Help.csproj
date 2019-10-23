@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <RootNamespace>Guit.Plugin.Log</RootNamespace>
+    <RootNamespace>Guit.Plugin.Help</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

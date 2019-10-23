@@ -3,12 +3,13 @@ using System.Composition;
 using LibGit2Sharp;
 using Terminal.Gui;
 using System.Collections.Generic;
+using Guit.Plugin.Sync.Properties;
 
 namespace Guit.Plugin.Sync
 {
     [Shared]
     [Export]
-    [ContentView(nameof(Sync), '2')]
+    [ContentView(WellKnownViews.Sync, '2', resources: typeof(Resources))]
     public class SyncView : ContentView
     {
         readonly IRepository repository;
@@ -27,7 +28,7 @@ namespace Guit.Plugin.Sync
 
         [ImportingConstructor]
         public SyncView(IRepository repository, IHistoryDivergenceService historyDivergenceService)
-            : base("Sync")
+            : base(Resources.Sync)
         {
             this.repository = repository;
             this.historyDivergenceService = historyDivergenceService;

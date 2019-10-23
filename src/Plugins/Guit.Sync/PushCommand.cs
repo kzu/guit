@@ -11,7 +11,7 @@ using Merq;
 namespace Guit.Plugin.Sync
 {
     [Shared]
-    [MenuCommand("Sync.Push", 'u', nameof(Sync), typeof(Resources))]
+    [SyncCommand(WellKnownCommands.Sync.Push, 'u')]
     public class PushCommand : IMenuCommand
     {
         readonly IEventStream eventStream;

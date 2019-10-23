@@ -8,7 +8,7 @@ using Merq;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand(WellKnownCommands.ResolveConflicts, 'v', WellKnownViews.Changes, typeof(ResolveConflictsCommand), DefaultVisible = false, IsDynamic = true)]
+    [ChangesCommand(WellKnownCommands.ResolveConflicts, 'v', DefaultVisible = false, IsDynamic = true)]
     public class ResolveConflictsCommand : IDynamicMenuCommand
     {
         readonly IRepository repository;
@@ -32,5 +32,5 @@ namespace Guit.Plugin.Changes
             mainThread.Invoke(() => new ResolveConflictsDialog(repository, commands).ShowDialog());
             return Task.CompletedTask;
         }
-   }
+    }
 }

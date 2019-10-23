@@ -10,7 +10,7 @@ using Guit.Events;
 namespace Guit.Plugin.Sync
 {
     [Shared]
-    [MenuCommand("Switch/Checkout", 's', nameof(Sync))]
+    [SyncCommand(WellKnownCommands.Sync.SwitchCheckout, 's')]
     public class SwitchCommand : IMenuCommand
     {
         readonly MainThread mainThread;
