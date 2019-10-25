@@ -121,42 +121,42 @@
     <value>Cherry Pick</value>
   </data>
   <data name="CherryPick.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Apply the changes introduced by some existing commits.</value>
   </data>
   <data name="CherryPicker" xml:space="preserve">
     <value>Cherry-Picker</value>
   </data>
   <data name="CherryPicker.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Browse existing commits to apply via cherry-pick.</value>
   </data>
   <data name="Fetch" xml:space="preserve">
     <value>Fetch</value>
   </data>
   <data name="Fetch.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Download objects and refs from another repository.</value>
   </data>
   <data name="Ignore" xml:space="preserve">
     <value>Ignore</value>
   </data>
   <data name="Ignore.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Ignores the selected commit(s) for cherry-picking.</value>
   </data>
   <data name="Push" xml:space="preserve">
     <value>Push</value>
   </data>
   <data name="Push.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Pushes the cherry-picked commits.</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="Reset.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Hard resets the current checked out branch to its remote tip.</value>
   </data>
   <data name="SelectBaseBranch" xml:space="preserve">
     <value>Select Branch</value>
   </data>
   <data name="SelectBaseBranch.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Select the branch to cherry-pick from.</value>
   </data>
 </root>

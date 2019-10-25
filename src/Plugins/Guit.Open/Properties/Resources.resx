@@ -121,9 +121,7 @@
     <value>Open</value>
   </data>
   <data name="Open.Description" xml:space="preserve">
-    <value>TODO</value>
-  </data>
-  <data name="ResolveConflicts" xml:space="preserve">
-    <value>Resolve</value>
+    <value>Opens the currently selected file in the appropriate
+editor.</value>
   </data>
 </root>

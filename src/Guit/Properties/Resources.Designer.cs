@@ -70,11 +70,93 @@ namespace Guit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Applies a filter to the current view, if supported..
         /// </summary>
         internal static string Filter_Description {
             get {
                 return ResourceManager.GetString("Filter.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        internal static string Help {
+            get {
+                return ResourceManager.GetString("Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displays this help dialog..
+        /// </summary>
+        internal static string Help_Description {
+            get {
+                return ResourceManager.GetString("Help.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Global Commands.
+        /// </summary>
+        internal static string HelpDialog_GlobalCommands {
+            get {
+                return ResourceManager.GetString("HelpDialog.GlobalCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commands available in all views.
+        /// </summary>
+        internal static string HelpDialog_GlobalCommandsDescription {
+            get {
+                return ResourceManager.GetString("HelpDialog.GlobalCommandsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [Press shortcut to view description].
+        /// </summary>
+        internal static string HelpDialog_ShortcutDescription {
+            get {
+                return ResourceManager.GetString("HelpDialog.ShortcutDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        internal static string InstallPlugins {
+            get {
+                return ResourceManager.GetString("InstallPlugins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse and install available online plugins from
+        ///nuget.org tagged with &apos;guit&apos;..
+        /// </summary>
+        internal static string InstallPlugins_Description {
+            get {
+                return ResourceManager.GetString("InstallPlugins.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugins.
+        /// </summary>
+        internal static string Plugins {
+            get {
+                return ResourceManager.GetString("Plugins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse, enable, disable and install plugins..
+        /// </summary>
+        internal static string Plugins_Description {
+            get {
+                return ResourceManager.GetString("Plugins.Description", resourceCulture);
             }
         }
         
@@ -88,11 +170,29 @@ namespace Guit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Refreshes the current view, if supported..
         /// </summary>
         internal static string Refresh_Description {
             get {
                 return ResourceManager.GetString("Refresh.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string SavePlugins {
+            get {
+                return ResourceManager.GetString("SavePlugins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saves the changes to the installed plugins..
+        /// </summary>
+        internal static string SavePlugins_Description {
+            get {
+                return ResourceManager.GetString("SavePlugins.Description", resourceCulture);
             }
         }
         
@@ -106,7 +206,7 @@ namespace Guit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Selects all items in the current view, if supported..
         /// </summary>
         internal static string SelectAll_Description {
             get {
@@ -124,7 +224,7 @@ namespace Guit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Shows the next view..
         /// </summary>
         internal static string ShowNextView_Description {
             get {
@@ -142,7 +242,7 @@ namespace Guit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Shows the previous view..
         /// </summary>
         internal static string ShowPreviousView_Description {
             get {
@@ -169,7 +269,8 @@ namespace Guit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Views the currently selected item, opening it in
+        ///the appropriate editor..
         /// </summary>
         internal static string View_Description {
             get {

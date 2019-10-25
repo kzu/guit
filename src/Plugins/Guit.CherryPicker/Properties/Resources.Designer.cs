@@ -70,7 +70,7 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Apply the changes introduced by some existing commits..
         /// </summary>
         internal static string CherryPick_Description {
             get {
@@ -88,7 +88,7 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Browse existing commits to apply via cherry-pick..
         /// </summary>
         internal static string CherryPicker_Description {
             get {
@@ -106,7 +106,7 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Download objects and refs from another repository..
         /// </summary>
         internal static string Fetch_Description {
             get {
@@ -124,7 +124,7 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Ignores the selected commit(s) for cherry-picking..
         /// </summary>
         internal static string Ignore_Description {
             get {
@@ -142,7 +142,7 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Pushes the cherry-picked commits..
         /// </summary>
         internal static string Push_Description {
             get {
@@ -160,7 +160,7 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Hard resets the current checked out branch to its remote tip..
         /// </summary>
         internal static string Reset_Description {
             get {
@@ -178,7 +178,7 @@ namespace Guit.Plugin.CherryPicker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Select the branch to cherry-pick from..
         /// </summary>
         internal static string SelectBaseBranch_Description {
             get {

@@ -20,7 +20,7 @@ namespace Guit
             }
         }
 
-        public override void Add(View view)
+        public override View Add(View view)
         {
             if (Subviews.Count > 0)
             {
@@ -36,6 +36,7 @@ namespace Guit
             }
 
             base.Add(view);
+            return this;
         }
     }
 }

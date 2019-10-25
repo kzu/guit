@@ -121,12 +121,12 @@
     <value>Log</value>
   </data>
   <data name="Log.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Browse commits in the current branch.</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="Reset.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Resets the current branch to the selected commit.</value>
   </data>
 </root>

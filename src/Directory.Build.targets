@@ -25,7 +25,7 @@ AssemblyVersion=$(AssemblyVersion)" />
           DependsOnTargets="GitVersion"
           Returns="$(Version)"
           Condition="'$(GitInfoImported)' == 'true' And '$(ExcludeRestorePackageImports)' != 'true'">
-
+          
     <PropertyGroup>
       <GitBranch>$(GitBranch.Replace('/', '-'))</GitBranch>
       <!-- We don't build stable versions from non-master branches. But when the version came from the branch, we leave it as-is. -->

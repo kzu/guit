@@ -7,5 +7,6 @@
         public const string Log = nameof(Log);
         public const string CherryPicker = nameof(CherryPicker);
         public const string Help = nameof(Help);
+        public const string Plugins = nameof(Plugins);
     }
 }

@@ -121,27 +121,30 @@
     <value>Amend</value>
   </data>
   <data name="Amend.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Amends the most recent commit's message in the current
+branch.</value>
   </data>
   <data name="Changes.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Shows the current status of files and submodules.</value>
   </data>
   <data name="Commit" xml:space="preserve">
     <value>Commit</value>
   </data>
   <data name="Commit.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Create a new commit with a given message, containing 
+the checked files.</value>
   </data>
   <data name="ResolveConflicts" xml:space="preserve">
     <value>Resolve</value>
   </data>
   <data name="ResolveConflicts.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Resolves conflicts in the currently selected file.</value>
   </data>
   <data name="Revert" xml:space="preserve">
     <value>Revert</value>
   </data>
   <data name="Revert.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Reverts the state of the selected files to the tip of
+the current branch.</value>
   </data>
 </root>

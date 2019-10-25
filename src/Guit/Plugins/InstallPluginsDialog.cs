@@ -9,7 +9,7 @@ using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using Terminal.Gui;
 
-namespace Guit.Plugins
+namespace Guit
 {
     class InstallPluginsDialog : DialogBox
     {
@@ -57,8 +57,8 @@ namespace Guit.Plugins
             // replace with 'guit'
             var results = await search.SearchAsync("guit", new SearchFilter(true) { SupportedFrameworks = new[] { "netstandard2.0", "netcoreapp3.0" } }, 0, 35, new Logger(), CancellationToken.None);
 
-            // plugins.SetSource(results.Where(x => x.Identity.Id != "Guit.Core" && x.Tags.Contains("guit")));
-            plugins.SetValues(results.Where(x => x.Tags.Contains("guit") && !manager.EnabledPlugins.Any(p => p.Id == x.Identity.Id)));
+            plugins.SetValues(results.Where(x => x.Identity.Id != "Guit.Core" && x.Tags.Contains("guit") && !manager.EnabledPlugins.Any(p => p.Id == x.Identity.Id)));
+            // TODO: this does not result in the listview being properly focused/painted :(
             Application.MainLoop.Invoke(() => SetFocus(plugins));
 
             done = true;

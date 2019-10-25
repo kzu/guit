@@ -43,8 +43,11 @@ namespace Guit
         /// </summary>
         protected virtual void BeginInit()
         {
-            Height = 15;
-            Width = Dim.Fill(20);
+            if (Height.Equals((Dim)0))
+                Height = 15;
+
+            if (Width == (Dim)0)
+                Width = Dim.Fill(20);
 
             foreach (var factory in ButtonFactories.Where(x => (x.Key & Buttons) == x.Key))
                 factory.Value(this);

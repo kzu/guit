@@ -1,11 +1,12 @@
 ﻿using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
+using Guit.Properties;
 
-namespace Guit.Plugins
+namespace Guit
 {
     [Shared]
-    [MenuCommand("Install", 'i', "Plugins", ReportProgress = false)]
+    [MenuCommand(nameof(Resources.InstallPlugins), 'i', nameof(Resources.Plugins), typeof(Resources), ReportProgress = false)]
     class InstallPluginsCommand : IMenuCommand
     {
         readonly IShell shell;

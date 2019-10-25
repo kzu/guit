@@ -121,31 +121,31 @@
     <value>Filter</value>
   </data>
   <data name="Filter.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Applies a filter to the current view, if supported.</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Refresh</value>
   </data>
   <data name="Refresh.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Refreshes the current view, if supported.</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Select All</value>
   </data>
   <data name="SelectAll.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Selects all items in the current view, if supported.</value>
   </data>
   <data name="ShowNextView" xml:space="preserve">
     <value>Next View</value>
   </data>
   <data name="ShowNextView.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Shows the next view.</value>
   </data>
   <data name="ShowPreviousView" xml:space="preserve">
     <value>Previous View</value>
   </data>
   <data name="ShowPreviousView.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Shows the previous view.</value>
   </data>
   <data name="Sync.Pull" xml:space="preserve">
     <value>Pull</value>
@@ -154,6 +154,41 @@
     <value>View</value>
   </data>
   <data name="View.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Views the currently selected item, opening it in
+the appropriate editor.</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Help.Description" xml:space="preserve">
+    <value>Displays this help dialog.</value>
+  </data>
+  <data name="Plugins" xml:space="preserve">
+    <value>Plugins</value>
+  </data>
+  <data name="Plugins.Description" xml:space="preserve">
+    <value>Browse, enable, disable and install plugins.</value>
+  </data>
+  <data name="InstallPlugins" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="InstallPlugins.Description" xml:space="preserve">
+    <value>Browse and install available online plugins from
+nuget.org tagged with 'guit'.</value>
+  </data>
+  <data name="SavePlugins" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SavePlugins.Description" xml:space="preserve">
+    <value>Saves the changes to the installed plugins.</value>
+  </data>
+  <data name="HelpDialog.GlobalCommands" xml:space="preserve">
+    <value>Global Commands</value>
+  </data>
+  <data name="HelpDialog.GlobalCommandsDescription" xml:space="preserve">
+    <value>Commands available in all views</value>
+  </data>
+  <data name="HelpDialog.ShortcutDescription" xml:space="preserve">
+    <value>[Press shortcut to view description]</value>
   </data>
 </root>

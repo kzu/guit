@@ -70,20 +70,12 @@ namespace Guit.Plugin.Changes.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Opens the currently selected file in the appropriate
+        ///editor..
         /// </summary>
         internal static string Open_Description {
             get {
                 return ResourceManager.GetString("Open.Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Resolve.
-        /// </summary>
-        internal static string ResolveConflicts {
-            get {
-                return ResourceManager.GetString("ResolveConflicts", resourceCulture);
             }
         }
     }

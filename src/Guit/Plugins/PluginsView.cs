@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
+using Guit.Properties;
 using Terminal.Gui;
 
 namespace Guit
@@ -8,7 +9,7 @@ namespace Guit
     [Shared]
 #if DEBUG
     [Export]
-    [ContentView("Plugins", '6')]
+    [ContentView(WellKnownViews.Plugins, '6', resources: typeof(Resources))]
 #endif
     public class PluginsView : ContentView
     {

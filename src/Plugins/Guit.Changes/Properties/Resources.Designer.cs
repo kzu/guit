@@ -70,7 +70,8 @@ namespace Guit.Plugin.Changes.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Amends the most recent commit&apos;s message in the current
+        ///branch..
         /// </summary>
         internal static string Amend_Description {
             get {
@@ -79,7 +80,7 @@ namespace Guit.Plugin.Changes.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Shows the current status of files and submodules..
         /// </summary>
         internal static string Changes_Description {
             get {
@@ -97,7 +98,8 @@ namespace Guit.Plugin.Changes.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Create a new commit with a given message, containing 
+        ///the checked files..
         /// </summary>
         internal static string Commit_Description {
             get {
@@ -115,7 +117,7 @@ namespace Guit.Plugin.Changes.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Resolves conflicts in the currently selected file..
         /// </summary>
         internal static string ResolveConflicts_Description {
             get {
@@ -133,7 +135,8 @@ namespace Guit.Plugin.Changes.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Reverts the state of the selected files to the tip of
+        ///the current branch..
         /// </summary>
         internal static string Revert_Description {
             get {

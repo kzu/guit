@@ -70,7 +70,7 @@ namespace Guit.Plugin.Sync.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Download objects and refs from all remotes..
         /// </summary>
         internal static string Fetch_Description {
             get {
@@ -88,7 +88,8 @@ namespace Guit.Plugin.Sync.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Incorporates changes from a remote repository into the
+        ///current branch..
         /// </summary>
         internal static string Pull_Description {
             get {
@@ -106,7 +107,8 @@ namespace Guit.Plugin.Sync.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Updates remote refs using local refs, while sending
+        ///objects necessary to complete the given refs..
         /// </summary>
         internal static string Push_Description {
             get {
@@ -124,7 +126,7 @@ namespace Guit.Plugin.Sync.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Checkout or switch to the specified branch..
         /// </summary>
         internal static string SwitchCheckout_Description {
             get {
@@ -142,7 +144,8 @@ namespace Guit.Plugin.Sync.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Compares local and remote branch state and shows the 
+        ///commit logs for both..
         /// </summary>
         internal static string Sync_Description {
             get {

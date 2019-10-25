@@ -1,12 +1,12 @@
 ﻿using System.Composition;
-using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
+using Guit.Properties;
 
 namespace Guit
 {
     [Shared]
-    [MenuCommand("Save", 's', "Plugins", ReportProgress = false)]
+    [MenuCommand(nameof(Resources.SavePlugins), 's', nameof(Resources.Plugins), typeof(Resources), ReportProgress = false)]
     class SavePluginsCommand : IMenuCommand
     {
         readonly IShell shell;

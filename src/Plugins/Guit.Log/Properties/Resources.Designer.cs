@@ -70,7 +70,7 @@ namespace Guit.Plugin.Log.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Browse commits in the current branch..
         /// </summary>
         internal static string Log_Description {
             get {
@@ -88,7 +88,7 @@ namespace Guit.Plugin.Log.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to Resets the current branch to the selected commit..
         /// </summary>
         internal static string Reset_Description {
             get {

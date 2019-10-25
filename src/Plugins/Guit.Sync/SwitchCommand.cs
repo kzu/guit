@@ -90,7 +90,7 @@ namespace Guit.Plugin.Sync
                 eventStream.Push(Status.Create(0.6f, "Swithing to branch {0}", targetBranchName));
                 repository.Checkout(targetBranch);
 
-                // 5. Update sub modules
+                // 5. Update submodules
                 if (dialog.UpdateSubmodules)
                 {
                     eventStream.Push(Status.Create(0.8f, "Updating submodules..."));

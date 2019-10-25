@@ -121,30 +121,33 @@
     <value>Fetch</value>
   </data>
   <data name="Fetch.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Download objects and refs from all remotes.</value>
   </data>
   <data name="Pull" xml:space="preserve">
     <value>Pull</value>
   </data>
   <data name="Pull.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Incorporates changes from a remote repository into the
+current branch.</value>
   </data>
   <data name="Push" xml:space="preserve">
     <value>Push</value>
   </data>
   <data name="Push.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Updates remote refs using local refs, while sending
+objects necessary to complete the given refs.</value>
   </data>
   <data name="SwitchCheckout" xml:space="preserve">
     <value>Switch/Checkout</value>
   </data>
   <data name="SwitchCheckout.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Checkout or switch to the specified branch.</value>
   </data>
   <data name="Sync" xml:space="preserve">
     <value>Sync</value>
   </data>
   <data name="Sync.Description" xml:space="preserve">
-    <value>TODO</value>
+    <value>Compares local and remote branch state and shows the 
+commit logs for both.</value>
   </data>
 </root>
