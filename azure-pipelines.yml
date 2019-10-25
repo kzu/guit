@@ -24,13 +24,6 @@ stages:
         configuration: $(Configuration)
         msbuildArguments: -r -nowarn:NU5105;NU5125
 
-    - task: MSBuild@1
-      displayName: Build
-      inputs:
-        solution: src/Guit/Guit.csproj
-        configuration: $(Configuration)
-        msbuildArguments: -p:BuildProjectReferences=false -p:PackageId=guit -nowarn:NU5105;NU5125
-
     - task: VSTest@2
       displayName: Test
       inputs:
