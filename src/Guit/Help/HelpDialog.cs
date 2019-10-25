@@ -60,7 +60,10 @@ namespace Guit.Plugin.Help
                 Y = left.Y,
             };
 
-            var commandsByView = commands.GroupBy(x => x.Metadata.Context);
+            var commandsByView = commands.GroupBy(cmd => views.FirstOrDefault(view => view.Metadata.Id == cmd.Metadata.Context))
+                .OrderBy(x => x?.Key?.Metadata?.Order ?? -1)
+                .ThenBy(x => x?.Key?.Metadata?.Key ?? 0);
+
             var pageSize = commandsByView.Count();
             if (Math.Abs(pageSize / 2) == pageSize / 2)
                 pageSize = pageSize / 2;
@@ -79,10 +82,7 @@ namespace Guit.Plugin.Help
                         maxHeight = height;
                 }
 
-                var view = views.FirstOrDefault(x => x.Metadata.Id == group.Key);
-                if (view == null && !string.IsNullOrEmpty(group.Key))
-                    continue;
-
+                var view = group.Key;
                 if (view == null)
                 {
                     view = new Lazy<ContentView, MenuCommandMetadata>(new MenuCommandMetadata
@@ -113,7 +113,7 @@ namespace Guit.Plugin.Help
 
                 height += 2;
 
-                foreach (var command in group)
+                foreach (var command in group.OrderBy(c => c.Metadata.Order).ThenBy(c => c.Metadata.Key))
                 {
                     panel.Add(new Label(command.Metadata.DisplayName)
                     {

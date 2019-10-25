@@ -27,6 +27,7 @@ namespace Guit
                     .Commands
                     .Where(x => string.IsNullOrEmpty(x.Metadata.Context) && IsVisible(x))
                     .OrderBy(x => x.Metadata.Order)
+                    .ThenBy(x => x.Metadata.Key)
                     .SelectMany(RenderCommand)
                     // Skip first separator
                     .Skip(1)
@@ -41,6 +42,7 @@ namespace Guit
                     .Commands
                     .Where(x => x.Metadata.Context == context && IsVisible(x))
                     .OrderBy(x => x.Metadata.Order)
+                    .ThenBy(x => x.Metadata.Key)
                     .SelectMany(RenderCommand)
                     // Skip first separator
                     .Skip(1)

@@ -28,7 +28,7 @@ namespace Guit
         [MenuCommand(WellKnownCommands.Refresh, Key.F5, resources: typeof(Resources), DefaultVisible = false, ReportProgress = false)]
         IMenuCommand RefreshCommand => new MenuCommand(() => mainThread.Invoke(() => (Application.Current as IRefreshPattern)?.Refresh()));
 
-        [MenuCommand(WellKnownCommands.SelectAll, '*', resources: typeof(Resources), DefaultVisible = false, ReportProgress = false)]
+        [MenuCommand(WellKnownCommands.SelectAll, '*', double.MaxValue, resources: typeof(Resources), DefaultVisible = false, ReportProgress = false)]
         IMenuCommand SelectAllCommand => new MenuCommand(() => mainThread.Invoke(() => (Application.Current as ISelectPattern)?.SelectAll(invertSelection: true)));
 
         [MenuCommand(WellKnownCommands.View, Key.F3, resources: typeof(Resources), DefaultVisible = false, ReportProgress = false)]

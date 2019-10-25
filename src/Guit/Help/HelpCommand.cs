@@ -8,7 +8,7 @@ namespace Guit.Help
 {
     [Shared]
     [Export]
-    [MenuCommand(WellKnownViews.Help, '?', resources: typeof(Resources))]
+    [MenuCommand(WellKnownViews.Help, '?', double.MaxValue, resources: typeof(Resources))]
     class HelpCommand : MenuCommand
     {
         [ImportingConstructor]

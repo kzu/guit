@@ -11,7 +11,7 @@ using LibGit2Sharp;
 namespace Guit.Plugin.Changes
 {
     [Shared]
-    [MenuCommand(WellKnownCommands.Open, 'o', resources: typeof(Resources))]
+    [MenuCommand(WellKnownCommands.Open, 'o', nameof(WellKnownViews.Changes), resources: typeof(Resources))]
     public class OpenCommand : IMenuCommand
     {
         readonly IRepository repository;
