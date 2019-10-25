@@ -2,29 +2,28 @@
 
 A dotnet global tool providing a text-based UI for Git leveraging [gui.cs](https://github.com/migueldeicaza/gui.cs).
 
-[![Version](https://img.shields.io/nuget/vpre/dotnet-guit.svg)](https://www.nuget.org/packages/dotnet-guit)
-[![Downloads](https://img.shields.io/nuget/dt/dotnet-guit)](https://www.nuget.org/packages/dotnet-guit)
+[![Version](https://img.shields.io/nuget/vpre/guit.svg)](https://www.nuget.org/packages/guit)
+[![Downloads](https://img.shields.io/nuget/dt/guit)](https://www.nuget.org/packages/guit)
 [![Build Status](https://dev.azure.com/kzu/oss/_apis/build/status/guit?branchName=master)](http://build.azdo.io/kzu/oss/27)
 [![License](https://img.shields.io/github/license/kzu/guit.svg)](LICENSE)
 
-
-To install a CI build run:
-
-```
-dotnet tool install -g --no-cache --add-source https://kzu.io/index.json guit
-```
-
-(or run `install.cmd` from this repository)
-
-To update to a CI build, run:
+Install:
 
 ```
-dotnet tool update -g --no-cache --add-source https://kzu.io/index.json guit
+dotnet tool install -g guit
 ```
-(or run `update.cmd` from this repository)
+
+Update:
+
+```
+dotnet tool update -g guit
+```
 
 
-To run the tool, open a command prompt on the git repo root directory and run `guit` (or `dotnet guit`). 
+To use the CI version of the tool, append `--no-cache --add-source https://kzu.io/index.json` to both operations above, 
+or run the `install.cmd` or `update.cmd` from this repository.
+
+To run the tool, open a command prompt on git repo root directory and run `guit` (or `dotnet guit`). 
 
 
 You can also install (or update to) a specific version (i.e. for a PR you send) by looking at the version 
