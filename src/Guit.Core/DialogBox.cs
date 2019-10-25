@@ -46,7 +46,7 @@ namespace Guit
             if (Height.Equals((Dim)0))
                 Height = 15;
 
-            if (Width == (Dim)0)
+            if (Width.Equals((Dim)0))
                 Width = Dim.Fill(20);
 
             foreach (var factory in ButtonFactories.Where(x => (x.Key & Buttons) == x.Key))
