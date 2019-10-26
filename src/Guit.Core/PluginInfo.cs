@@ -7,7 +7,8 @@
         public string Spec { get; set; }
 
         public string Id { get; set; }
-        public bool IsAvailable { get; set; }
+        public bool IsAvailable { get; set; } = true;
+        public bool IsVisible { get; set; } = true;
         public string? Version { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }

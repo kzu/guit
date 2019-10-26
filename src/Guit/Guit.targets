@@ -10,6 +10,7 @@
     <ItemGroup>
       <AssemblyAttribute Include="Guit.CorePlugin" Condition="%(ReferencePath.IsCorePlugin)">
         <_Parameter1>%(ReferencePath.Filename)%(ReferencePath.Extension)</_Parameter1>
+        <_Parameter2>%(ReferencePath.IsCorePluginVisible)</_Parameter2>
       </AssemblyAttribute>
     </ItemGroup>
   </Target>

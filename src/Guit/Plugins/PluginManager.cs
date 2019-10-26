@@ -4,6 +4,7 @@ using System.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text.RegularExpressions;
@@ -17,10 +18,25 @@ namespace Guit
     class PluginManager : IPluginManager
     {
         static readonly Regex pluginVersionExpr = new Regex("<PluginVersion>(.*)</PluginVersion>", RegexOptions.Compiled);
-        static readonly HashSet<string> corePlugins = Assembly
+
+        static readonly string guitBaseDir = 
+            Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? 
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? 
+            new FileInfo(Assembly.GetExecutingAssembly().ManifestModule.FullyQualifiedName).DirectoryName;
+
+        static readonly HashSet<PluginInfo> corePlugins = Assembly
             .GetExecutingAssembly()
             .GetCustomAttributes<CorePluginAttribute>()
-            .Select(x => x.AssemblyFileName)
+            .Select(x => (Id: x.AssemblyFileName, Path: Path.Combine(guitBaseDir, x.AssemblyFileName), x.IsVisible))
+            .Where(x => File.Exists(x.Path))
+            .Select(x => (x.Id, Assembly: Assembly.Load(AssemblyName.GetAssemblyName(x.Path)), x.IsVisible))
+            .Select(x => new PluginInfo(x.Id)
+            {
+                Id = x.Id,
+                Title = x.Assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title,
+                Description = x.Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description,
+                IsVisible = x.IsVisible,
+            })
             .ToHashSet();
 
         readonly IRepository repository;
@@ -50,8 +66,8 @@ namespace Guit
                 .OfType<ConfigurationEntry<string>>()
                 .Where(x => x.Key == "guit.plugin")
                 .Select(x => x.Value)
-                .Concat(corePlugins)
                 .Select(ReadPlugin)
+                .Concat(corePlugins)
                 .Where(x => x.IsAvailable)
                 .OrderBy(x => x.Id)
                 .Distinct();
@@ -70,14 +86,14 @@ namespace Guit
                     .Distinct();
             set
             {
-                if (corePlugins.All(id => value.Any(p => p.Id == id)))
+                if (corePlugins.All(id => value.Any(p => p.Id == id.Id)))
                 {
                     // If *all* plugins are included in the list, it basically means 
                     // opt-in to all core plugins. Set the appropriate config then.
                     UseCorePlugins = true;
                     // Also, in this case, we don't want/need to list each 
                     // individual plugin in the configuration, so keep it clean
-                    value = value.Where(x => !corePlugins.Contains(x.Id)).ToList();
+                    value = value.Where(x => !corePlugins.Any(p => p.Id == x.Id)).ToList();
                 }
                 else
                 {
@@ -112,9 +128,12 @@ namespace Guit
 
         public IPluginContext Load()
         {
-            var guitDir = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-            var baseDir = Path.Combine(repository.Info.Path, "guit");
+            var guitDir = 
+                Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? 
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? 
+                new FileInfo(Assembly.GetExecutingAssembly().ManifestModule.FullyQualifiedName).DirectoryName;
 
+            var baseDir = Path.Combine(repository.Info.Path, "guit");
             var contexts = new List<PluginLoadContext>();
             var template = Path.Combine(guitDir, "Guit.Plugin.csproj");
             var plugins = EnabledPlugins.ToList();
@@ -213,22 +232,17 @@ namespace Guit
             if (identity.EndsWith(".dll"))
             {
                 // This is a built-in plugin.
-                var baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                if (baseDir != null)
+                var filePath = Path.Combine(guitBaseDir, identity);
+                if (File.Exists(filePath))
                 {
-                    var filePath = Path.Combine(baseDir, identity);
-                    if (File.Exists(filePath))
+                    var assembly = Assembly.Load(AssemblyName.GetAssemblyName(filePath));
+                    result = new PluginInfo(identity)
                     {
-                        var assembly = Assembly.Load(AssemblyName.GetAssemblyName(filePath));
-                        result = new PluginInfo(identity)
-                        {
-                            IsAvailable = true,
-                            Id = identity,
-                            Title = assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title,
-                            Description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description,
-                            // Version = assembly.GetName().Version?.ToString(),
-                        };
-                    }
+                        Id = identity,
+                        Title = assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title,
+                        Description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description,
+                        // Version = assembly.GetName().Version?.ToString(),
+                    };
                 }
             }
             else
@@ -237,7 +251,6 @@ namespace Guit
                 result = new PluginInfo(identity)
                 {
                     // TODO: check if plugin is currently enabled.
-                    IsAvailable = true,
                     Id = parts[0],
                     Title = parts[0],
                     Version = parts[1],

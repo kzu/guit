@@ -36,7 +36,7 @@ namespace Guit
         {
             base.Refresh();
 
-            plugins = manager.AvailablePlugins.ToList();
+            plugins = manager.AvailablePlugins.Where(x => x.IsVisible).ToList();
             view.SetSource(plugins);
 
             var enabled = manager.EnabledPlugins.Select(x => x.Id).ToHashSet();
@@ -48,6 +48,8 @@ namespace Guit
             }
         }
 
-        public IEnumerable<PluginInfo> EnabledPlugins => plugins.Where((x, i) => view.Source.IsMarked(i));
+        public IEnumerable<PluginInfo> EnabledPlugins => 
+            manager.AvailablePlugins.Where(x => !x.IsVisible).Concat(
+                plugins.Where((x, i) => view.Source.IsMarked(i)));
     }
 }

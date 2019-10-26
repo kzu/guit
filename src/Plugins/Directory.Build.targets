@@ -3,6 +3,8 @@
   <ItemDefinitionGroup>
     <TargetPathWithTargetPlatformMoniker>
       <IsCorePlugin>$(IsCorePlugin)</IsCorePlugin>
+      <IsCorePluginVisible>$(IsCorePluginVisible)</IsCorePluginVisible>
+      <IsCorePluginVisible Condition="'$(IsCorePluginVisible)' == ''">true</IsCorePluginVisible>
     </TargetPathWithTargetPlatformMoniker>
   </ItemDefinitionGroup>
 
