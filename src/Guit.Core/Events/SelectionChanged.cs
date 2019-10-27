@@ -3,11 +3,21 @@ using LibGit2Sharp;
 
 namespace Guit.Events
 {
+    /// <summary>
+    /// Allows modifying (and notifying) that the current selection has 
+    /// changed. This event also sets the <see cref="ISelectionService.SelectedObject"/>.
+    /// </summary>
     public class SelectionChanged
     {
-        public SelectionChanged(object selectedObject) => SelectedObject = selectedObject;
+        /// <summary>
+        /// Initializes the event with the given selected object;
+        /// </summary>
+        public SelectionChanged(object? selectedObject) => SelectedObject = selectedObject;
 
-        public object SelectedObject { get; private set; }
+        /// <summary>
+        /// The selected object.
+        /// </summary>
+        public object? SelectedObject { get; private set; }
 
         public static implicit operator SelectionChanged(string selectedFile) => new SelectionChanged(selectedFile);
 

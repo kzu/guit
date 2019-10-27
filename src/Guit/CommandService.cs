@@ -18,14 +18,14 @@ namespace Guit
         readonly Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>> commands = new Dictionary<Tuple<int, string?>, Lazy<IMenuCommand, MenuCommandMetadata>>();
         readonly MainThread mainThread;
         readonly IEventStream eventStream;
-        readonly Selection selection;
+        readonly ISelectionService selection;
 
         [ImportingConstructor]
         public CommandService(
             IShell app,
             MainThread mainThread,
             IEventStream eventStream,
-            Selection selection,
+            ISelectionService selection,
             [ImportMany] IEnumerable<Lazy<IMenuCommand, MenuCommandMetadata>> commands,
             [ImportMany] IEnumerable<Lazy<ContentView, MenuCommandMetadata>> views)
         {
@@ -68,7 +68,7 @@ namespace Guit
                 !commands.TryGetValue(Tuple.Create(hotKey, default(string)), out command))
                 return Task.CompletedTask;
 
-            return ExecuteAsync(command, parameter ?? selection.Current, cancellation);
+            return ExecuteAsync(command, parameter ?? selection.SelectedObject, cancellation);
         }
 
         public Task RunAsync(string commandId, object? parameter = null, CancellationToken cancellation = default)
@@ -76,7 +76,7 @@ namespace Guit
             var command = commands.Values.FirstOrDefault(x => x.Metadata.Id == commandId);
 
             if (command != null)
-                return ExecuteAsync(command, parameter ?? selection.Current, cancellation);
+                return ExecuteAsync(command, parameter ?? selection.SelectedObject, cancellation);
 
             return Task.CompletedTask;
         }
