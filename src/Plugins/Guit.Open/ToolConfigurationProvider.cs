@@ -13,6 +13,10 @@ namespace Guit.Plugin.Changes
     [Export]
     class ToolConfigurationProvider
     {
+        // TODO: verify this is also the case on Mac.
+        /// <summary>
+        /// %LocalAppData%\Programs\Microsoft VS Code\bin\code
+        /// </summary>
         static readonly string DefaultCode = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Microsoft VS Code", "bin", "code");
 
         readonly IRepository repository;
@@ -124,6 +128,7 @@ namespace Guit.Plugin.Changes
             }
         }
 
+        // TODO: do we need more fallbacks for Mac?
         private string? LocateCode() =>
             // Try 'code' from %PATH%
             Environment.GetEnvironmentVariable("PATH")
@@ -134,7 +139,6 @@ namespace Guit.Plugin.Changes
             // Try default VSCode install path 
             (File.Exists(DefaultCode) ? DefaultCode : null);
 
-        // TODO: could there be a 
         [Export("core.editor")]
         public string EditorTool => editorTool.Value;
 

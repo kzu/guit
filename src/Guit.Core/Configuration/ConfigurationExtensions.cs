@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Guit
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ConfigurationExtensions
     {
         static readonly IDictionary<Type, Func<LibGit2Sharp.Configuration, string, object>> getValueOrDefault = new Dictionary<Type, Func<LibGit2Sharp.Configuration, string, object>>
@@ -14,6 +16,23 @@ namespace Guit
             { typeof(string), (config, key) => config.GetValueOrDefault<string>(key) },
         };
 
+        /// <summary>
+        /// Reads a strong-typed representation of a configuration section, by setting 
+        /// all writable properties that match configuration settings in the given 
+        /// section and optional subsection.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         Only <see cref="int"/>, <see cref="long"/>, <see cref="bool"/> 
+        ///         and <see cref="string"/> typed properties are supported, since 
+        ///         those are the supported value types in git configuration.
+        ///     </para>
+        /// </remarks>
+        /// <typeparam name="T">The type of the strongly typed data object to hold the configuration values.</typeparam>
+        /// <param name="configuration">The <see cref="LibGit2Sharp.Configuration"/> instance to use for reading values.</param>
+        /// <param name="section">The configuration section to read.</param>
+        /// <param name="subSection">Optional subsection to read.</param>
+        /// <returns>A new instance of <typeparamref name="T"/> with properties set to their matching configuration values.</returns>
         public static T Read<T>(this LibGit2Sharp.Configuration configuration, string section, string? subSection = null) where T : new()
         {
             var result = new T();

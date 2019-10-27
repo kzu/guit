@@ -5,7 +5,6 @@ using Guit.Events;
 using Guit.Plugin.Changes.Properties;
 using LibGit2Sharp;
 using Merq;
-using Terminal.Gui;
 
 namespace Guit.Plugin.Changes
 {
