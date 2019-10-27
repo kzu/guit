@@ -41,7 +41,7 @@ namespace Guit.Plugin.CherryPicker
 
         public bool IsEnabled { get; }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             foreach (var (config, index) in repositories.Select((config, index) => (config, index)))
             {

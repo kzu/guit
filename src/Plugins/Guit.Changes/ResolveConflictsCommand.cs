@@ -27,7 +27,7 @@ namespace Guit.Plugin.Changes
 
         public bool IsEnabled => repository.Index.Conflicts.Any();
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             mainThread.Invoke(() => new ResolveConflictsDialog(repository, commands).ShowDialog());
             return Task.CompletedTask;

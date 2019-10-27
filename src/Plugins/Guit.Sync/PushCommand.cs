@@ -30,7 +30,7 @@ namespace Guit.Plugin.Sync
             this.view = view;
         }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             var localBranch = repository.Head;
             var targetBranch = repository.Head.TrackedBranch ?? repository.Head;

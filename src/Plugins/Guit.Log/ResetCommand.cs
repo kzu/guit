@@ -22,7 +22,7 @@ namespace Guit.Plugin.Log
             this.view = view;
         }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             if (view.SelectedEntry is CommitEntry selectedEntry)
             {

@@ -26,7 +26,7 @@ namespace Guit.Plugin.Sync
             this.credentials = credentials;
         }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             var remotes = repository.Network.Remotes.ToList();
 

@@ -27,7 +27,7 @@ namespace Guit.Plugin.CherryPicker
             this.view = view;
         }
 
-        public async Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public async Task ExecuteAsync(CancellationToken cancellation = default)
         {
             foreach (var repositoryEntries in view.MarkedEntries.GroupBy(x => x.Config).Where(x => x.Any()))
             {

@@ -21,7 +21,7 @@ namespace Guit
             this.view = view;
         }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             manager.EnabledPlugins = view.EnabledPlugins;
             shell.Shutdown();

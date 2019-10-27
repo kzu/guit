@@ -30,7 +30,7 @@ namespace Guit.Plugin.CherryPicker
 
         public bool IsEnabled { get; }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             if (config != null)
             {

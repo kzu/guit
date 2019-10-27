@@ -43,7 +43,7 @@ namespace Guit.Plugin.Sync
             this.view = view;
         }
 
-        public async Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public async Task ExecuteAsync(CancellationToken cancellation = default)
         {
             var repositoryStatus = repository.RetrieveStatus();
 

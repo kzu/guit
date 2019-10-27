@@ -31,7 +31,7 @@ namespace Guit.Plugin.Changes
 
         protected bool Amend { get; set; }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             if (changes.GetMarkedEntries().Any() || Amend)
             {

@@ -23,7 +23,7 @@ namespace Guit.Plugin.Changes
             this.changes = changes;
         }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             var entries = changes.GetMarkedEntries().ToList();
 

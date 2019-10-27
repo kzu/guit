@@ -23,7 +23,7 @@ namespace Guit.Plugin.CherryPicker
             this.view = view;
         }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             var entries = view.MarkedEntries.ToList();
 

@@ -13,7 +13,7 @@ namespace Guit
 
         public MenuCommand(Func<Task> function) => this.function = function;
 
-        public async Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public async Task ExecuteAsync(CancellationToken cancellation = default)
         {
             action?.Invoke();
 

@@ -15,13 +15,20 @@ namespace Guit.Plugin.Changes
     public class OpenCommand : IMenuCommand
     {
         readonly IRepository repository;
+        readonly ISelectionService selection;
         readonly string editorTool;
         readonly DiffTool diffTool;
         readonly MergeTool mergeTool;
         readonly MainThread mainThread;
 
         [ImportingConstructor]
-        public OpenCommand(IRepository repository, [Import("core.editor")] string editorTool, DiffTool diffTool, MergeTool mergeTool, MainThread mainThread)
+        public OpenCommand(
+            IRepository repository, 
+            ISelectionService selection,
+            [Import("core.editor")] string editorTool, 
+            DiffTool diffTool, 
+            MergeTool mergeTool, 
+            MainThread mainThread)
         {
             this.repository = repository;
             this.editorTool = editorTool;
@@ -30,10 +37,10 @@ namespace Guit.Plugin.Changes
             this.mainThread = mainThread;
         }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
-            var filePath = parameter as string;
-            var conflict = parameter as Conflict;
+            var filePath = selection.SelectedObject as string;
+            var conflict = selection.SelectedObject as Conflict;
 
             if (!string.IsNullOrEmpty(filePath))
                 conflict = repository.Index.Conflicts[filePath];

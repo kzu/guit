@@ -41,7 +41,7 @@ namespace Guit.Plugin.CherryPicker
 
         public bool IsEnabled { get; }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             var dialog = new MessageBox(
                 string.Format("Reset"),

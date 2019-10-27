@@ -25,7 +25,7 @@ namespace Guit.Plugin.Sync
             this.eventStream = eventStream;
         }
 
-        public Task ExecuteAsync(object? parameter = null, CancellationToken cancellation = default)
+        public Task ExecuteAsync(CancellationToken cancellation = default)
         {
             var dialog = new SwitchDialog(branches: repository.Branches.Select(x => x.FriendlyName).OrderBy(x => x).ToArray());
 
