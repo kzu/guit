@@ -19,12 +19,24 @@ namespace Guit.Events
         /// </summary>
         public object? SelectedObject { get; private set; }
 
+        /// <summary>
+        /// Implicit conversion from string to <see cref="SelectionChanged"/>.
+        /// </summary>
         public static implicit operator SelectionChanged(string selectedFile) => new SelectionChanged(selectedFile);
 
+        /// <summary>
+        /// Implicit conversion from <see cref="FileInfo"/> to <see cref="SelectionChanged"/>.
+        /// </summary>
         public static implicit operator SelectionChanged(FileInfo selectedFile) => new SelectionChanged(selectedFile);
 
+        /// <summary>
+        /// Implicit conversion from <see cref="StatusEntry"/> to <see cref="SelectionChanged"/>.
+        /// </summary>
         public static implicit operator SelectionChanged(StatusEntry selectedStatus) => new SelectionChanged(selectedStatus);
 
+        /// <summary>
+        /// Implicit conversion from <see cref="Conflict"/> to <see cref="SelectionChanged"/>.
+        /// </summary>
         public static implicit operator SelectionChanged(Conflict selectedConflict) => new SelectionChanged(selectedConflict);
     }
 }

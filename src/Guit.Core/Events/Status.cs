@@ -18,7 +18,6 @@
 
         public StatusImportance Importance { get; set; }
 
-
         public static implicit operator Status(string? newStatus) => new Status(newStatus);
 
         public static implicit operator Status(float progress) => new Status(null, progress);

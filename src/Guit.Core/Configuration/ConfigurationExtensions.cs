@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace Guit
 {
+    /// <summary>
+    /// Usability overloads for <see cref="LibGit2Sharp.Configuration"/>.
+    /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ConfigurationExtensions
     {
