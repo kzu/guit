@@ -7,7 +7,7 @@
     <AssemblyName>guit</AssemblyName>
     <RootNamespace>Guit</RootNamespace>
 
-    <PackageId>guit</PackageId>
+    <PackageId>dotnet-guit</PackageId>
     <ToolCommandName>guit</ToolCommandName>
     <PackAsTool>true</PackAsTool>
 
