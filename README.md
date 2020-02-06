@@ -21,11 +21,11 @@ dotnet tool update -g guit
 ```
 
 
-To use the CI version of the tool, append `--no-cache --add-source https://kzu.io/index.json` to both operations above, 
+To use the CI version of the tool, append `--no-cache --add-source https://wwwkzu.io/index.json` to both operations above, 
 or run the `install.cmd` or `update.cmd` from this repository.
 
 To run the tool, open a command prompt on git repo root directory and run `guit` (or `dotnet guit`). 
 
 
 You can also install (or update to) a specific version (i.e. for a PR you send) by looking at the version 
-numbers from the build runs in the [AzDO build](http://build.azdo.io/kzu/oss/27).
+numbers from the build runs in the [AzDO build](https://build.azdo.io/kzu/oss/27).
