@@ -21,7 +21,7 @@ dotnet tool update -g guit
 ```
 
 
-To use the CI version of the tool, append `--no-cache --add-source https://www.kzu.io/index.json` to both operations above, 
+To use the CI version of the tool, append `--no-cache --add-source https://pkg.kzu.io/index.json` to both operations above, 
 or run the `install.cmd` or `update.cmd` from this repository.
 
 To run the tool, open a command prompt on git repo root directory and run `guit` (or `dotnet guit`). 
