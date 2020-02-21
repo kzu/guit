@@ -33,8 +33,8 @@ namespace Guit.Plugin.CherryPicker
         public IEnumerable<string> IgnoreCommits { get; set; } = Enumerable.Empty<string>();
 
         /// <summary>
-        /// Gets true of the local target branch should be automatically
-        /// merged (Pull FastFordward) with the remote 
+        /// <see langword="true"/> if the local target branch should be automatically
+        /// merged (Pull FastForward) with the remote 
         /// </summary>
         public bool SyncTargetBranch { get; set; }
     }
