@@ -43,7 +43,7 @@ namespace Guit
             return base.ProcessKey(kb);
         }
 
-        void OnTextChanged(object sender, System.EventArgs e)
+        void OnTextChanged(object sender, ustring text)
         {
             try
             {
