@@ -2,8 +2,8 @@
 
 A dotnet global tool providing a text-based UI for Git leveraging [gui.cs](https://github.com/migueldeicaza/gui.cs).
 
-[![Version](https://img.shields.io/nuget/vpre/guit.svg)](https://www.nuget.org/packages/guit)
-[![Downloads](https://img.shields.io/nuget/dt/guit)](https://www.nuget.org/packages/guit)
+[![Version](https://img.shields.io/nuget/vpre/dotnet-guit.svg)](https://www.nuget.org/packages/dotnet-guit)
+[![Downloads](https://img.shields.io/nuget/dt/dotnet-guit)](https://www.nuget.org/packages/dotnet-guit)
 [![Build Status](https://dev.azure.com/kzu/oss/_apis/build/status/guit?branchName=master)](http://build.azdo.io/kzu/oss/27)
 [![License](https://img.shields.io/github/license/kzu/guit.svg)](LICENSE)
 [![Join the chat at https://gitter.im/kzu/guit](https://badges.gitter.im/kzu/guit.svg)](https://gitter.im/kzu/guit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
