@@ -31,6 +31,7 @@ namespace Guit.Plugin.Changes
             MainThread mainThread)
         {
             this.repository = repository;
+            this.selection = selection;
             this.editorTool = editorTool;
             this.diffTool = diffTool;
             this.mergeTool = mergeTool;

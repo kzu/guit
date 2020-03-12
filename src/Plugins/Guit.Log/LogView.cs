@@ -33,7 +33,7 @@ namespace Guit.Plugin.Log
             Content = view;
         }
 
-        public CommitEntry SelectedEntry => view.SelectedEntry;
+        public CommitEntry? SelectedEntry => view.SelectedEntry;
 
         public override void Refresh()
         {

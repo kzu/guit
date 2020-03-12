@@ -5,7 +5,7 @@ using Terminal.Gui;
 
 namespace Guit
 {
-    public class ListView<T> : ListView, IFilterPattern, IViewPattern, ISelectPattern
+    public class ListView<T> : ListView, IFilterPattern, IViewPattern, ISelectPattern where T : class
     {
         string[]? filter;
 
@@ -21,7 +21,7 @@ namespace Guit
 
         public IEnumerable<T> MarkedEntries => Values.Where((x, i) => Source.IsMarked(i));
 
-        public T SelectedEntry =>
+        public T? SelectedEntry =>
             SelectedItem >= 0 && SelectedItem < Values.Count() ?
                 Values.ElementAt(SelectedItem) : default;
 
