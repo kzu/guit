@@ -5,7 +5,7 @@
     <RootNamespace>Guit</RootNamespace>
 
     <Description>Library to build plugins for dotnet-guit.</Description>
-    <PackageId>Guit.Core</PackageId>
+    <PackageId>Guit</PackageId>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
