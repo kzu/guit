@@ -58,7 +58,9 @@ namespace Guit
                 });
 
                 ev.Wait();
+#pragma warning disable CS8603 // Possible null reference return.
                 return result;
+#pragma warning restore CS8603 // Possible null reference return.
             }
         }
     }

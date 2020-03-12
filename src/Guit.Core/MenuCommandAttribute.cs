@@ -36,11 +36,13 @@ namespace Guit
                 catch (MissingManifestResourceException)
                 {
                     DisplayName = id;
+                    Description = string.Empty;
                 }
             }
             else
             {
                 DisplayName = id;
+                Description = string.Empty;
             }
 
             Id = id;

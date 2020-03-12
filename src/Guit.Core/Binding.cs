@@ -75,7 +75,9 @@ namespace Guit
             if (value == null)
                 value = defaultValue;
 
+#pragma warning disable CS8603 // Possible null reference return.
             return (T)value;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         void SetValue(object? value) =>

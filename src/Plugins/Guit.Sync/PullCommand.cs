@@ -107,7 +107,7 @@ namespace Guit.Plugin.Sync
                     repository.UpdateSubmodules(eventStream: eventStream);
                 }
 
-                eventStream.Push(Status.Finish(mergeResult.Status.ToString()));
+                eventStream.Push(Status.Finish(mergeResult?.Status.ToString() ?? "Done"));
 
                 mainThread.Invoke(() => view.Refresh());
             }
