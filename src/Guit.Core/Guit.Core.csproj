@@ -5,7 +5,7 @@
     <RootNamespace>Guit</RootNamespace>
 
     <Description>Library to build plugins for dotnet-guit.</Description>
-    <PackageId>Guit</PackageId>
+    <PackageId>Guit.Core</PackageId>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -26,5 +26,11 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Guit" />
   </ItemGroup>
+
+  <Target Name="BeforeGenerateNuspec" BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <PackageId>Guit</PackageId>
+    </PropertyGroup>
+  </Target>
 
 </Project>
