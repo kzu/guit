@@ -1,4 +1,4 @@
-# dotnet git
+# dotnet-git
 
 A dotnet global tool providing a text-based UI for Git leveraging [gui.cs](https://github.com/migueldeicaza/gui.cs).
 
