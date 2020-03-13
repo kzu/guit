@@ -8,6 +8,11 @@ A dotnet global tool providing a text-based UI for Git leveraging [gui.cs](https
 [![License](https://img.shields.io/github/license/kzu/guit.svg)](LICENSE)
 [![Join the chat at https://gitter.im/kzu/guit](https://badges.gitter.im/kzu/guit.svg)](https://gitter.im/kzu/guit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+![changes view](https://github.com/kzu/guit/raw/master/docs/img/changes.png)
+![sync view](https://github.com/kzu/guit/raw/master/docs/img/sync.png)
+![log view](https://github.com/kzu/guit/raw/master/docs/img/log.png)
+![cherry-pick view](https://github.com/kzu/guit/raw/master/docs/img/cherry.png)
+
 Install:
 
 ```
