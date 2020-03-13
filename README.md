@@ -11,20 +11,20 @@ A dotnet global tool providing a text-based UI for Git leveraging [gui.cs](https
 Install:
 
 ```
-dotnet tool install -g guit
+dotnet tool install -g dotnet-guit
 ```
 
 Update:
 
 ```
-dotnet tool update -g guit
+dotnet tool update -g dotnet-guit
 ```
 
 
 To use the CI version of the tool, append `--no-cache --add-source https://pkg.kzu.io/index.json` to both operations above, 
 or run the `install.cmd` or `update.cmd` from this repository.
 
-To run the tool, open a command prompt on git repo root directory and run `guit` (or `dotnet guit`). 
+To run the tool, open a command prompt on git repo root directory and run `guit`. 
 
 
 You can also install (or update to) a specific version (i.e. for a PR you send) by looking at the version 
