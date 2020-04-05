@@ -17,7 +17,7 @@ namespace Guit.Plugin.Sync
     public class PullCommand : IMenuCommand
     {
         readonly MainThread mainThread;
-        readonly IRepository repository;
+        readonly IGitRepository repository;
         readonly IEventStream eventStream;
         readonly CredentialsHandler credentials;
         readonly ICommandService commandService;
@@ -27,7 +27,7 @@ namespace Guit.Plugin.Sync
         [ImportingConstructor]
         public PullCommand(
             MainThread mainThread,
-            IRepository repository,
+            IGitRepository repository,
             IEventStream eventStream,
             CredentialsHandler credentials,
             ICommandService commandService,

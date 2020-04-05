@@ -8,7 +8,7 @@ namespace Guit.Plugin.CherryPicker
     {
         string? targetBranch;
 
-        public CherryPickConfig(IRepository repository, string? baseBranch = default, string? targetBranch = default)
+        public CherryPickConfig(IGitRepository repository, string? baseBranch = default, string? targetBranch = default)
         {
             Repository = repository;
 
@@ -16,7 +16,7 @@ namespace Guit.Plugin.CherryPicker
             this.targetBranch = targetBranch;
         }
 
-        public IRepository Repository { get; set; }
+        public IGitRepository Repository { get; set; }
 
         public string? BaseBranch { get; set; }
 

@@ -6,13 +6,13 @@ namespace Guit.Plugin.Log
 {
     class CommitEntry : IViewPattern
     {
-        public CommitEntry(IRepository repository, Commit commit)
+        public CommitEntry(IGitRepository repository, Commit commit)
         {
             Repository = repository;
             Commit = commit;
         }
 
-        public IRepository Repository { get; }
+        public IGitRepository Repository { get; }
 
         public Commit Commit { get; }
 

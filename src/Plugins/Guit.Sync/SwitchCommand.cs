@@ -14,11 +14,11 @@ namespace Guit.Plugin.Sync
     public class SwitchCommand : IMenuCommand
     {
         readonly MainThread mainThread;
-        readonly IRepository repository;
+        readonly IGitRepository repository;
         readonly IEventStream eventStream;
 
         [ImportingConstructor]
-        public SwitchCommand(MainThread mainThread, IRepository repository, IEventStream eventStream)
+        public SwitchCommand(MainThread mainThread, IGitRepository repository, IEventStream eventStream)
         {
             this.mainThread = mainThread;
             this.repository = repository;

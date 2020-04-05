@@ -19,6 +19,8 @@ namespace Guit
             }
 
             Repository = new Repository(repoRoot ?? currentDir);
+            GitRepository = new GitRepository(Repository);
+
             var version = Repository.Config.Get<string>("guit.version")?.Value;
             if (string.IsNullOrEmpty(version))
             {
@@ -38,6 +40,14 @@ namespace Guit
 
         [Singleton]
         [Export]
+        public GitRepository GitRepository { get; }
+
+        [Singleton]
+        [Export]
         public IRepository IRepository => Repository;
+
+        [Singleton]
+        [Export]
+        public IGitRepository IGitRepository => GitRepository;
     }
 }
