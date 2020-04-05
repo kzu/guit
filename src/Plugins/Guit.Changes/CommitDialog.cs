@@ -7,7 +7,10 @@ namespace Guit.Plugin.Changes
         TextView textView = new TextView();
         string? message;
 
-        public CommitDialog(string? title = null) : base(title ?? "Commit") { }
+        public CommitDialog(string title, string? message = null) : base(title)
+        {
+            this.message = message;
+        }
 
         protected override void EndInit()
         {
@@ -29,11 +32,11 @@ namespace Guit.Plugin.Changes
 
         public string? Message
         {
-            get => textView.Text.ToString();
+            get => IsInitialized ? textView.Text.ToString() : message;
             set => message = value;
         }
 
-        public string? NewBranchName { get; private set; }
+        public string? NewBranchName { get; set; }
 
         void OnNewBranchClicked()
         {

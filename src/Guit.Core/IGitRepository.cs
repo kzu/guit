@@ -28,6 +28,8 @@ namespace Guit
 
         public void Fetch(IEnumerable<Remote> remotes, CredentialsHandler credentials, IEventStream? eventStream = null, bool prune = false);
 
+        public Branch CreateBranch(string branchName);
+
         public void Checkout(Branch branch);
 
         public void Stage(string filepath);
