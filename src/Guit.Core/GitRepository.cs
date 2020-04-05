@@ -148,6 +148,9 @@ namespace Guit
             }
         }
 
+        public Branch CreateBranch(string branchName) =>
+            RepositoryExtensions.CreateBranch(repository, branchName);
+
         public void Checkout(Branch branch) =>
             Git.Checkout(repository, branch);
 

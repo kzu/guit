@@ -39,6 +39,9 @@ namespace Guit
             }
         }
 
+        public virtual bool? ShowDialog<T>(T dialog) where T : DialogBox =>
+            Invoke(() => dialog.ShowDialog());
+
         public T Invoke<T>(Func<T> function)
         {
             if (Thread.CurrentThread.ManagedThreadId == mainThreadId)

@@ -13,83 +13,83 @@ namespace Guit.Plugin.Changes
 {
     [Shared]
     [ChangesCommand(WellKnownCommands.Changes.Commit, 'c')]
-    public class CommitCommand : IMenuCommand
+    class CommitCommand : IMenuCommand
     {
         readonly IEventStream eventStream;
         readonly MainThread mainThread;
-        readonly IRepository repository;
-        readonly ChangesView changes;
+        readonly IGitRepository repository;
+        readonly IChangesView view;
 
         [ImportingConstructor]
-        public CommitCommand(IEventStream eventStream, MainThread mainThread, IRepository repository, ChangesView changes)
+        public CommitCommand(IEventStream eventStream, MainThread mainThread, IGitRepository repository, IChangesView view)
         {
             this.eventStream = eventStream;
             this.mainThread = mainThread;
             this.repository = repository;
-            this.changes = changes;
+            this.view = view;
         }
 
-        protected bool Amend { get; set; }
+        protected virtual bool CanExecute() => view.GetMarkedEntries().Any();
+
+        protected virtual CommitOptions CreateCommitOptions() => new CommitOptions();
+
+        protected virtual CommitDialog CreateDialog() => new CommitDialog("Commit");
 
         public Task ExecuteAsync(CancellationToken cancellation = default)
         {
-            if (changes.GetMarkedEntries().Any() || Amend)
+            if (CanExecute())
             {
-                foreach (var submoduleEntry in changes.GetMarkedEntries(true))
-                {
-                    var submodule = repository.Submodules.FirstOrDefault(x => x.Path == submoduleEntry.FilePath);
-                    if (submodule != null)
-                    {
-                        using (var subRepo = new Repository(Path.Combine(repository.Info.WorkingDirectory, submodule.Path)))
-                        {
-                            var status = subRepo.RetrieveStatus();
-                            var entries = status.Added
-                                .Concat(status.Removed)
-                                .Concat(status.Modified)
-                                .Concat(status.Untracked)
-                                .Concat(status.Missing);
+                CommitSubmodules();
+                CommitChanges(repository, view.GetMarkedEntries(), CreateDialog());
 
-                            Commit(subRepo, entries, string.Format("Commit Submodule {0}", submodule.Name));
-                        }
-                    }
-                }
-
-                Commit(repository, changes.GetMarkedEntries(), reportProgress: true);
-
-                mainThread.Invoke(() => changes.Refresh());
+                mainThread.Invoke(() => view.Refresh());
             }
 
             return Task.CompletedTask;
         }
 
-        void Commit(IRepository repository, IEnumerable<StatusEntry> entries, string title = "Commit", bool reportProgress = false)
+        void CommitSubmodules()
         {
-            if (entries.Any() || Amend)
+            foreach (var submoduleEntry in view.GetMarkedEntries(true))
             {
-                var dialog = new CommitDialog(title);
-
-                if (Amend)
-                    dialog.Message = repository.Commits.FirstOrDefault()?.Message;
-
-                if (mainThread.Invoke(() => dialog.ShowDialog()) == true)
+                if (repository.Submodules.FirstOrDefault(x => x.Path == submoduleEntry.FilePath) is Submodule submodule)
                 {
-                    if (!string.IsNullOrEmpty(dialog.NewBranchName))
-                        repository.Checkout(repository.CreateBranch(dialog.NewBranchName));
-
-                    foreach (var entry in entries)
-                        repository.Stage(entry.FilePath);
-
-                    var signature = repository.Config.BuildSignature(DateTimeOffset.Now);
-
-                    var options = new CommitOptions
+                    using (var subRepo = new GitRepository(Path.Combine(repository.Info.WorkingDirectory, submodule.Path)))
                     {
-                        AmendPreviousCommit = Amend
-                    };
+                        var status = subRepo.RetrieveStatus();
 
-                    eventStream.Push<Status>(0.5f);
+                        var entries = status.Added
+                            .Concat(status.Removed)
+                            .Concat(status.Modified)
+                            .Concat(status.Untracked)
+                            .Concat(status.Missing);
 
-                    repository.Commit(dialog.Message, signature, signature, options);
+                        if (entries.Any())
+                            CommitChanges(subRepo, entries, new CommitDialog(string.Format("Commit Submodule {0}", submodule.Name)));
+                    }
                 }
+            }
+        }
+
+        void CommitChanges(IGitRepository repository, IEnumerable<StatusEntry> entries, CommitDialog dialog)
+        {
+            if (mainThread.ShowDialog(dialog) == true)
+            {
+                if (!string.IsNullOrEmpty(dialog.NewBranchName))
+                    repository.Checkout(repository.CreateBranch(dialog.NewBranchName));
+
+                foreach (var entry in entries)
+                    repository.Stage(entry.FilePath);
+
+                eventStream.Push<Status>(0.5f);
+
+                var signature = repository.Config.BuildSignature(DateTimeOffset.Now);
+
+                repository.Commit(
+                    dialog.Message,
+                    signature,
+                    signature,
+                    CreateCommitOptions());
             }
         }
     }

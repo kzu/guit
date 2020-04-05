@@ -10,8 +10,9 @@ namespace Guit.Plugin.Changes
 {
     [Shared]
     [Export]
+    [Export(typeof(IChangesView))]
     [ContentView(WellKnownViews.Changes, '1', resources: typeof(Resources))]
-    public class ChangesView : ContentView
+    public class ChangesView : ContentView, IChangesView
     {
         readonly IRepository repository;
         readonly IEventStream eventStream;
@@ -51,10 +52,6 @@ namespace Guit.Plugin.Changes
 
             view.SetValues(files);
 
-            // Mark modified files by default
-            foreach (var file in files.Where(x => x.Status == Status.Modified || status.Staged.Contains(x.Entry)))
-                view.Source.SetMark(files.IndexOf(file), true);
-
             if (files.Count > 0)
                 OnSelectedChanged();
         }
@@ -65,7 +62,7 @@ namespace Guit.Plugin.Changes
         void OnSelectedChanged() =>
             eventStream.Push<SelectionChanged>(view.Values.ElementAt(view.SelectedItem).Entry.FilePath);
 
-        public IEnumerable<StatusEntry> GetMarkedEntries(bool? submoduleEntriesOnly = null) => view.Values
+        public virtual IEnumerable<StatusEntry> GetMarkedEntries(bool? submoduleEntriesOnly = null) => view.Values
             .Where((x, i) => view.Source.IsMarked(i) &&
                 (submoduleEntriesOnly == null || IsSubmodule(x.Entry.FilePath) == submoduleEntriesOnly))
             .Select(x => x.Entry);
@@ -122,6 +119,11 @@ namespace Guit.Plugin.Changes
                         return "+ " + Entry.FilePath;
                 }
             }
+
+            public override int GetHashCode() => Entry.GetHashCode();
+
+            public override bool Equals(object obj) => Entry.Equals((obj as FileStatus)?.Entry);
+
         }
 
         enum Status
