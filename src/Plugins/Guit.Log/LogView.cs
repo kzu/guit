@@ -12,11 +12,11 @@ namespace Guit.Plugin.Log
     [ContentView(WellKnownViews.Log, '3', resources: typeof(Resources))]
     class LogView : ContentView
     {
-        readonly IRepository repository;
+        readonly IGitRepository repository;
         readonly ListView<CommitEntry> view;
 
         [ImportingConstructor]
-        public LogView(IRepository repository)
+        public LogView(IGitRepository repository)
             : base(Resources.Log)
         {
             this.repository = repository;

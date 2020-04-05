@@ -12,11 +12,11 @@ namespace Guit.Plugin.Changes
     public class RevertCommand : IMenuCommand
     {
         readonly MainThread mainThread;
-        readonly IRepository repository;
+        readonly IGitRepository repository;
         readonly ChangesView changes;
 
         [ImportingConstructor]
-        public RevertCommand(MainThread mainThread, IRepository repository, ChangesView changes)
+        public RevertCommand(MainThread mainThread, IGitRepository repository, ChangesView changes)
         {
             this.mainThread = mainThread;
             this.repository = repository;

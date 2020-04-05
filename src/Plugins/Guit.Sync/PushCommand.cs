@@ -16,12 +16,12 @@ namespace Guit.Plugin.Sync
     {
         readonly IEventStream eventStream;
         readonly MainThread mainThread;
-        readonly Repository repository;
+        readonly IGitRepository repository;
         readonly CredentialsHandler credentialsProvider;
         readonly SyncView view;
 
         [ImportingConstructor]
-        public PushCommand(IEventStream eventStream, MainThread mainThread, Repository repository, CredentialsHandler credentialsProvider, SyncView view)
+        public PushCommand(IEventStream eventStream, MainThread mainThread, IGitRepository repository, CredentialsHandler credentialsProvider, SyncView view)
         {
             this.eventStream = eventStream;
             this.mainThread = mainThread;

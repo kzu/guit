@@ -14,7 +14,7 @@ namespace Guit.Plugin.Changes
     [MenuCommand(WellKnownCommands.Open, 'o', nameof(WellKnownViews.Changes), resources: typeof(Resources))]
     public class OpenCommand : IMenuCommand
     {
-        readonly IRepository repository;
+        readonly IGitRepository repository;
         readonly ISelectionService selection;
         readonly string editorTool;
         readonly DiffTool diffTool;
@@ -23,7 +23,7 @@ namespace Guit.Plugin.Changes
 
         [ImportingConstructor]
         public OpenCommand(
-            IRepository repository, 
+            IGitRepository repository, 
             ISelectionService selection,
             [Import("core.editor")] string editorTool, 
             DiffTool diffTool, 

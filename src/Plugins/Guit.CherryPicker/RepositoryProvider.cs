@@ -13,12 +13,12 @@ namespace Guit.Plugin.CherryPicker
         readonly Lazy<List<CherryPickConfig>> repositories = new Lazy<List<CherryPickConfig>>();
 
         [ImportingConstructor]
-        public RepositoryProvider(IRepository root)
+        public RepositoryProvider(IGitRepository root)
         {
             repositories = new Lazy<List<CherryPickConfig>>(() => ReadConfig(root));
         }
 
-        List<CherryPickConfig> ReadConfig(IRepository root)
+        List<CherryPickConfig> ReadConfig(IGitRepository root)
         {
             var configs = new List<CherryPickConfig>();
 
@@ -64,7 +64,7 @@ namespace Guit.Plugin.CherryPicker
             return configs;
         }
 
-        IRepository CreateRepository(Submodule submodule) => new Repository(submodule.Path);
+        IGitRepository CreateRepository(Submodule submodule) => new GitRepository(submodule.Path);
 
         [Export]
         public IEnumerable<CherryPickConfig> Repositories => repositories.Value;

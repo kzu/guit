@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Guit;
 using Guit.Plugin.CherryPicker;
 
 namespace LibGit2Sharp
 {
+    // TODO: Refactor these extension methods into IGitRepository 
     static class IRepositoryExtensions
     {
         public static string GetName(this IRepository repository) => new DirectoryInfo(repository.Info.WorkingDirectory).Name;
@@ -25,7 +27,7 @@ namespace LibGit2Sharp
             return localBranch ?? remoteBranch;
         }
 
-        public static Branch SwitchToTargetBranch(this IRepository repository, CherryPickConfig config)
+        public static Branch SwitchToTargetBranch(this IGitRepository repository, CherryPickConfig config)
         {
             GetLocalAndRemoteBranch(repository, config.TargetBranch, config.TargetBranchRemote, out var targetBranch, out var targetBranchRemote);
 

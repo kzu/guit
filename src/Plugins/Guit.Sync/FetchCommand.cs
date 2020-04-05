@@ -14,12 +14,12 @@ namespace Guit.Plugin.Sync
     [SyncCommand(WellKnownCommands.Sync.Fetch, 'f')]
     class FetchCommand : IMenuCommand
     {
-        readonly IRepository repository;
+        readonly IGitRepository repository;
         readonly IEventStream eventStream;
         readonly CredentialsHandler credentials;
 
         [ImportingConstructor]
-        public FetchCommand(IRepository repository, IEventStream eventStream, CredentialsHandler credentials)
+        public FetchCommand(IGitRepository repository, IEventStream eventStream, CredentialsHandler credentials)
         {
             this.repository = repository;
             this.eventStream = eventStream;
