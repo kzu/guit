@@ -18,6 +18,7 @@
 
     <!-- We inherit this from Guit.Core -->
     <GitThisAssembly>false</GitThisAssembly>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
 
   <ItemGroup>
