@@ -17,7 +17,8 @@ Install:
 
 ```
 dotnet tool install -g dotnet-guit
-```
+```guit
+gui
 
 Update:
 
