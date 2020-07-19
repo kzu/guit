@@ -17,6 +17,8 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kzu/guit</PackageProjectUrl>
+    <PackageIcon>guit-128.png</PackageIcon>
+    <PackageTags>dotnet tool git</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>

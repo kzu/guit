@@ -101,6 +101,10 @@ AssemblyVersion=$(AssemblyVersion)" />
     </ItemGroup>
   </Target>
   
+  <ItemGroup Condition="$(IsPackable)">
+    <Content Include="..\..\docs\img\guit-128.png" Link="guit-128.png" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="%(Filename)%(Extension)" />
+  </ItemGroup>
+
   <!-- If a package is produced delete restored packages with the matching id
        so that re-installing latest will automatically pick up this newest package.
   -->
