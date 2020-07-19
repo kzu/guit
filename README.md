@@ -1,4 +1,5 @@
-# dotnet-guit
+![Icon](https://github.com/kzu/guit/raw/master/docs/img/guit-32.png) dotnet-guit
+============
 
 A dotnet global tool providing a text-based UI for Git leveraging [gui.cs](https://github.com/migueldeicaza/gui.cs).
 

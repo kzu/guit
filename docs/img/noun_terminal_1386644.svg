@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 60" version="1.1" x="0px" y="0px">
+    <path d="M6,12 L6,40 L42,40 L42,12 L6,12 Z M6,8 L42,8 C44.209139,8 46,9.790861 46,12 L46,40 C46,42.209139 44.209139,44 42,44 L6,44 C3.790861,44 2,42.209139 2,40 L2,12 C2,9.790861 3.790861,8 6,8 Z" fill="#000000" fill-rule="nonzero"/>
+    <polygon fill="#000000" fill-rule="nonzero" points="4.37988281 19.987793 46 19.987793 46 15.987793 4.37988281 15.987793"/>
+    <polygon fill="#000000" fill-rule="nonzero" points="33.9819336 9.74951172 33.9819336 20 37.9819336 20 37.9819336 9.74951172"/>
+    <path d="M10.0282973,33.2426743 L12.6987534,36.2207046 L17.0547753,32.3145774 C18.2883158,31.2084383 18.391595,29.3117532 17.2854559,28.0782126 C17.2128032,27.997192 17.1357959,27.9201847 17.0547753,27.847532 L12.6987534,23.9414048 L10.0282973,26.9194351 L13.5540617,30.0810547 L10.0282973,33.2426743 Z" fill="#000000" fill-rule="nonzero"/>
+    <polygon fill="#000000" fill-rule="nonzero" points="20 36 28 36 28 32 20 32"/>
+    <text x="0" y="63" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Kevin Eichhorn</text>
+    <text x="0" y="68" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text>
+</svg>
